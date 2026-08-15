@@ -1,0 +1,46 @@
+:global {
+  :local(.Canvas) {
+    box-sizing: border-box;
+    height: 100%;
+    padding-top: 46px;
+    font-size: 13px;
+    background-color: var(--bf-bg-filled);
+
+    &:global(__hd) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 996;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      height: 46px;
+      padding: 0 15px;
+      font-size: 14px;
+      background-color: var(--bf-bg-body);
+      border-bottom: 1px solid var(--bf-bd-input);
+      box-shadow: var(--bf-sd-btn);
+
+      > .left {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+
+        > .title {
+          padding-right: 20px;
+        }
+      }
+
+      > .right {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+    }
+
+    &:global(__bd) {
+      height: 100%;
+    }
+  }
+}

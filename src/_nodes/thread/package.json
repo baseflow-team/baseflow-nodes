@@ -1,0 +1,19 @@
+{
+  "name": "@baseflow-nodes/thread",
+  "version": "0.0.1",
+  "private": true,
+  "baseflow": {
+    "type": "Thread",
+    "name": "并行分支",
+    "icon": "",
+    "desc": "并行分支：放置于[并行执行]中，多个并行分支同时执行"
+  },
+  "executor": {
+    "node": "@baseflow-executors/thread@0.0.1"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rollup -c ../../../scripts/rollup.config.js",
+    "publish": "npm publish ../../../public/nodes/thread"
+  }
+}

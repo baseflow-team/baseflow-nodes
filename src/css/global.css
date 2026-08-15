@@ -1,0 +1,30 @@
+html,
+body,
+#root {
+  height: 100%;
+  font-size: 13px;
+  color: var(--bf-tx-body);
+}
+
+:focus-visible {
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0000000c;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #00000008;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #00000008;
+}
