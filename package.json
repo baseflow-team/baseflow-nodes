@@ -1,5 +1,5 @@
 {
-  "name": "baseflow-app",
+  "name": "baseflow-nodes",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -7,6 +7,7 @@
     "node": ">=22.12"
   },
   "workspaces": [
+    "app",
     "nodes/*"
   ],
   "scripts": {
@@ -21,7 +22,6 @@
   "dependencies": {
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "reactflow": "^11.11.4",
     "antd": "^6.6.1",
     "axios": "^1.18.1",
     "dayjs": "^1.11.21",

@@ -1,0 +1,30 @@
+{
+  "name": "baseflow-app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build:type": "npm run build:type --workspaces --if-present",
+    "type:check": "tsc --noEmit && npm run type:check --workspaces --if-present",
+    "lint": "biome check . && stylelint \"packages/*/src/**/*.{css,scss}\"",
+    "lint:fix": "biome check --write . && stylelint \"packages/*/src/**/*.{css,scss}\" --fix",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "axios": "*",
+    "antd": "*",
+    "lucide-react": "*",
+    "dayjs": "*",
+    "@baseflow/flow-react": "*"
+  },
+  "dependencies": {
+    "reactflow": "^11.11.4"
+  }
+}

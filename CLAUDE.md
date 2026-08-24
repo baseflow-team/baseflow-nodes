@@ -2,7 +2,7 @@
 
 ## 工作区事实
 
-- 仓库结构: 基于 npm workspaces 的 Monorepo，包含 `nodes/*` 多个子项目
+- 仓库结构: 基于 npm workspaces 的 Monorepo，包含 `app`、`nodes/*` 多个子项目
 - Node.js: `>=22.12`
 - TypeScript: `5.x`
 - React: `19.x`
@@ -15,8 +15,9 @@
 
 ## Monorepo 说明
 
-- `根目录` 下为 `baseflow-app` 项目，该项目负责启动一个 app 页面，可动态加载 `nodes` 下面的独立节点。
-- `nodes/*` 为多个独立的`节点`子项目，它们为 `baseflow-app` 项目提供节点`物料`，不能独立运行。
+- `app` 为 `Flow应用` 项目，运行在浏览器中可动态 import `nodes` 下面的 `节点物料` 子包。
+- `nodes/*` 为多个独立的 `节点物料` 子包项目，它们不能独立运行，为 `app` 提供节点 `物料`。
+- 由于 `app` 需要动态 import `nodes`，而 `vite` 开发环境不能跨项目 import 资源，所以最终`联合演示`需要将 `app` 和 `nodes` build 到 `./demo` 文件夹下，使用生产环境运行。
 
 ## 编码约定
 
