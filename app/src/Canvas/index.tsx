@@ -1,10 +1,11 @@
-import type { CreatorPayload, GraphData, IGraph, IGraphOptions, INodeData } from "@baseflow/react";
-import { DslTools, Flow, getLocale, HistoryTools, useEvent } from "@baseflow/react";
+import type { CreatorPayload, GraphData, IGraph, IGraphOptions, INodeData } from "@baseflow/flow-react";
+import { DslTools, Flow, getLocale, HistoryTools } from "@baseflow/flow-react";
 import { Modal, message, notification, Select, Spin } from "antd";
 import type { FC } from "react";
 import { memo, useCallback, useState } from "react";
-import type { IFLow } from "../entity";
 import NodeList from "../NodeList";
+import type { IFLow } from "../utils";
+import { useEvent } from "../utils";
 import { GraphHooks } from "./GraphHooks";
 import styles from "./index.module.scss";
 
@@ -64,9 +65,22 @@ const Component: FC<{ data: IFLow }> = (props) => {
         </div>
         <div className="right">{graph && <HistoryTools graph={graph} />}</div>
       </div>
-      <div className={`${styles.Canvas}__bd`}>{initGraphData && graphHooks ? <Flow options={graphOptions} initialData={initGraphData} graphHooks={graphHooks} onInit={onInit} onShowCreater={setShowNodeCreater} /> : <Spin />}</div>
+      <div className={`${styles.Canvas}__bd`}>
+        {initGraphData && graphHooks ? (
+          <Flow options={graphOptions} initialData={initGraphData} graphHooks={graphHooks} onInit={onInit} onShowCreater={setShowNodeCreater} />
+        ) : (
+          <Spin />
+        )}
+      </div>
       {showNodeCreater && (
-        <Modal title="请选择节点" className={`${styles.Canvas}__creater`} open={true} width={1010} footer={null} onCancel={() => setShowNodeCreater(undefined)}>
+        <Modal
+          title="请选择节点"
+          className={`${styles.Canvas}__creater`}
+          open={true}
+          width={1010}
+          footer={null}
+          onCancel={() => setShowNodeCreater(undefined)}
+        >
           <NodeList onSelect={onApplyNode} />
         </Modal>
       )}

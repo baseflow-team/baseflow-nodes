@@ -1,9 +1,13 @@
-import type { IBaseWidgets, SchemaModel } from "@baseflow/react";
-import { DataType, FlowConfigProvider } from "@baseflow/react";
-import { DatePicker, DescMD, StringInput, StringSelect, TimePicker } from "@baseflow/widgets";
+import type { IBaseWidgets, SchemaModel } from "@baseflow/flow-react";
+import { DataType, FlowConfigProvider } from "@baseflow/flow-react";
 import { Button, ConfigProvider, Modal, message, Segmented, Spin, Switch } from "antd";
 import Canvas from "./Canvas";
-import { MockFlow } from "./MockData";
+import DatePicker from "./components/DatePicker";
+import DescMD from "./components/DescMD";
+import StringInput from "./components/StringInput";
+import StringSelect from "./components/StringSelect";
+import TimePicker from "./components/TimePicker";
+import { MockFlow } from "./utils";
 
 const Locale = localStorage.getItem("baseflow-locale") || "";
 
@@ -18,7 +22,12 @@ const widgets: Partial<IBaseWidgets> = {
   DatePicker,
   TimePicker,
   DescMD,
-  message,
+  message: {
+    success: (text: string) => message.success(text),
+    error: (text: string) => message.error(text),
+    warning: (text: string) => message.warning(text),
+    info: (text: string) => message.info(text),
+  },
   confirm: (message: string, callback: (ok: boolean) => void, props?: { title?: string; okText?: string; cancelText?: string }) => {
     Modal.confirm({
       title: "提示",

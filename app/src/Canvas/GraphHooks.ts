@@ -1,8 +1,6 @@
-import type { EnvStatus, FlowLogs, FlowLogsListItem, GraphData, INodeData, NodeManifest, RunState, SchemaValue } from "@baseflow/react";
-import { DefalutGraphHooks, DslTools } from "@baseflow/react";
-import type { IFLow } from "../entity";
-import { onImportNode } from "../MockData";
-import { sleep } from "../utils";
+import type { EnvStatus, FlowLogs, FlowLogsListItem, GraphData, INodeData, NodeManifest, RunState, SchemaValue } from "@baseflow/flow-react";
+import { DefalutGraphHooks, DslTools } from "@baseflow/flow-react";
+import { type IFLow, onImportNode, sleep } from "../utils";
 
 export class GraphHooks extends DefalutGraphHooks {
   public doc: IFLow;

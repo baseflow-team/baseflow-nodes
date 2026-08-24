@@ -1,12 +1,5 @@
 {
   "extends": "../tsconfig.base.json",
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "types": ["vite/client"],
-    "skipLibCheck": true
-  },
-  "include": ["src", "vite.config.ts"]
+  "compilerOptions": {},
+  "include": ["src", "../env.d.ts"]
 }
