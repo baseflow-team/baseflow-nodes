@@ -1,0 +1,24 @@
+{
+  "name": "@baseflow-nodes/break",
+  "version": "0.0.1",
+  "private": true,
+  "baseflow": {
+    "type": "Break",
+    "icon": "",
+    "desc": "循环Break：放置于[循环]节点中，退出整个循环",
+    "executor": {
+      "node": "@baseflow-executors/break@0.0.1"
+    },
+    "defaultData": {
+      "meta": {
+        "name": "循环Break"
+      },
+      "props": {}
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rollup -c ../../../scripts/rollup.config.js",
+    "publish": "npm publish ../../../public/nodes/break"
+  }
+}

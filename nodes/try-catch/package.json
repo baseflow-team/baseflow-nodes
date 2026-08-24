@@ -1,0 +1,24 @@
+{
+  "name": "@baseflow-nodes/try-catch",
+  "version": "0.0.1",
+  "private": true,
+  "baseflow": {
+    "type": "Group",
+    "icon": "",
+    "desc": "TryCatch：提供一个可以捕获子节点运行时错误的容器节点",
+    "executor": {
+      "node": "@baseflow-executors/try-catch@0.0.1"
+    },
+    "defaultData": {
+      "meta": {
+        "name": "TryCatch"
+      },
+      "props": {}
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rollup -c ../../../scripts/rollup.config.js",
+    "publish": "npm publish ../../../public/nodes/try-catch"
+  }
+}

@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "target": "ES2023",
-    "lib": ["ES2023"],
-    "module": "ESNext",
+    "target": "es2022",
+    "lib": ["es2022"],
+    "module": "esNext",
     "types": ["node"],
     "skipLibCheck": true,
 
@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["executors"]
+  "include": ["scripts/*.m?js"]
 }

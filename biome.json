@@ -1,12 +1,7 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
+  "$schema": "https://biomejs.dev/schemas/2.5.10/schema.json",
   "files": {
-    "includes": ["**", "!public"]
+    "includes": ["**", "!**/dist", "!**/out", "!node_modules", "!**/*.svg"]
   },
   "formatter": {
     "enabled": true,
@@ -14,31 +9,35 @@
     "indentWidth": 2,
     "lineWidth": 150
   },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always"
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "style": {
-        "noNestedTernary": "warn",
-        "noNonNullAssertion": "off"
-      },
+      "preset": "recommended",
       "suspicious": {
-        "noPrototypeBuiltins": "off",
         "noExplicitAny": "off"
       },
-      "correctness": {
-        "useExhaustiveDependencies": "error"
+      "style": {
+        "noNonNullAssertion": "off"
       },
       "complexity": {
-        "noExcessiveCognitiveComplexity": "warn"
+        "noImportantStyles": "off",
+        "noBannedTypes": "off"
       },
       "a11y": {
-        "useValidAnchor": "off",
-        "useButtonType": "off",
-        "noSvgWithoutTitle": "off",
+        "noStaticElementInteractions": "off",
         "useKeyWithClickEvents": "off",
-        "noStaticElementInteractions": "off"
+        "useKeyWithMouseEvents": "off",
+        "noLabelWithoutControl": "off",
+        "noSvgWithoutTitle": "off"
+      },
+      "correctness": {
+        "noUnusedFunctionParameters": "off"
       }
     }
   }

@@ -1,0 +1,45 @@
+{
+  "name": "@baseflow-nodes/http",
+  "version": "0.0.1",
+  "private": true,
+  "baseflow": {
+    "type": "Task",
+    "icon": "",
+    "desc": "HTTP请求：通过置请求参数发送HTTP请求，并输出响应数据",
+    "executor": {
+      "node": "@baseflow-executors/http@0.0.1"
+    },
+    "inputForm": "",
+    "outputForm": {
+      "editable": true,
+      "toolsFilter": "(item, parent) => {\n  if (!parent) {\n    return { addNext: false, addChild: false, edit: false, delete: false };\n  }\n  if (parent.name === \"response\") {\n    return { addNext: false, addChild: true, edit: false, delete: false };\n  }\n};\n"
+    },
+    "readme": "M|abc\n- 发送HTTP请求目前仅支持Get Post\n- 参数请使用JSON格式\n",
+    "defaultData": {
+      "meta": {
+        "name": "HTTP请求",
+        "outputSchema": {
+          "name": "output",
+          "type": "ͼOBJECTͼ",
+          "children": [
+            {
+              "name": "header",
+              "type": "ͼOBJECTͼ"
+            },
+            {
+              "name": "body",
+              "type": "ͼOBJECTͼ"
+            }
+          ]
+        }
+      },
+      "props": {}
+    },
+    "validate": "(nodeData) => {\n  if (!nodeData.props.input) {\n    return { error: \"Http input is required!\" };\n  }\n};"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rollup -c ../../../scripts/rollup.config.js",
+    "publish": "npm publish ../../../public/nodes/http"
+  }
+}

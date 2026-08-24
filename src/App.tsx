@@ -76,7 +76,13 @@ function App() {
         },
       }}
     >
-      <FlowConfigProvider locale={Locale} widgets={widgets} monacoEditorUrl="/monaco/index.html" expressionUtils={expressionUtils}>
+      <FlowConfigProvider
+        locale={Locale}
+        widgets={widgets}
+        monacoEditorUrl="/monaco/index.html"
+        pureRunnerUrl="/pureRunner.worker-Dds5pDf9.js"
+        expressionUtils={expressionUtils}
+      >
         <Canvas data={MockFlow} />
       </FlowConfigProvider>
     </ConfigProvider>

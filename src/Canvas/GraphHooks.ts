@@ -1,4 +1,4 @@
-import type { EnvStatus, FlowLogs, FlowLogsListItem, GraphData, INodeConfig, INodeData, RunState, SchemaValue } from "@baseflow/react";
+import type { EnvStatus, FlowLogs, FlowLogsListItem, GraphData, INodeData, NodeManifest, RunState, SchemaValue } from "@baseflow/react";
 import { DefalutGraphHooks, DslTools } from "@baseflow/react";
 import type { IFLow } from "../entity";
 import { onImportNode } from "../MockData";
@@ -17,7 +17,7 @@ export class GraphHooks extends DefalutGraphHooks {
     localStorage.setItem("baseflow-dsl", JSON.stringify(dsl));
   }
 
-  async onImportNode(source: string): Promise<INodeConfig> {
+  async onImportNode(source: string): Promise<NodeManifest> {
     return onImportNode(source);
   }
 
@@ -214,7 +214,11 @@ export class GraphHooks extends DefalutGraphHooks {
         retry: () => Promise.resolve(),
       },
       logs: {
-        info: { commitId: this.doc.commitId, label: `v${this.doc.version}${this.doc.released ? "" : "-dev"}（试运行）`, datetime: "2025/10/12 09:34:02" },
+        info: {
+          commitId: this.doc.commitId,
+          label: `v${this.doc.version}${this.doc.released ? "" : "-dev"}（试运行）`,
+          datetime: "2025/10/12 09:34:02",
+        },
         result: { status: "running", totalTime: 0, totalNodes: 0 },
         nodes: {},
       },

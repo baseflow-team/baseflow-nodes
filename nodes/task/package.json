@@ -1,0 +1,23 @@
+{
+  "name": "@baseflow-nodes/task",
+  "version": "0.0.1",
+  "private": true,
+  "baseflow": {
+    "type": "Task",
+    "icon": "",
+    "desc": "Task任务: 测试任务",
+    "executor": {
+      "node": "@baseflow-executors/task@0.0.1"
+    },
+    "defaultData": {
+      "meta": {
+        "name": "Task任务"
+      },
+      "props": {}
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rollup -c ../../../scripts/rollup.config.js"
+  }
+}

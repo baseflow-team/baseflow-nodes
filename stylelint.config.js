@@ -1,30 +1,21 @@
-/** @type {import('stylelint').Config} */
-
+/** @type {import("stylelint").Config} */
 export default {
-  extends: ['stylelint-config-html', 'stylelint-config-standard-scss', 'stylelint-prettier/recommended', 'stylelint-config-recess-order'],
-  plugins: ['stylelint-prettier', 'stylelint-order', 'stylelint-declaration-block-no-ignored-properties'],
+  extends: ["stylelint-config-recommended-scss", "stylelint-config-recess-order"],
+  plugins: ["@stylistic/stylelint-plugin"],
+  ignoreFiles: ["**/dist/**", "**/out/**", "**/node_modules/**"],
   rules: {
-    'selector-class-pattern': null,
-    'plugin/declaration-block-no-ignored-properties': true,
-    'no-descending-specificity': null,
-    'selector-type-case': null,
-    'selector-type-no-unknown': [
-      true,
-      {
-        ignoreTypes: [/^__\w+/],
-      },
-    ],
-    'selector-pseudo-class-no-unknown': [
-      true,
-      {
-        ignorePseudoClasses: ['global', 'local'],
-      },
-    ],
+    "selector-pseudo-class-no-unknown": [true, { ignorePseudoClasses: ["global", "local"] }],
+    "selector-type-no-unknown": [true, { ignoreTypes: ["/^__/"] }],
+    "@stylistic/indentation": 2,
+    "@stylistic/max-empty-lines": 1,
+    "@stylistic/no-eol-whitespace": true,
+    "@stylistic/no-missing-end-of-source-newline": true,
+    "@stylistic/block-opening-brace-space-before": "always",
+    "@stylistic/block-closing-brace-newline-before": "always-multi-line",
+    "@stylistic/block-closing-brace-newline-after": "always",
+    "@stylistic/declaration-colon-space-before": "never",
+    "@stylistic/declaration-colon-space-after": "always-single-line",
+    "@stylistic/declaration-block-semicolon-newline-after": "always-multi-line",
+    "@stylistic/selector-list-comma-newline-after": "always",
   },
-  overrides: [
-    {
-      files: ['**/*.scss'],
-      customSyntax: 'postcss-scss',
-    },
-  ],
 };

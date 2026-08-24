@@ -1,0 +1,24 @@
+{
+  "name": "@baseflow-nodes/parallel",
+  "version": "0.0.1",
+  "private": true,
+  "baseflow": {
+    "type": "Parallel",
+    "icon": "",
+    "desc": "并行执行：可添加多个[并行分支]，多个并行分支同时执行",
+    "executor": {
+      "node": "@baseflow-executors/parallel@0.0.1"
+    },
+    "defaultData": {
+      "meta": {
+        "name": "并行执行"
+      },
+      "props": {}
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rollup -c ../../../scripts/rollup.config.js",
+    "publish": "npm publish ../../../public/nodes/parallel"
+  }
+}
