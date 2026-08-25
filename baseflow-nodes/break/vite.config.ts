@@ -1,11 +1,13 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
+const SharedDependencies = ["react", "react/jsx-runtime", "react/jsx-dev-runtime", "react-dom", "react-dom/client", "@baseflow/render-react"];
+
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: "../baseflow-preview/nodes/break",
-    emptyOutDir: true,
+    outDir: "../../baseflow-preview/nodes/break",
+    emptyOutDir: false,
     minify: false,
     cssMinify: false,
     lib: {
@@ -15,7 +17,10 @@ export default defineConfig({
       cssFileName: "style",
     },
     rollupOptions: {
-      external: "react|react-dom",
+      external: SharedDependencies,
+      output: {
+        entryFileNames: "index.js",
+      },
     },
   },
 });

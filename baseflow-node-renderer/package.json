@@ -11,7 +11,7 @@
     "lint": "biome check . && stylelint \"./src/**/*.scss\"",
     "lint:fix": "biome check --write . && stylelint \"./src/**/*.scss\" --fix",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --config vite.shared.config.ts && vite build",
     "preview": "vite preview"
   },
   "peerDependencies": {

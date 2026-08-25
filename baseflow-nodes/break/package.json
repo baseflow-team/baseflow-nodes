@@ -2,6 +2,7 @@
   "name": "@baseflow-nodes/break",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "baseflow": {
     "type": "Break",
     "icon": "",
@@ -18,6 +19,7 @@
     "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/break\"}],\"sources\":{\"@baseflow-nodes/break\":\"@baseflow-nodes/break@*\"}}"
   },
   "scripts": {
+    "build": "vite build",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {

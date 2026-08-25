@@ -1,31 +1,18 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
+const SharedDependencies = ["react", "react/jsx-runtime", "react/jsx-dev-runtime", "react-dom", "react-dom/client", "@baseflow/render-react"];
+
 export default defineConfig({
+  base: "./",
   plugins: [react()],
   build: {
-    outDir: "../baseflow-preview",
+    outDir: "../baseflow-preview/renderer",
     emptyOutDir: false,
     minify: false,
     cssMinify: false,
     rollupOptions: {
-      plugins: [],
-      output: {
-        codeSplitting: {
-          groups: [
-            {
-              name: "react-vendor",
-              test: /node_modules[\\/](?:react|react-dom)[\\/]/,
-              priority: 2,
-            },
-            {
-              name: "flow-react",
-              test: /node_modules[\\/]@baseflow[\\/]flow-react[\\/]/,
-              priority: 1,
-            },
-          ],
-        },
-      },
+      external: SharedDependencies,
     },
   },
 });
