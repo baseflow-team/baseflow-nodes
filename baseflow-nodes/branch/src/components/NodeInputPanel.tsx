@@ -13,6 +13,14 @@ const Component: INodeInputPanel<NodeProps> = ({ nodeData }) => {
     node.updateProps({ conditions });
   });
 
-  return <div>{nodeProps.default ? <Typography.Text type="secondary">其它条件默认分支</Typography.Text> : <ConditionSelector value={nodeProps.conditions} onChange={onConditionsChange} />}</div>;
+  return (
+    <div>
+      {nodeProps.default ? (
+        <Typography.Text type="secondary">其它条件默认分支</Typography.Text>
+      ) : (
+        <ConditionSelector value={nodeProps.conditions} onChange={onConditionsChange} />
+      )}
+    </div>
+  );
 };
 export default memo(Component);

@@ -10,6 +10,10 @@
     "type:check": "tsc --noEmit",
     "lint": "biome check . && stylelint \"./src/**/*.scss\"",
     "lint:fix": "biome check --write . && stylelint \"./src/**/*.scss\" --fix",
+    "mock:generate": "node ./scripts/generateMock.js",
+    "preview:clean": "node ./scripts/cleanPreview.js",
+    "prebuild": "npm run mock:generate && npm run preview:clean",
+    "predev": "npm run mock:generate",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

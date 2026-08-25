@@ -1,4 +1,3 @@
-import type { INodeProps } from '@baseflow/react';
+import type { INodeProps } from "@baseflow/react";
 
-export interface NodeProps extends INodeProps {
-}
+export interface NodeProps extends INodeProps {}

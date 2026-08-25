@@ -62,19 +62,19 @@ const Component: INodeInputPanel<NodeProps> = ({ nodeData, rebuildKey }) => {
   const onFormChange = useEvent((updates: Partial<NodeProps>) => {
     node.updateProps(updates);
     const outputSchema = nodeData.meta.outputSchema!;
-    if (Object.prototype.hasOwnProperty.call(updates, "path")) {
+    if (Object.hasOwn(updates, "path")) {
       node.updateOutputSchema(mergeSchema(outputSchema, { params: buildPathSchema(updates.path) }));
     }
-    if (Object.prototype.hasOwnProperty.call(updates, "headers")) {
+    if (Object.hasOwn(updates, "headers")) {
       node.updateOutputSchema(mergeSchema(outputSchema, { headers: buildKeyValueSchema(updates.headers) }));
     }
-    if (Object.prototype.hasOwnProperty.call(updates, "queries")) {
+    if (Object.hasOwn(updates, "queries")) {
       node.updateOutputSchema(mergeSchema(outputSchema, { queries: buildKeyValueSchema(updates.queries) }));
     }
-    if (Object.prototype.hasOwnProperty.call(updates, "cookies")) {
+    if (Object.hasOwn(updates, "cookies")) {
       node.updateOutputSchema(mergeSchema(outputSchema, { cookies: buildKeyValueSchema(updates.cookies) }));
     }
-    if (Object.prototype.hasOwnProperty.call(updates, "contentSchema")) {
+    if (Object.hasOwn(updates, "contentSchema")) {
       node.updateOutputSchema(mergeSchema(outputSchema, { body: updates.contentSchema?.children }));
     }
   });

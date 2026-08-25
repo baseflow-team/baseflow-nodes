@@ -1,17 +1,31 @@
 {
-  "@baseflow-nodes/flow": {
-    "type": "Flow",
-    "name": "流程",
+  "@baseflow-nodes/branch": {
+    "type": "Branch",
+    "name": "条件分支",
     "icon": "",
-    "desc": "流程：定义一个独立的流程",
-    "dsl": ""
+    "desc": "条件分支：放置于[条件选择]中，通过设置执行条件来决定是否执行",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/branch\"}],\"sources\":{\"@baseflow-nodes/branch\":\"@baseflow-nodes/branch@*\"}}"
   },
-  "@baseflow-nodes/start": {
-    "type": "Start",
+  "@baseflow-nodes/break": {
+    "type": "Break",
+    "name": "循环Break",
     "icon": "",
-    "name": "流程开始",
-    "desc": "流程开始：表示流程开始执行，可以定义流程入参返回数据结构.",
-    "dsl": ""
+    "desc": "循环Break：放置于[循环]节点中，退出整个循环",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/break\"}],\"sources\":{\"@baseflow-nodes/break\":\"@baseflow-nodes/break@*\"}}"
+  },
+  "@baseflow-nodes/choice": {
+    "type": "Choice",
+    "name": "条件选择",
+    "icon": "",
+    "desc": "条件选择：可添加多个[条件分支]，通过条件判断来控制分支执行",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/choice\",\"id\":\"choice1\",\"childrenIds\":[\"branch1\",\"branch2\"]},{\"tag\":\"@baseflow-nodes/branch\",\"id\":\"branch1\",\"parentId\":\"choice1\"},{\"tag\":\"@baseflow-nodes/branch\",\"id\":\"branch2\",\"parentId\":\"choice1\",\"props\":{\"default\":true}}],\"sources\":{\"@baseflow-nodes/choice\":\"@baseflow-nodes/choice@*\",\"@baseflow-nodes/branch\":\"@baseflow-nodes/branch@*\"}}"
+  },
+  "@baseflow-nodes/continue": {
+    "type": "Break",
+    "name": "循环Continue",
+    "icon": "",
+    "desc": "循环Continue：放置于[循环]节点中，跳过本次循环，继续下一次循环",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/continue\"}],\"sources\":{\"@baseflow-nodes/continue\":\"@baseflow-nodes/continue@*\"}}"
   },
   "@baseflow-nodes/end": {
     "type": "End",
@@ -20,6 +34,62 @@
     "desc": "流程结束：流程正常执行完成，可以设置返回数据",
     "dsl": ""
   },
+  "@baseflow-nodes/flow": {
+    "type": "Flow",
+    "name": "流程",
+    "icon": "",
+    "desc": "流程：定义一个独立的流程",
+    "dsl": ""
+  },
+  "@baseflow-nodes/foreach": {
+    "type": "Loop",
+    "name": "Foreach循环",
+    "icon": "",
+    "desc": "Foreach循环：通过指定一个迭代源来循环执行子节点",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/foreach\"}],\"sources\":{\"@baseflow-nodes/foreach\":\"@baseflow-nodes/foreach@*\"}}"
+  },
+  "@baseflow-nodes/http": {
+    "type": "Task",
+    "name": "HTTP请求",
+    "icon": "",
+    "desc": "HTTP请求：通过置请求参数发送HTTP请求，并输出响应数据",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/http\"}],\"sources\":{\"@baseflow-nodes/http\":\"@baseflow-nodes/http@*\"}}"
+  },
+  "@baseflow-nodes/parallel": {
+    "type": "Parallel",
+    "name": "并行执行",
+    "icon": "",
+    "desc": "并行执行：可添加多个[并行分支]，多个并行分支同时执行",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/parallel\",\"id\":\"parallel1\",\"childrenIds\":[\"thread1\",\"thread2\"]},{\"tag\":\"@baseflow-nodes/thread\",\"id\":\"thread1\",\"parentId\":\"parallel1\"},{\"tag\":\"@baseflow-nodes/thread\",\"id\":\"thread2\",\"parentId\":\"parallel1\"}],\"sources\":{\"@baseflow-nodes/parallel\":\"@baseflow-nodes/parallel@*\",\"@baseflow-nodes/thread\":\"@baseflow-nodes/thread@*\"}}"
+  },
+  "@baseflow-nodes/return": {
+    "type": "Return",
+    "name": "流程返回",
+    "icon": "",
+    "desc": "流程返回：流程提前终止执行并返回，可以设置返回数据",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/return\"}],\"sources\":{\"@baseflow-nodes/return\":\"@baseflow-nodes/return@0.0.1\"}}"
+  },
+  "@baseflow-nodes/start": {
+    "type": "Start",
+    "name": "流程开始",
+    "icon": "",
+    "desc": "流程开始：表示流程开始执行，可以定义流程入参返回数据结构.",
+    "dsl": ""
+  },
+  "@baseflow-nodes/task": {
+    "type": "Task",
+    "name": "Task任务",
+    "icon": "",
+    "desc": "Task任务: 测试任务",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/task\"}],\"sources\":{\"@baseflow-nodes/task\":\"@baseflow-nodes/task@*\"}}"
+  },
+  "@baseflow-nodes/thread": {
+    "type": "Thread",
+    "name": "并行分支",
+    "icon": "",
+    "desc": "并行分支：放置于[并行执行]中，多个并行分支同时执行",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/thread\"}],\"sources\":{\"@baseflow-nodes/thread\":\"@baseflow-nodes/thread@*\"}}"
+  },
   "@baseflow-nodes/trigger-webhook": {
     "type": "Trigger",
     "name": "webhook触发器",
@@ -27,12 +97,12 @@
     "desc": "webhook触发器：让流程能被指定的Http请求触发",
     "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/trigger-webhook\"}],\"sources\":{\"@baseflow-nodes/trigger-webhook\":\"@baseflow-nodes/trigger-webhook@*\"}}"
   },
-  "@baseflow-nodes/return": {
-    "type": "Return",
-    "name": "流程返回",
+  "@baseflow-nodes/try-catch": {
+    "type": "Group",
+    "name": "TryCatch",
     "icon": "",
-    "desc": "流程返回：流程提前终止执行并返回，可以设置返回数据",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/return\"}],\"sources\":{\"@baseflow-nodes/return\":\"@baseflow-nodes/return@*\"}}"
+    "desc": "TryCatch：提供一个可以捕获子节点运行时错误的容器节点",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/try-catch\"}],\"sources\":{\"@baseflow-nodes/try-catch\":\"@baseflow-nodes/try-catch@*\"}}"
   },
   "@baseflow-nodes/variable": {
     "type": "Variable",
@@ -43,79 +113,9 @@
   },
   "@baseflow-nodes/variable-update": {
     "type": "VariableUpdate",
-    "icon": "",
     "name": "变量修改",
+    "icon": "",
     "desc": "变量修改：通过本节点可以修改[变量定义]节点中的变量值.",
     "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/variable-update\"}],\"sources\":{\"@baseflow-nodes/variable-update\":\"@baseflow-nodes/variable-update@*\"}}"
-  },
-  "@baseflow-nodes/try-catch": {
-    "type": "Group",
-    "name": "TryCatch",
-    "icon": "",
-    "desc": "TryCatch：提供一个可以捕获子节点运行时错误的容器节点",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/try-catch\"}],\"sources\":{\"@baseflow-nodes/try-catch\":\"@baseflow-nodes/try-catch@*\"}}"
-  },
-  "@baseflow-nodes/choice": {
-    "type": "Choice",
-    "name": "条件选择",
-    "icon": "",
-    "desc": "条件选择：可添加多个[条件分支]，通过条件判断来控制分支执行",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/choice\",\"id\":\"choice1\",\"childrenIds\":[\"branch1\",\"branch2\"]},{\"tag\":\"@baseflow-nodes/branch\",\"id\":\"branch1\",\"parentId\":\"choice1\"},{\"tag\":\"@baseflow-nodes/branch\",\"id\":\"branch2\",\"parentId\":\"choice1\",\"props\":{\"default\":true}}],\"sources\":{\"@baseflow-nodes/choice\":\"@baseflow-nodes/choice@*\",\"@baseflow-nodes/branch\":\"@baseflow-nodes/branch@*\"}}"
-  },
-  "@baseflow-nodes/branch": {
-    "type": "Branch",
-    "icon": "",
-    "name": "条件分支",
-    "desc": "条件分支：放置于[条件选择]中，通过设置执行条件来决定是否执行",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/branch\"}],\"sources\":{\"@baseflow-nodes/branch\":\"@baseflow-nodes/branch@*\"}}"
-  },
-  "@baseflow-nodes/parallel": {
-    "type": "Parallel",
-    "name": "并行执行",
-    "icon": "",
-    "desc": "并行执行：可添加多个[并行分支]，多个并行分支同时执行",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/parallel\",\"id\":\"parallel1\",\"childrenIds\":[\"thread1\",\"thread2\"]},{\"tag\":\"@baseflow-nodes/thread\",\"id\":\"thread1\",\"parentId\":\"parallel1\"},{\"tag\":\"@baseflow-nodes/thread\",\"id\":\"thread2\",\"parentId\":\"parallel1\"}],\"sources\":{\"@baseflow-nodes/parallel\":\"@baseflow-nodes/parallel@*\",\"@baseflow-nodes/thread\":\"@baseflow-nodes/thread@*\"}}"
-  },
-  "@baseflow-nodes/thread": {
-    "type": "Thread",
-    "name": "并行分支",
-    "icon": "",
-    "desc": "并行分支：放置于[并行执行]中，多个并行分支同时执行",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/thread\"}],\"sources\":{\"@baseflow-nodes/thread\":\"@baseflow-nodes/thread@*\"}}"
-  },
-  "@baseflow-nodes/foreach": {
-    "type": "Loop",
-    "name": "Foreach循环",
-    "icon": "",
-    "desc": "Foreach循环：通过指定一个迭代源来循环执行子节点",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/foreach\"}],\"sources\":{\"@baseflow-nodes/foreach\":\"@baseflow-nodes/foreach@*\"}}"
-  },
-  "@baseflow-nodes/continue": {
-    "type": "Break",
-    "name": "循环Continue",
-    "icon": "",
-    "desc": "循环Continue：放置于[循环]节点中，跳过本次循环，继续下一次循环",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/continue\"}],\"sources\":{\"@baseflow-nodes/continue\":\"@baseflow-nodes/continue@*\"}}"
-  },
-  "@baseflow-nodes/break": {
-    "type": "Break",
-    "name": "循环Break",
-    "icon": "",
-    "desc": "循环Break：放置于[循环]节点中，退出整个循环",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/break\"}],\"sources\":{\"@baseflow-nodes/break\":\"@baseflow-nodes/break@*\"}}"
-  },
-  "@baseflow-nodes/http": {
-    "type": "Task",
-    "name": "HTTP请求",
-    "icon": "",
-    "desc": "HTTP请求：通过置请求参数发送HTTP请求，并输出响应数据",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/http\"}],\"sources\":{\"@baseflow-nodes/http\":\"@baseflow-nodes/http@*\"}}"
-  },
-  "@baseflow-nodes/task": {
-    "type": "Task",
-    "name": "Task任务",
-    "icon": "",
-    "desc": "Task任务: 测试任务",
-    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/task\"}],\"sources\":{\"@baseflow-nodes/task\":\"@baseflow-nodes/task@*\"}}"
   }
 }

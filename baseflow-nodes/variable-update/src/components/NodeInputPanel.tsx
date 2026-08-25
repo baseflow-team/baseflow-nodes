@@ -154,7 +154,6 @@ const Component: INodeInputPanel<NodeProps> = ({ nodeData }) => {
                     value={nodeData.meta.valueReference?.value}
                     onChange={onVariableValueChange}
                   />
-                  // biome-ignore lint/style/noNestedTernary: <>
                 ) : variableSchema.type === DataType.Array ? (
                   <div className="remove-targets">
                     <div className="title">输入要移除元素的个数：</div>
