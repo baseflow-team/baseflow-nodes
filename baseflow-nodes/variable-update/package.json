@@ -19,7 +19,8 @@
     "propsRender": {
       "in": "(dsl) => {\n  const { scripts, variable, action, at, removeTargets } = dsl;\n  return {\n    scripts: scripts ? { type: DataType.Any, source: ValueSource.Expression, text: scripts } : undefined,\n    variable: variable ? { type: DataType.Any, source: ValueSource.Variable, text: variable } : undefined,\n    action,\n    at,\n    removeTargets: removeTargets && (typeof removeTargets === \"number\" ? removeTargets : removeTargets.map((item) => ({ value: item }))),\n  };\n};\n",
       "out": "(props) => {\n  if (props.scripts) {\n    const scripts = props.scripts?.text;\n    return { scripts };\n  } else {\n    const { action, at } = props;\n    const variable = props.variable?.text;\n    const removeTargets =\n      props.removeTargets && (typeof props.removeTargets === \"number\" ? props.removeTargets : props.removeTargets.map((item) => item.value));\n    return { variable, action, at, removeTargets };\n  }\n};\n"
-    }
+    },
+    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/variable-update\"}],\"sources\":{\"@baseflow-nodes/variable-update\":\"@baseflow-nodes/variable-update@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

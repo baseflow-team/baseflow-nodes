@@ -14,7 +14,8 @@
         "name": "循环Break"
       },
       "props": {}
-    }
+    },
+    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/break\"}],\"sources\":{\"@baseflow-nodes/break\":\"@baseflow-nodes/break@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

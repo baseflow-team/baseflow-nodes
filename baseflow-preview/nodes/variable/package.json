@@ -1,0 +1,34 @@
+{
+  "name": "@baseflow-nodes/variable",
+  "version": "0.0.1",
+  "private": true,
+  "baseflow": {
+    "type": "Variable",
+    "icon": "",
+    "desc": "变量定义：通过本节点可以定义多个流程变量",
+    "executor": {
+      "node": "@baseflow-executors/variable@0.0.1"
+    },
+    "defaultData": {
+      "meta": {
+        "name": "变量定义",
+        "outputSchema": {
+          "name": "output",
+          "type": "ͼOBJECTͼ",
+          "children": [
+            {
+              "name": "newVariable",
+              "type": "ͼSTRINGͼ"
+            }
+          ]
+        }
+      },
+      "props": {}
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rollup -c ../../../scripts/rollup.config.js",
+    "publish": "npm publish ../../../public/nodes/variable"
+  }
+}

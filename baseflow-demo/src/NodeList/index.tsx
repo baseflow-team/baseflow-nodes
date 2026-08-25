@@ -10,7 +10,7 @@ const Component: FC<{ onSelect: (item: { type: string; dsl: string }) => void }>
   const [nodeList, setNodeList] = useState<NodeEntity[]>([]);
 
   useEffect(() => {
-    fetchNodes().then((list) => setNodeList(list));
+    fetchNodes().then(setNodeList);
   });
   return (
     <div className={styles.NodeList}>

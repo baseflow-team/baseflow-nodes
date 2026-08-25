@@ -35,7 +35,8 @@
       },
       "props": {}
     },
-    "validate": "(nodeData) => {\n  if (!nodeData.props.input) {\n    return { error: \"Http input is required!\" };\n  }\n};"
+    "validate": "(nodeData) => {\n  if (!nodeData.props.input) {\n    return { error: \"Http input is required!\" };\n  }\n};",
+    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/http\"}],\"sources\":{\"@baseflow-nodes/http\":\"@baseflow-nodes/http@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

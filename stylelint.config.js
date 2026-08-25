@@ -2,7 +2,7 @@
 export default {
   extends: ["stylelint-config-recommended-scss", "stylelint-config-recess-order"],
   plugins: ["@stylistic/stylelint-plugin"],
-  ignoreFiles: ["**/dist/**", "**/out/**", "**/node_modules/**"],
+  ignoreFiles: ["baseflow-preview/**", "**/dist/**", "**/node_modules/**"],
   rules: {
     "selector-pseudo-class-no-unknown": [true, { ignorePseudoClasses: ["global", "local"] }],
     "selector-type-no-unknown": [true, { ignoreTypes: ["/^__/"] }],

@@ -14,7 +14,8 @@
         "name": "并行分支"
       },
       "props": {}
-    }
+    },
+    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/thread\"}],\"sources\":{\"@baseflow-nodes/thread\":\"@baseflow-nodes/thread@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

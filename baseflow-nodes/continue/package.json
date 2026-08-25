@@ -14,7 +14,8 @@
         "name": "循环Continue"
       },
       "props": {}
-    }
+    },
+    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/continue\"}],\"sources\":{\"@baseflow-nodes/continue\":\"@baseflow-nodes/continue@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

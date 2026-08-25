@@ -12,13 +12,11 @@
     "baseflow-nodes/*"
   ],
   "scripts": {
-    "build:type": "npm run build:type --workspaces --if-present",
     "type:check": "tsc --noEmit && npm run type:check --workspaces --if-present",
-    "lint": "biome check . && stylelint \"packages/*/src/**/*.{css,scss}\"",
-    "lint:fix": "biome check --write . && stylelint \"packages/*/src/**/*.{css,scss}\" --fix",
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "lint": "biome check . && stylelint \"**/*.{css,scss}\"",
+    "lint:fix": "biome check --write . && stylelint \"**/*.{css,scss}\" --fix",
+    "build": "npm run build --workspace baseflow-demo",
+    "preview": "npm run preview --workspace baseflow-demo"
   },
   "dependencies": {
     "react": "^19.2.8",

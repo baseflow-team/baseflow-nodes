@@ -7,12 +7,11 @@
     "node": ">=22.12"
   },
   "scripts": {
-    "build:type": "npm run build:type --workspaces --if-present",
-    "type:check": "tsc --noEmit && npm run type:check --workspaces --if-present",
-    "lint": "biome check . && stylelint \"packages/*/src/**/*.{css,scss}\"",
-    "lint:fix": "biome check --write . && stylelint \"packages/*/src/**/*.{css,scss}\" --fix",
+    "type:check": "tsc --noEmit",
+    "lint": "biome check . && stylelint \"./src/**/*.scss\"",
+    "lint:fix": "biome check --write . && stylelint \"./src/**/*.scss\" --fix",
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "peerDependencies": {

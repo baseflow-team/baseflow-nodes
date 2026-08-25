@@ -14,7 +14,8 @@
         "name": "Task任务"
       },
       "props": {}
-    }
+    },
+    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/task\"}],\"sources\":{\"@baseflow-nodes/task\":\"@baseflow-nodes/task@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

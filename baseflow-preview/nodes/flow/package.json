@@ -1,0 +1,24 @@
+{
+  "name": "@baseflow-nodes/flow",
+  "version": "0.0.1",
+  "private": true,
+  "baseflow": {
+    "type": "Flow",
+    "icon": "",
+    "desc": "流程：定义一个独立的流程",
+    "executor": {
+      "node": "@baseflow-executors/flow@0.0.1"
+    },
+    "defaultData": {
+      "meta": {
+        "name": "流程"
+      },
+      "props": {}
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rollup -c ../../../scripts/rollup.config.js",
+    "publish": "npm publish ../../../public/nodes/flow"
+  }
+}

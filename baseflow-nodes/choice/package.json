@@ -14,7 +14,8 @@
         "name": "条件选择"
       },
       "props": {}
-    }
+    },
+    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/choice\",\"id\":\"choice1\",\"childrenIds\":[\"branch1\",\"branch2\"]},{\"tag\":\"@baseflow-nodes/branch\",\"id\":\"branch1\",\"parentId\":\"choice1\"},{\"tag\":\"@baseflow-nodes/branch\",\"id\":\"branch2\",\"parentId\":\"choice1\",\"props\":{\"default\":true}}],\"sources\":{\"@baseflow-nodes/choice\":\"@baseflow-nodes/choice@*\",\"@baseflow-nodes/branch\":\"@baseflow-nodes/branch@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
