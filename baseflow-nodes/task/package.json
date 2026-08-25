@@ -15,7 +15,7 @@
       },
       "props": {}
     },
-    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/task\"}],\"sources\":{\"@baseflow-nodes/task\":\"@baseflow-nodes/task@*\"}}"
+    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/task\"}],\"sources\":{\"@baseflow-nodes/task\":\"@baseflow-nodes/task@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

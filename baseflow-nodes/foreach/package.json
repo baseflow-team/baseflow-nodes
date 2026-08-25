@@ -21,7 +21,7 @@
       "in": "(dsl) => {\n  const { source } = dsl;\n  if (source) {\n    const sourceType = /D/.test(source) ? \"ͼVARIABLEͼ\" : \"ͼTEMPLATEͼ\";\n    return { source: { name: \"source\", value: { type: \"ͼARRAYͼ\", source: sourceType, text: source }, children: [] } };\n  } else {\n    return { source: undefined };\n  }\n};\n",
       "out": "(props) => {\n  const source = props.source?.value.text;\n  return { source };\n};\n"
     },
-    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/foreach\"}],\"sources\":{\"@baseflow-nodes/foreach\":\"@baseflow-nodes/foreach@*\"}}"
+    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/foreach\"}],\"sources\":{\"@baseflow-nodes/foreach\":\"@baseflow-nodes/foreach@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

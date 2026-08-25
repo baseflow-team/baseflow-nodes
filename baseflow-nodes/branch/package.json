@@ -17,7 +17,7 @@
       "props": {}
     },
     "validate": "(nodeData) => {\n  const props = nodeData.props;\n  if (props.default) {\n    return;\n  }\n  if (!props.conditions) {\n    return { error: \"条件不能为空\" };\n  }\n  if (typeof props.conditions !== \"string\") {\n    for (const groups of props.conditions.groups) {\n      for (const item of groups.items) {\n        if (!item.source.text || !item.target.text || !item.operator) {\n          return { error: \"请输入\" };\n        }\n      }\n    }\n  }\n}",
-    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/branch\"}],\"sources\":{\"@baseflow-nodes/branch\":\"@baseflow-nodes/branch@*\"}}"
+    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/branch\"}],\"sources\":{\"@baseflow-nodes/branch\":\"@baseflow-nodes/branch@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

@@ -15,7 +15,7 @@
       },
       "props": {}
     },
-    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/try-catch\"}],\"sources\":{\"@baseflow-nodes/try-catch\":\"@baseflow-nodes/try-catch@*\"}}"
+    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/try-catch\"}],\"sources\":{\"@baseflow-nodes/try-catch\":\"@baseflow-nodes/try-catch@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

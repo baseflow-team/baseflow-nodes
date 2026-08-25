@@ -25,7 +25,7 @@
       },
       "props": {}
     },
-    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/variable\"}],\"sources\":{\"@baseflow-nodes/variable\":\"@baseflow-nodes/variable@*\"}}"
+    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/variable\"}],\"sources\":{\"@baseflow-nodes/variable\":\"@baseflow-nodes/variable@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

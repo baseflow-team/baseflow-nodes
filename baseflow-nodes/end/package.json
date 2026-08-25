@@ -18,7 +18,8 @@
         }
       },
       "props": {}
-    }
+    },
+    "defaultDsl": ""
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

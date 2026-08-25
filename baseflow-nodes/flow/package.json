@@ -14,7 +14,8 @@
         "name": "流程"
       },
       "props": {}
-    }
+    },
+    "defaultDsl": ""
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

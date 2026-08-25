@@ -92,7 +92,7 @@
       "in": "(dsl) => {\n  const { headers, queries, cookies, ...others } = dsl;\n  return {\n    headers: headers?.map((item) => ({ value: item })),\n    queries: queries?.map((item) => ({ value: item })),\n    cookies: cookies?.map((item) => ({ value: item })),\n    ...others,\n  };\n};\n",
       "out": "(props) => {\n  const { headers, queries, cookies, ...others } = props;\n  return {\n    headers: headers?.map((item) => item.value),\n    queries: queries?.map((item) => item.value),\n    cookies: cookies?.map((item) => item.value),\n    ...others,\n  };\n};\n"
     },
-    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/trigger-webhook\"}],\"sources\":{\"@baseflow-nodes/trigger-webhook\":\"@baseflow-nodes/trigger-webhook@*\"}}"
+    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/trigger-webhook\"}],\"sources\":{\"@baseflow-nodes/trigger-webhook\":\"@baseflow-nodes/trigger-webhook@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

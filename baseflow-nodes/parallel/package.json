@@ -15,7 +15,7 @@
       },
       "props": {}
     },
-    "defalutDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/parallel\",\"id\":\"parallel1\",\"childrenIds\":[\"thread1\",\"thread2\"]},{\"tag\":\"@baseflow-nodes/thread\",\"id\":\"thread1\",\"parentId\":\"parallel1\"},{\"tag\":\"@baseflow-nodes/thread\",\"id\":\"thread2\",\"parentId\":\"parallel1\"}],\"sources\":{\"@baseflow-nodes/parallel\":\"@baseflow-nodes/parallel@*\",\"@baseflow-nodes/thread\":\"@baseflow-nodes/thread@*\"}}"
+    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/parallel\",\"id\":\"parallel1\",\"childrenIds\":[\"thread1\",\"thread2\"]},{\"tag\":\"@baseflow-nodes/thread\",\"id\":\"thread1\",\"parentId\":\"parallel1\"},{\"tag\":\"@baseflow-nodes/thread\",\"id\":\"thread2\",\"parentId\":\"parallel1\"}],\"sources\":{\"@baseflow-nodes/parallel\":\"@baseflow-nodes/parallel@*\",\"@baseflow-nodes/thread\":\"@baseflow-nodes/thread@*\"}}"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
