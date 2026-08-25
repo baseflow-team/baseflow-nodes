@@ -1,5 +1,5 @@
 {
-  "name": "baseflow-nodes",
+  "name": "baseflow-nodes-dev",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -7,8 +7,9 @@
     "node": ">=22.12"
   },
   "workspaces": [
-    "app",
-    "nodes/*"
+    "baseflow-demo",
+    "baseflow-preview",
+    "baseflow-nodes/*"
   ],
   "scripts": {
     "build:type": "npm run build:type --workspaces --if-present",
