@@ -5,6 +5,7 @@
     "module": "esNext",
     "types": ["node"],
     "skipLibCheck": true,
+    "allowJs": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -21,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["scripts/*.m?js", "baseflow-demo/vite.config.ts"]
+  "include": ["scripts/*.mjs", "*/vite.config.ts", "*/scripts/*.mjs"]
 }

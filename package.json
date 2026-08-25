@@ -9,6 +9,7 @@
   "workspaces": [
     "baseflow-demo",
     "baseflow-preview",
+    "baseflow-node-renderer",
     "baseflow-nodes/*"
   ],
   "scripts": {
