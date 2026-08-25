@@ -17,10 +17,8 @@
   "peerDependencies": {
     "react": "*",
     "react-dom": "*",
-    "axios": "*",
     "antd": "*",
-    "lucide-react": "*",
     "dayjs": "*",
-    "@baseflow/flow-react": "*"
+    "@baseflow/render-react": "*"
   }
 }
