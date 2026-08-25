@@ -90,6 +90,7 @@ function App() {
         widgets={widgets}
         monacoEditorUrl="/monaco/index.html"
         pureRunnerUrl="/pureRunner.worker-DAkP84-u.js"
+        nodeRendererUrl="/renderer/index.html"
         expressionUtils={expressionUtils}
       >
         <Canvas data={MockFlow} />

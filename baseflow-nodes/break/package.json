@@ -18,8 +18,11 @@
     "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/break\"}],\"sources\":{\"@baseflow-nodes/break\":\"@baseflow-nodes/break@*\"}}"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rollup -c ../../../scripts/rollup.config.js",
-    "publish": "npm publish ../../../public/nodes/break"
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "@baseflow/render-react": "*"
   }
 }
