@@ -89,7 +89,7 @@ function App() {
         locale={Locale}
         widgets={widgets}
         monacoEditorUrl="/monaco/index.html"
-        pureRunnerUrl="/pureRunner.worker-Dds5pDf9.js"
+        pureRunnerUrl="/pureRunner.worker-DAkP84-u.js"
         expressionUtils={expressionUtils}
       >
         <Canvas data={MockFlow} />

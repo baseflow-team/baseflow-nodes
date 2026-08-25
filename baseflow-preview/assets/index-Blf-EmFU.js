@@ -71729,7 +71729,7 @@ function App() {
 			locale: Locale,
 			widgets,
 			monacoEditorUrl: "/monaco/index.html",
-			pureRunnerUrl: "/pureRunner.worker-Dds5pDf9.js",
+			pureRunnerUrl: "/pureRunner.worker-DAkP84-u.js",
 			expressionUtils,
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Canvas_default, { data: MockFlow })
 		})
