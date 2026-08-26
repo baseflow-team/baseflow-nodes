@@ -1,57 +1,62 @@
 # baseflow-nodes 工作区规则
 
-## 工作区事实
+## 技术与架构
 
-- 仓库结构：基于 npm workspaces 的 Monorepo，包含 `baseflow-demo`、`baseflow-nodes/*`、`baseflow-node-renderer`、`baseflow-preview` 等子项目
-- Node.js：`>=22.12`
-- TypeScript：`5.x`
-- React：`19.x`
-- 模块系统：ESM
-- 代码 Lint/format：Biome
-- CSS：Sass
-- CSS Lint/format：Stylelint
-- Vite：`8.x`
-- Vitest：`4.x`
-
-## Monorepo 说明
-
-- `baseflow-demo` 是 Web App 父页面，提供一个简单的 Workflow 运行演示；生产构建为静态入口 Bundle，不直接通过原生 ESM 动态加载节点 UI。
-- `baseflow-nodes/*` 是多个独立的节点物料子包，由节点渲染基座加载，通过基座间接服务于父页面，不能独立运行。
-- `baseflow-node-renderer` 是嵌入 `baseflow-demo` 的 iframe 子页面，作为节点渲染基座独立渲染节点物料 UI，与父页面保持脚本和样式隔离。
-- 当前开发模式不采用跨子项目动态加载资源；联合演示统一将 `baseflow-demo`、`baseflow-node-renderer` 和 `baseflow-nodes/*` 构建到 `./baseflow-preview`，通过生产预览运行。
-
-## Node UI 构建与运行边界
+- npm workspaces Monorepo；Node.js `>=22.12`，TypeScript `5.x`，React `19.x`，ESM，Vite `8.x`，Vitest `4.x`。
+- 代码使用 Biome；样式使用 Sass 和 Stylelint。
+- `baseflow-demo`：Web App 父页面，负责 Workflow 演示。
+- `baseflow-node-renderer`：嵌入 demo 的 iframe 子页面，负责隔离运行和挂载节点 UI。
+- `baseflow-nodes/*`：由 renderer 加载的节点物料，不独立运行。
+- `baseflow-preview`：demo、renderer 和节点的联合静态产物目录。
 
 ```text
-baseflow-demo（父页面）
-  └─ iframe
-      └─ baseflow-node-renderer（节点渲染基座）
-          └─ baseflow-nodes/*（节点物料）
+baseflow-demo
+  └─ iframe: baseflow-node-renderer
+       └─ baseflow-nodes/*
 ```
 
-- `baseflow-demo`：父页面。
-- `baseflow-node-renderer`：节点渲染基座，负责隔离运行、共享依赖、动态加载和挂载节点 UI。
-- `baseflow-nodes/*`：节点物料，由节点渲染基座加载，不独立运行。
-- `baseflow-node-renderer` 构建到 `./baseflow-preview/renderer`，节点物料构建为 `./baseflow-preview/nodes/<node-id>/index.js`，由节点渲染基座在 iframe 内动态加载。
-- 父页面与节点渲染基座分属不同 JS Realm，这是刻意保留的沙箱边界；二者不共享运行时依赖，后续通过 `postMessage` 协议通信。
-- 节点渲染基座 iframe 内仅将 `react`、`react-dom`、`@baseflow/render-react` 作为单例共享依赖，通过 Import Map 统一加载；相关子路径（如 `react/jsx-runtime`、`react-dom/client`）遵循同一映射。
-- `@baseflow/render-react/style.css` 由节点渲染基座统一加载，节点物料无需重复加载。
-- `@baseflow/flow-react` 明确不共享；除上述三个包外，节点物料的其它运行时依赖均打入各自 Bundle。
-- 联合预览由根目录 `npm run preview` 提供，可通过 `/renderer/index.html#/nodes/<node-id>/index.js` 验证节点 UI 加载。
+父页面与 renderer 分属不同 JS Realm，不共享运行时实例；这是必须保留的沙箱边界。联合调试统一走生产构建后的 `baseflow-preview`，不使用跨子项目的 Vite dev 动态加载。
 
-### 共享依赖 ESM 构建
+## 构建契约
 
-- 共享依赖由 `baseflow-node-renderer/vite.shared.config.ts` 统一构建为浏览器可直接加载的 ESM，输出到 `./baseflow-preview/renderer/shared`。
-- React npm 包不能作为浏览器 ESM 原样复制；构建入口位于 `baseflow-node-renderer/src/shared`，用于生成 `react`、JSX runtime、`react-dom`、`react-dom/client` 和 `@baseflow/render-react` 等 ESM 入口及其共享 chunk。
-- `baseflow-node-renderer` 的 `build` 脚本会先执行共享依赖构建，再构建节点渲染基座；单独修改共享依赖时也应重新执行 `npm run build --workspace baseflow-node-renderer`。
-- `baseflow-node-renderer/index.html` 中的 Import Map 是共享依赖入口的浏览器映射；renderer 与节点物料的 Vite `external` 配置必须与其保持一致，避免共享依赖被重复打包或出现无法解析的裸模块标识符。
-- `@baseflow/render-react/style.css` 不属于 external 的 JavaScript 入口，由节点渲染基座主入口统一导入并输出为 CSS 产物。
-- 修改共享依赖版本、ESM 门面导出、Import Map 或 external 列表时，必须同步检查其它配置并重新构建 renderer；React 版本变化后需特别核对显式导出的 API。
-- `./baseflow-preview/renderer/shared` 中的文件和 chunk 均为生成产物，不要复制、重命名或直接修改。
+### 产物边界
 
-### 当前手工联合构建
+- demo 构建到 `baseflow-preview/`；清理时保留 `nodes` 和 `renderer`。
+- renderer 构建到 `baseflow-preview/renderer/`，该目录每次清空重建。
+- 节点构建到 `baseflow-preview/nodes/<node-id>/`，每个节点只拥有并清理自己的目录。
+- `baseflow-preview` 是生成产物，禁止手工修改；源码变更后重建对应 workspace。
 
-在顶层联合构建脚本完成前，从仓库根目录按以下顺序执行完整构建：
+### 节点物料
+
+- 节点文件夹名是 node ID 的唯一事实来源，必须为 kebab-case。
+- Vite 配置统一使用 `baseflow-node-renderer/scripts/defineNodeConfig.js`：
+
+```ts
+export default defineNodeConfig(import.meta.dirname);
+```
+
+- 工厂根据包目录确定 Vite root、Rolldown cwd、入口、manifest 和 outDir，不得重新引入对命令 cwd 的依赖。
+- 节点产物为 `index.js` 和 `package.json`：CSS 内联到 JS 并自行注入，`package.json` 的 `baseflow` 字段作为 NodeManifest。
+- `index.js` 文件名由构建工厂强制固定；节点包仍应遵循仓库 ESM 约定，声明 `"type": "module"`。
+- 当前只有 `break` 完成浏览器 ESM 构建试点；其它节点接入时复用配置工厂并补齐 `build` 脚本。
+
+### 共享依赖
+
+- renderer iframe 内仅共享 `react`、`react-dom`、`@baseflow/render-react` 及已登记子路径；`@baseflow/flow-react` 不共享，其它运行时依赖打入节点 Bundle。
+- `baseflow-node-renderer/scripts/sharedDependencies.js` 是共享依赖的唯一配置源，同时驱动 shared entry、external 和 Import Map；禁止在其它配置里复制列表。
+- shared 先构建到 `baseflow-node-renderer/public/shared/`，再由 renderer 复制到 preview。`public/shared` 纳入 Git 跟踪，但只能通过构建更新。
+- shared 入口文件名包含实际安装版本，如 `react-dom@19.2.8.js`；共享 chunk 使用内容哈希。
+- Import Map 仅在 build 时动态注入。renderer 的 `vite dev` 不支持加载节点物料，联合调试使用生产预览。
+- `@baseflow/render-react/style.css` 由 renderer 统一加载，节点不重复导入。修改共享依赖、版本或 ESM 门面导出后，重建 renderer 和全部已接入节点；React 版本变化还需核对门面显式导出。
+
+### Monaco
+
+- demo 的 `predev`/`prebuild` 会按版本将 Monaco 复制到 `baseflow-demo/public/monaco/monaco-editor`，该目录不入库。
+- 强制重建使用 `npm run monaco:copy --workspace baseflow-demo -- --force`；同目录的 `index.html` 和 `monaco.js` 为手写文件，不得覆盖。
+
+## 构建与验证
+
+顶层联合构建脚本尚未完成，完整构建从仓库根目录依次执行：
 
 ```bash
 npm run build --workspace baseflow-demo
@@ -60,101 +65,25 @@ npm run build --workspace @baseflow-nodes/break
 npm run preview
 ```
 
-构建职责与产物：
-
-- `baseflow-demo`：生成节点 mock、清理并重建 demo 自有产物到 `./baseflow-preview`；清理时保留 `nodes` 和 `renderer`。
-- `baseflow-node-renderer`：先重建共享依赖，再构建节点渲染基座到 `./baseflow-preview/renderer`。
-- `@baseflow-nodes/break`：当前试点节点，构建到 `./baseflow-preview/nodes/break/index.js`。
-- 根目录 `npm run preview`：仅启动 `./baseflow-preview` 的生产预览服务，不执行构建，也不监听源码变化。
-
-增量构建时，只需重建发生变化的部分：
-
-- 修改节点渲染基座、Import Map、共享依赖或共享样式后，执行 `npm run build --workspace baseflow-node-renderer`。
-- 修改 break 节点 UI 后，执行 `npm run build --workspace @baseflow-nodes/break`。
-- 修改 demo 或影响节点 mock 的 `baseflow-nodes/*/package.json` 后，执行 `npm run build --workspace baseflow-demo`。
-
-注意事项：
-
-- 根目录 `npm run build` 当前只构建 `baseflow-demo`，不能作为联合构建命令。
-- 当前只有 break 节点完成了浏览器 ESM 构建试点；其它节点接入前需先补齐各自的构建配置和 `build` 脚本。
-- `baseflow-preview` 中的 JS、CSS 和 HTML 均为生成产物，不要直接修改；源码变化后应重新执行对应 workspace 的构建命令。
-- 预览服务运行期间重新构建后，需要刷新浏览器；若仍看到旧资源，执行硬刷新。
-- 完整链路可访问 `http://localhost:4173/renderer/index.html#/nodes/break/index.js`，确认节点渲染基座成功加载并渲染 break 组件。
+- 根目录 `npm run build` 当前只构建 demo，不是联合构建命令。
+- `npm run preview` 只启动 `baseflow-preview` 的生产预览，不构建、不监听源码。
+- 增量构建：demo 或节点 manifest 变更重建 demo；renderer/shared 变更重建 renderer；节点 UI 变更只重建对应节点。
+- 完整链路使用 `http://localhost:4173/renderer/index.html#/nodes/break/index.js` 验证。预览期间重建后需刷新，缓存未更新时硬刷新。
+- 按变更范围运行 `npm run type:check`、Biome、Stylelint 和相关构建；不额外引入 `tsc --checkJs` 验收要求。
 
 ## 编码约定
 
-- 命名规范：
-  - 常量：PascalCase
-  - 文件名：camelCase
-  - 组件名：PascalCase
-  - 变量/函数：camelCase
-- TypeScript 策略：
-  - `strict: true`
-  - `erasableSyntaxOnly: true`，避免使用在 erasableSyntaxOnly 下容易出问题的语法
-  - 优先选择实用、可读的类型设计
-  - 避免过度复杂的泛型计算
-  - 当类型过重、过复杂、难以顺利验证时，优先采用更简单的方案：简化泛型、放宽接口、显式断言、少量 `any`
-  - 在能提升交付效率和可维护性的前提下，可适度使用魔法字符串
+- 常量、组件和 SCSS 本地基类使用 PascalCase；文件、变量和函数使用 camelCase；模块 ID 使用 kebab-case。
+- TypeScript 保持 `strict: true` 和 `erasableSyntaxOnly: true`。类型设计优先实用与可读，避免过度复杂的泛型；必要时可简化接口、显式断言或少量使用 `any`。
+- 普通代码不写解释性注释；只为复杂、模糊或易错的关键逻辑添加简洁注释。
+- 每个模块原则上只导出一个 SCSS 本地基类；内部元素使用 BEM 后缀，React 以 `${styles.Module}__element` 引用。
+- `.role`、`.link`、`.on` 等短 class 必须位于模块命名空间下，不得跨模块引用，也不得作为运行时或 E2E 选择器。
+- `globals.css` 只保留设计变量、reset、基础排版和公共骨架；全局 class 必须以 `g-` 开头，其它样式放入所属 SCSS Module。
 
-### 5.1 模块 ID 与样式命名
+## 操作边界
 
-- 模块文件夹名是模块 ID 的唯一事实来源，不维护集中注册表。模块 ID 使用 kebab-case，组件名和 SCSS 本地基类使用确定性的 PascalCase 形式；
-- 每个模块原则上只导出一个本地基类。内部元素使用基类拼接 BEM 后缀，React 使用 `${styles.HomeHeader}__menu` 形式引用。
-- 可使用 `:local(.Module)`，并用 `&:global(__element)` 创建可动态拼接的后缀：
-
-```scss
-:local(.HomeHeader) {
-  &:global(__menu) {
-    position: absolute;
-
-    > :global(.role) {
-      color: var(--bf-tx-summary);
-      font-size: 11px;
-    }
-  }
-}
-```
-
-```tsx
-<div className={`${styles.HomeHeader}__menu`}>
-  <div>{authUser.username}</div>
-  <div className="role">admin</div>
-</div>
-```
-
-- 模块内部允许使用 `.role`、`.link`、`.on` 等短 className，但父级链必须存在带模块命名空间的本地基类或 BEM 元素，CSS 必须从该作用域锚点限制范围。禁止裸写、跨模块引用或使用短 className 作为运行时及 E2E 选择器。
-- `globals.css` 只保留设计变量、reset、基础排版、整屏骨架和公共样式，其中声明的所有 class 必须以 `g-` 开头。模块背景、局部布局、交互状态和响应式规则存放在所属 SCSS Module。
-
-## 代码注释
-
-- 基于“代码即注释”的理念，普通代码无需添加注释。
-- 对复杂难懂、模糊易错的关键环节，需要补充简洁、准确的注释。
-
-## 持续优化
-
-- 发现与当前任务相关的错误、不合理实现、明显优化点或更好的替代方案时，应在交付结果中报告；需要写入对应应用目录的 `optimize.md` 时，先与用户确认。
-
-## Memory 使用约束
-
-- 不要默认把对话中观察到的信息写入 memory。过多的 memory 会造成上下文膨胀和隐式规则，影响后续判断。
-- 只有同时满足以下条件才考虑写入：极其重要、跨会话仍有效、无法从权威文档或代码现状推导。
-- 写入或更新 memory 前必须先与我确认。
-
-## 需先确认的边界
-
-遇到以下情况先暂停并确认：
-
-- 修改会与设计文档冲突。
-- 安装、升级或变更项目依赖。
-- 删除用途不明的文件或代码。
-- 需求歧义会导致不同实现方向、破坏兼容性或产生不可逆影响。
-- 需要在“代码真相”和“文档真相”之间做取舍。
-- 写入或更新 memory。
-
-## Git 操作
-
-- 不得擅自执行会改变 Git 状态或工作区的操作，例如回滚、commit、add 等；允许使用 `status`、`diff`、`log` 等只读命令进行检查。
-
-## AI 会话风格
-
-- 尽量使用中文。
+- 发现与当前任务相关的错误或优化点时在交付中报告；写入 `optimize.md` 前先确认。
+- 以下情况必须先确认：与设计文档冲突；安装、升级或变更依赖；删除用途不明的文件或代码；歧义会影响兼容性或导致不可逆结果；需要在代码与文档之间取舍。
+- 不默认写入 memory。只有信息极其重要、跨会话稳定且无法从代码或文档推导时才考虑，写入前必须确认。
+- 不得擅自执行改变 Git 状态的操作，包括 `add`、`commit`、回滚等；允许使用 `status`、`diff`、`log` 等只读命令。
+- 优先使用中文沟通。

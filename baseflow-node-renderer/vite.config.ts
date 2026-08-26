@@ -1,18 +1,19 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-
-const SharedDependencies = ["react", "react/jsx-runtime", "react/jsx-dev-runtime", "react-dom", "react-dom/client", "@baseflow/render-react"];
+import { SharedDependencyIds } from "./scripts/sharedDependencies.js";
+import { sharedImportMapPlugin } from "./scripts/sharedImportMapPlugin.js";
 
 export default defineConfig({
   base: "./",
-  plugins: [react()],
+  plugins: [react(), sharedImportMapPlugin()],
   build: {
     outDir: "../baseflow-preview/renderer",
-    emptyOutDir: false,
+    // 共享依赖已改为 public/shared，清理 renderer 产物目录的职责回到主构建
+    emptyOutDir: true,
     minify: false,
     cssMinify: false,
     rollupOptions: {
-      external: SharedDependencies,
+      external: SharedDependencyIds,
     },
   },
 });

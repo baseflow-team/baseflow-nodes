@@ -32,21 +32,24 @@ baseflow-demo（父页面）
 - `baseflow-demo`：父页面。
 - `baseflow-node-renderer`：节点渲染基座，负责隔离运行、共享依赖、动态加载和挂载节点 UI。
 - `baseflow-nodes/*`：节点物料，由节点渲染基座加载，不独立运行。
-- `baseflow-node-renderer` 构建到 `./baseflow-preview/renderer`，节点物料构建为 `./baseflow-preview/nodes/<node-id>/index.js`，由节点渲染基座在 iframe 内动态加载。
+- `baseflow-node-renderer` 构建到 `./baseflow-preview/renderer`，节点物料构建为 `./baseflow-preview/nodes/<node-id>/`，由节点渲染基座在 iframe 内动态加载 `index.js`。
+- 节点物料的产物是 `index.js` 和 `package.json` 两个文件：前者已把 CSS 内联进 JS 自行注入（基座只动态 import JS，不会加载同目录 CSS），后者供父页面以 JSON module 读取 `baseflow` 字段作为 NodeManifest。
 - 父页面与节点渲染基座分属不同 JS Realm，这是刻意保留的沙箱边界；二者不共享运行时依赖，后续通过 `postMessage` 协议通信。
 - 节点渲染基座 iframe 内仅将 `react`、`react-dom`、`@baseflow/render-react` 作为单例共享依赖，通过 Import Map 统一加载；相关子路径（如 `react/jsx-runtime`、`react-dom/client`）遵循同一映射。
 - `@baseflow/render-react/style.css` 由节点渲染基座统一加载，节点物料无需重复加载。
 - `@baseflow/flow-react` 明确不共享；除上述三个包外，节点物料的其它运行时依赖均打入各自 Bundle。
+- 节点物料的 Vite 配置统一由 `baseflow-node-renderer/scripts/defineNodeConfig.js` 工厂生成，节点自身的 `vite.config.ts` 只需 `export default defineNodeConfig(import.meta.dirname)`。节点 ID 由文件夹名推导并强校验 kebab-case——`outDir` 是清空式构建的目标，ID 为空会退化成清空整个 `nodes` 目录。节点的 Vite root、入口、manifest 和 outDir 均由传入的包目录生成，不依赖构建命令的 cwd；入口产物显式固定为 `index.js`，不依赖 `package.json` 的模块类型推导扩展名。
 - 联合预览由根目录 `npm run preview` 提供，可通过 `/renderer/index.html#/nodes/<node-id>/index.js` 验证节点 UI 加载。
 
 ### 共享依赖 ESM 构建
 
-- 共享依赖由 `baseflow-node-renderer/vite.shared.config.ts` 统一构建为浏览器可直接加载的 ESM，输出到 `./baseflow-preview/renderer/shared`。
+- 共享依赖由 `baseflow-node-renderer/vite.shared.config.ts` 统一构建为浏览器可直接加载的 ESM，先输出到 `baseflow-node-renderer/public/shared`，再由节点渲染基座主构建作为静态资源复制到 `./baseflow-preview/renderer/shared`。`public/shared` 作为可直接发布的公共依赖纳入 Git 跟踪，必须通过共享依赖构建更新，不要手工修改。
 - React npm 包不能作为浏览器 ESM 原样复制；构建入口位于 `baseflow-node-renderer/src/shared`，用于生成 `react`、JSX runtime、`react-dom`、`react-dom/client` 和 `@baseflow/render-react` 等 ESM 入口及其共享 chunk。
 - `baseflow-node-renderer` 的 `build` 脚本会先执行共享依赖构建，再构建节点渲染基座；单独修改共享依赖时也应重新执行 `npm run build --workspace baseflow-node-renderer`。
-- `baseflow-node-renderer/index.html` 中的 Import Map 是共享依赖入口的浏览器映射；renderer 与节点物料的 Vite `external` 配置必须与其保持一致，避免共享依赖被重复打包或出现无法解析的裸模块标识符。
+- `baseflow-node-renderer/scripts/sharedDependencies.js` 是共享依赖的唯一事实来源，同一张表同时驱动三处，无需手工对齐：`vite.shared.config.ts` 的 `lib.entry`、renderer 与节点物料的 `external`、以及 `index.html` 的 Import Map。入口文件名包含实际安装版本，例如 `react-dom@19.2.8.js`；版本从对应依赖的 `package.json` 自动读取，相关共享子路径沿用所属包版本，共享 chunk 继续使用内容哈希。
+- Import Map 由 `scripts/sharedImportMapPlugin.js` 在 build 时注入，`index.html` 中不再手写。该插件只在 build 生效：dev 下 `external` 不起作用，renderer 自身的 react 会走 Vite 预构建，与 Import Map 指向的 `./shared` 是两份实例，因此 renderer 的 dev 不支持加载节点物料，联合调试一律走生产预览。
 - `@baseflow/render-react/style.css` 不属于 external 的 JavaScript 入口，由节点渲染基座主入口统一导入并输出为 CSS 产物。
-- 修改共享依赖版本、ESM 门面导出、Import Map 或 external 列表时，必须同步检查其它配置并重新构建 renderer；React 版本变化后需特别核对显式导出的 API。
+- 增删共享依赖只需修改 `scripts/sharedDependencies.js` 的表并重新构建 renderer 与全部节点物料；React 版本变化后需特别核对显式导出的 API。
 - `./baseflow-preview/renderer/shared` 中的文件和 chunk 均为生成产物，不要复制、重命名或直接修改。
 
 ### 当前手工联合构建
@@ -62,21 +65,23 @@ npm run preview
 
 构建职责与产物：
 
-- `baseflow-demo`：生成节点 mock、清理并重建 demo 自有产物到 `./baseflow-preview`；清理时保留 `nodes` 和 `renderer`。
-- `baseflow-node-renderer`：先重建共享依赖，再构建节点渲染基座到 `./baseflow-preview/renderer`。
-- `@baseflow-nodes/break`：当前试点节点，构建到 `./baseflow-preview/nodes/break/index.js`。
+- `baseflow-demo`：按需复制 monaco、生成节点 mock、清理并重建 demo 自有产物到 `./baseflow-preview`；清理时保留 `nodes` 和 `renderer`。
+- `baseflow-node-renderer`：先重建共享依赖，再构建节点渲染基座到 `./baseflow-preview/renderer`（该目录由本次构建清空重建）。
+- `@baseflow-nodes/break`：当前试点节点，构建到 `./baseflow-preview/nodes/break/`（该目录由本次构建清空重建）。
 - 根目录 `npm run preview`：仅启动 `./baseflow-preview` 的生产预览服务，不执行构建，也不监听源码变化。
 
 增量构建时，只需重建发生变化的部分：
 
-- 修改节点渲染基座、Import Map、共享依赖或共享样式后，执行 `npm run build --workspace baseflow-node-renderer`。
+- 修改节点渲染基座、共享依赖表或共享样式后，执行 `npm run build --workspace baseflow-node-renderer`。
 - 修改 break 节点 UI 后，执行 `npm run build --workspace @baseflow-nodes/break`。
 - 修改 demo 或影响节点 mock 的 `baseflow-nodes/*/package.json` 后，执行 `npm run build --workspace baseflow-demo`。
 
 注意事项：
 
 - 根目录 `npm run build` 当前只构建 `baseflow-demo`，不能作为联合构建命令。
-- 当前只有 break 节点完成了浏览器 ESM 构建试点；其它节点接入前需先补齐各自的构建配置和 `build` 脚本。
+- `baseflow-demo` 的 `predev`/`prebuild` 会执行 `monaco:copy`，从 `node_modules` 复制 monaco 到 `baseflow-demo/public/monaco/monaco-editor`（不含 source map）。该目录是生成产物、不入库，版本一致时自动跳过；需要强制重建时执行 `npm run monaco:copy --workspace baseflow-demo -- --force`。同目录的 `index.html` 与 `monaco.js` 是手写文件，不会被覆盖。
+- 当前只有 break 节点完成了浏览器 ESM 构建试点；其它节点接入时，`vite.config.ts` 复用 `defineNodeConfig` 工厂，并在自身 `package.json` 中补上 `build` 脚本。
+- 节点构建工厂显式固定入口产物为 `index.js`，不依赖节点包的 `package.json.type` 决定扩展名；节点包仍建议统一声明 `"type": "module"`，与仓库的 ESM 约定保持一致。
 - `baseflow-preview` 中的 JS、CSS 和 HTML 均为生成产物，不要直接修改；源码变化后应重新执行对应 workspace 的构建命令。
 - 预览服务运行期间重新构建后，需要刷新浏览器；若仍看到旧资源，执行硬刷新。
 - 完整链路可访问 `http://localhost:4173/renderer/index.html#/nodes/break/index.js`，确认节点渲染基座成功加载并渲染 break 组件。
