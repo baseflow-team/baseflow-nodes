@@ -1,5 +1,6 @@
-import type { INodeData } from "@baseflow/flow-react";
+import type { INodeData } from "@baseflow/render-react";
+import styles from "./index.module.scss";
 
 export default function Properties({ nodeData }: { nodeData: INodeData }) {
-  return <div>{nodeData.id + nodeData.meta.name}</div>;
+  return <div className={styles.Break}>{nodeData.id + nodeData.meta.name}</div>;
 }

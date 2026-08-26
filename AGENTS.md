@@ -39,6 +39,48 @@ baseflow-demo（父页面）
 - `@baseflow/flow-react` 明确不共享；除上述三个包外，节点物料的其它运行时依赖均打入各自 Bundle。
 - 联合预览由根目录 `npm run preview` 提供，可通过 `/renderer/index.html#/nodes/<node-id>/index.js` 验证节点 UI 加载。
 
+### 共享依赖 ESM 构建
+
+- 共享依赖由 `baseflow-node-renderer/vite.shared.config.ts` 统一构建为浏览器可直接加载的 ESM，输出到 `./baseflow-preview/renderer/shared`。
+- React npm 包不能作为浏览器 ESM 原样复制；构建入口位于 `baseflow-node-renderer/src/shared`，用于生成 `react`、JSX runtime、`react-dom`、`react-dom/client` 和 `@baseflow/render-react` 等 ESM 入口及其共享 chunk。
+- `baseflow-node-renderer` 的 `build` 脚本会先执行共享依赖构建，再构建节点渲染基座；单独修改共享依赖时也应重新执行 `npm run build --workspace baseflow-node-renderer`。
+- `baseflow-node-renderer/index.html` 中的 Import Map 是共享依赖入口的浏览器映射；renderer 与节点物料的 Vite `external` 配置必须与其保持一致，避免共享依赖被重复打包或出现无法解析的裸模块标识符。
+- `@baseflow/render-react/style.css` 不属于 external 的 JavaScript 入口，由节点渲染基座主入口统一导入并输出为 CSS 产物。
+- 修改共享依赖版本、ESM 门面导出、Import Map 或 external 列表时，必须同步检查其它配置并重新构建 renderer；React 版本变化后需特别核对显式导出的 API。
+- `./baseflow-preview/renderer/shared` 中的文件和 chunk 均为生成产物，不要复制、重命名或直接修改。
+
+### 当前手工联合构建
+
+在顶层联合构建脚本完成前，从仓库根目录按以下顺序执行完整构建：
+
+```bash
+npm run build --workspace baseflow-demo
+npm run build --workspace baseflow-node-renderer
+npm run build --workspace @baseflow-nodes/break
+npm run preview
+```
+
+构建职责与产物：
+
+- `baseflow-demo`：生成节点 mock、清理并重建 demo 自有产物到 `./baseflow-preview`；清理时保留 `nodes` 和 `renderer`。
+- `baseflow-node-renderer`：先重建共享依赖，再构建节点渲染基座到 `./baseflow-preview/renderer`。
+- `@baseflow-nodes/break`：当前试点节点，构建到 `./baseflow-preview/nodes/break/index.js`。
+- 根目录 `npm run preview`：仅启动 `./baseflow-preview` 的生产预览服务，不执行构建，也不监听源码变化。
+
+增量构建时，只需重建发生变化的部分：
+
+- 修改节点渲染基座、Import Map、共享依赖或共享样式后，执行 `npm run build --workspace baseflow-node-renderer`。
+- 修改 break 节点 UI 后，执行 `npm run build --workspace @baseflow-nodes/break`。
+- 修改 demo 或影响节点 mock 的 `baseflow-nodes/*/package.json` 后，执行 `npm run build --workspace baseflow-demo`。
+
+注意事项：
+
+- 根目录 `npm run build` 当前只构建 `baseflow-demo`，不能作为联合构建命令。
+- 当前只有 break 节点完成了浏览器 ESM 构建试点；其它节点接入前需先补齐各自的构建配置和 `build` 脚本。
+- `baseflow-preview` 中的 JS、CSS 和 HTML 均为生成产物，不要直接修改；源码变化后应重新执行对应 workspace 的构建命令。
+- 预览服务运行期间重新构建后，需要刷新浏览器；若仍看到旧资源，执行硬刷新。
+- 完整链路可访问 `http://localhost:4173/renderer/index.html#/nodes/break/index.js`，确认节点渲染基座成功加载并渲染 break 组件。
+
 ## 编码约定
 
 - 命名规范：

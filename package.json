@@ -8,7 +8,6 @@
   },
   "workspaces": [
     "baseflow-demo",
-    "baseflow-preview",
     "baseflow-node-renderer",
     "baseflow-nodes/*"
   ],
@@ -32,7 +31,7 @@
     "markdown-to-jsx": "^9.10.2",
     "lucide-react": "^1.31.0",
     "@baseflow/flow-react": "0.0.3",
-    "@baseflow/render-react": "0.0.3"
+    "@baseflow/render-react": "0.0.4"
   },
   "devDependencies": {
     "@types/node": "^22.12.0",
@@ -50,6 +49,7 @@
     "vite": "~8.2.2",
     "vitest": "~4.1.0",
     "jsdom": "^26.1.0",
+    "monaco-editor": "^0.56.0",
     "sass": "^1.102.0",
     "stylelint": "^17.14.1",
     "stylelint-config-recess-order": "^7.7.0",
