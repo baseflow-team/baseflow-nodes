@@ -15,7 +15,12 @@
     "type:check": "tsc --noEmit && npm run type:check --workspaces --if-present",
     "lint": "biome check . && stylelint \"**/*.{css,scss}\"",
     "lint:fix": "biome check --write . && stylelint \"**/*.{css,scss}\" --fix",
-    "build": "npm run build --workspace baseflow-demo",
+    "prepare:monaco": "node ./scripts/assertWorkspaceRoot.js && npm run monaco:copy --workspace baseflow-demo",
+    "build:demo": "node ./scripts/assertWorkspaceRoot.js && npm run build --workspace baseflow-demo",
+    "build:shared": "node ./scripts/assertWorkspaceRoot.js && npm run build:shared --workspace baseflow-node-renderer && node ./scripts/verifyPreview.js --shared",
+    "build:renderer": "node ./scripts/assertWorkspaceRoot.js && node ./scripts/verifyPreview.js --shared && npm run build:app --workspace baseflow-node-renderer",
+    "build:nodes": "node ./scripts/assertWorkspaceRoot.js && npm run build --workspace @baseflow-nodes/break",
+    "build:verify": "node ./scripts/assertWorkspaceRoot.js && node ./scripts/verifyPreview.js",
     "preview": "npm run preview --workspace baseflow-demo"
   },
   "dependencies": {

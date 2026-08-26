@@ -14,13 +14,13 @@
     }
   </style>
   <script src="./monaco.js"></script>
-  <script src="./monaco-editor/min/vs/loader.js"></script>
+  <script src="./monaco-editor@0.56.0/min/vs/loader.js"></script>
   <script>
     // 'vs/nls' 是 require.config 的顶层配置项，不是 paths 映射；
     // 放进 paths 会让 loader 把它当路径前缀，拼出 [object Object].messages-loader.js
     require.config({
       paths: {
-        vs: window.location.origin + '/monaco/monaco-editor/min/vs',
+        vs: window.location.origin + '/monaco/monaco-editor@0.56.0/min/vs',
       },
       'vs/nls': {
         availableLanguages: {

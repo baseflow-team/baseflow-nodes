@@ -13,8 +13,8 @@
     "mock:generate": "node ./scripts/generateMock.js",
     "monaco:copy": "node ./scripts/copyMonaco.js",
     "preview:clean": "node ./scripts/cleanPreview.js",
-    "prebuild": "npm run monaco:copy && npm run mock:generate && npm run preview:clean",
-    "predev": "npm run monaco:copy && npm run mock:generate",
+    "prebuild": "npm run preview:clean && npm run mock:generate",
+    "predev": "npm run mock:generate",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

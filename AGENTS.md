@@ -51,23 +51,43 @@ export default defineNodeConfig(import.meta.dirname);
 
 ### Monaco
 
-- demo 的 `predev`/`prebuild` 会按版本将 Monaco 复制到 `baseflow-demo/public/monaco/monaco-editor`，该目录不入库。
-- 强制重建使用 `npm run monaco:copy --workspace baseflow-demo -- --force`；同目录的 `index.html` 和 `monaco.js` 为手写文件，不得覆盖。
+- Monaco 复制到带版本号的 `baseflow-demo/public/monaco/monaco-editor@<version>`，该目录不入库，也不属于 demo 的日常 dev/build 流程。
+- 首次检出、生成目录丢失或 `monaco-editor` 版本变化时，在根目录执行 `npm run prepare:monaco`；命令始终覆盖目标版本目录。
+- `index.html` 和 `monaco.js` 为手写文件，不得覆盖；升级 Monaco 后手工删除旧版本目录，并同步 `index.html` 中的版本目录引用。
 
 ## 构建与验证
 
-顶层联合构建脚本尚未完成，完整构建从仓库根目录依次执行：
+所有准备和构建子命令必须在仓库根目录执行，并会在写入前校验执行目录。根命令直接调用对应 workspace，当前不提供总构建命令。
+
+### 低频外围依赖
+
+外围依赖只在首次准备、生成物缺失或相关依赖/配置变化时更新：
 
 ```bash
-npm run build --workspace baseflow-demo
-npm run build --workspace baseflow-node-renderer
-npm run build --workspace @baseflow-nodes/break
-npm run preview
+npm run prepare:monaco
+npm run build:shared
 ```
 
-- 根目录 `npm run build` 当前只构建 demo，不是联合构建命令。
-- `npm run preview` 只启动 `baseflow-preview` 的生产预览，不构建、不监听源码。
-- 增量构建：demo 或节点 manifest 变更重建 demo；renderer/shared 变更重建 renderer；节点 UI 变更只重建对应节点。
+- `prepare:monaco`：更新 demo 的本地 Monaco 公共资源。
+- `build:shared`：重建纳入 Git 跟踪的 `public/shared`，版本、共享表、ESM 门面或 shared 配置变化时执行；它不写入 preview，更新后需再构建 renderer。
+
+### 日常项目构建
+
+node 物料、renderer 和 demo 的构建输入和输出互相独立，可任意排序或分别执行；需联合刷新时建议执行：
+
+```bash
+npm run build:nodes
+npm run build:renderer
+npm run build:demo
+npm run build:verify
+```
+
+- `build:nodes`：构建已迁移节点，当前只包含 `break`；不清理其它旧节点目录。
+- `build:renderer`：校验已准备的 `public/shared`，再清理并构建 renderer，同时复制 shared 和注入 Import Map。
+- `build:demo`：生成 mock、清理 demo 自有产物并构建父页面，不处理 Monaco。
+- `build:verify`：最后只读校验 HTML 资源、Import Map、shared 入口、Monaco 和已迁移节点产物，不构建、不修复。
+- `npm run preview` 只启动生产预览，不执行构建。
+- 增量构建只运行发生变化的项目；shared 更新后必须再运行 `build:renderer`，节点 manifest 变更还需运行 `build:demo` 刷新 mock。
 - 完整链路使用 `http://localhost:4173/renderer/index.html#/nodes/break/index.js` 验证。预览期间重建后需刷新，缓存未更新时硬刷新。
 - 按变更范围运行 `npm run type:check`、Biome、Stylelint 和相关构建；不额外引入 `tsc --checkJs` 验收要求。
 
