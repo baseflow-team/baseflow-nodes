@@ -1,12 +1,25 @@
 import { deepStrictEqual } from "node:assert";
 import { readdir, readFile, stat } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { basename, dirname, relative, resolve } from "node:path";
-import { createSharedImports } from "../baseflow-node-renderer/scripts/sharedDependencies.js";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { parseAst } from "rollup/parseAst";
+import { RuntimeVersion } from "../baseflow-node-renderer/runtimeContract.js";
+import { createSharedImports, SharedDependencies } from "../baseflow-node-renderer/scripts/sharedDependencies.js";
 
 const WorkspaceRoot = resolve(import.meta.dirname, "..");
 const PreviewDir = resolve(WorkspaceRoot, "baseflow-preview");
 const PublicSharedDir = resolve(WorkspaceRoot, "baseflow-node-renderer/public/shared");
 const MigratedNodeIds = ["break"];
+const Require = createRequire(import.meta.url);
+
+const SharedExportContracts = [
+  { id: "react", hasDefault: true },
+  { id: "react/jsx-runtime", hasDefault: false },
+  { id: "react-dom", hasDefault: true },
+  { id: "react-dom/client", hasDefault: true },
+];
+const StaticSharedExportContracts = ["@baseflow/render-react"];
 
 async function verifySharedDirectory() {
   const sharedDir = PublicSharedDir;
@@ -15,6 +28,84 @@ async function verifySharedDirectory() {
   for (const target of Object.values(createSharedImports())) {
     await requireFile(resolve(sharedDir, basename(target)));
   }
+
+  await verifySharedExports();
+}
+
+async function verifySharedExports() {
+  process.env.NODE_ENV = "production";
+
+  for (const contract of SharedExportContracts) {
+    const dependency = SharedDependencies.find(({ id }) => id === contract.id);
+    if (!dependency) throw new Error(`共享依赖表缺少 ${contract.id}`);
+
+    const outputFile = resolve(PublicSharedDir, `${dependency.outputName}.js`);
+    const outputUrl = pathToFileURL(outputFile);
+    outputUrl.searchParams.set("verify", String(Date.now()));
+
+    const [sourceModule, outputModule] = await Promise.all([Promise.resolve(Require(contract.id)), import(outputUrl.href)]);
+    const sourceExports = Object.keys(sourceModule).sort();
+    const expectedExports = contract.hasDefault ? [...sourceExports, "default"].sort() : sourceExports;
+    deepStrictEqual(Object.keys(outputModule).sort(), expectedExports, `${outputFile}: ESM 导出与 ${contract.id} production 包不一致`);
+
+    for (const name of sourceExports) {
+      if (outputModule[name] === undefined) throw new Error(`${outputFile}: 导出 ${name} 为 undefined`);
+    }
+
+    if (contract.hasDefault) {
+      if (!outputModule.default || typeof outputModule.default !== "object") {
+        throw new Error(`${outputFile}: 缺少有效的 default 模块对象`);
+      }
+      deepStrictEqual(Object.keys(outputModule.default).sort(), sourceExports, `${outputFile}: default 导出不是 ${contract.id} 的真实模块对象`);
+    }
+  }
+
+  for (const id of StaticSharedExportContracts) await verifyStaticSharedExports(id);
+}
+
+async function verifyStaticSharedExports(id) {
+  const dependency = SharedDependencies.find((item) => item.id === id);
+  if (!dependency) throw new Error(`共享依赖表缺少 ${id}`);
+
+  const sourceFile = fileURLToPath(import.meta.resolve(id));
+  const outputFile = resolve(PublicSharedDir, `${dependency.outputName}.js`);
+  const [sourceExports, outputExports] = await Promise.all([readStaticEsmExports(sourceFile), readStaticEsmExports(outputFile)]);
+  deepStrictEqual(outputExports, sourceExports, `${outputFile}: ESM 导出与 ${id} 包不一致`);
+}
+
+async function readStaticEsmExports(file) {
+  const source = await readFile(file, "utf8");
+  const ast = parseAst(source);
+  const names = new Set();
+
+  for (const statement of ast.body) {
+    if (statement.type === "ExportDefaultDeclaration") {
+      names.add("default");
+      continue;
+    }
+    if (statement.type === "ExportAllDeclaration") {
+      throw new Error(`${file}: 静态导出校验不支持 export * 产物`);
+    }
+    if (statement.type !== "ExportNamedDeclaration") continue;
+
+    if (statement.declaration?.type === "VariableDeclaration") {
+      for (const declaration of statement.declaration.declarations) {
+        if (declaration.id.type !== "Identifier") throw new Error(`${file}: 静态导出校验不支持解构导出`);
+        names.add(declaration.id.name);
+      }
+    } else if (statement.declaration?.type === "FunctionDeclaration" || statement.declaration?.type === "ClassDeclaration") {
+      if (statement.declaration.id) names.add(statement.declaration.id.name);
+    }
+
+    for (const specifier of statement.specifiers) {
+      if (specifier.exported.type !== "Identifier" && specifier.exported.type !== "Literal") {
+        throw new Error(`${file}: 无法识别静态导出名称`);
+      }
+      names.add(String(specifier.exported.name ?? specifier.exported.value));
+    }
+  }
+
+  return [...names].sort();
 }
 
 async function verifyPreview() {
@@ -71,6 +162,9 @@ async function verifyNode(nodeId) {
   const manifest = JSON.parse(outputContent).baseflow;
   if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
     throw new Error(`${outputPackage}: 缺少有效的 baseflow manifest`);
+  }
+  if (manifest.runtimeVersion !== RuntimeVersion) {
+    throw new Error(`${outputPackage}: baseflow.runtimeVersion 必须为 ${RuntimeVersion}`);
   }
 
   const cssFiles = (await listFiles(outputDir)).filter((file) => file.endsWith(".css"));

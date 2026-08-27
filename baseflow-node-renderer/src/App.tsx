@@ -18,6 +18,10 @@ function App() {
 
   useEffect(() => {
     const source = document.location.hash;
+    if (!source) {
+      setError(new Error("缺少节点入口，请通过 URL hash 指定节点 index.js"));
+      return;
+    }
     importNode<NodeProps>(source).then((component) => setNode(() => component), setError);
   }, []);
 

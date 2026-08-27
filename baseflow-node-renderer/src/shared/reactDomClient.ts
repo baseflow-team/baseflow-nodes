@@ -1,3 +1,6 @@
-import * as ReactDomClient from "react-dom/client";
+import ReactDomClient from "react-dom/client";
 
-export const { createRoot, hydrateRoot } = ReactDomClient;
+const ReactDomClientExports = ReactDomClient as typeof ReactDomClient & { version: string };
+
+export const { createRoot, hydrateRoot, version } = ReactDomClientExports;
+export default ReactDomClient;

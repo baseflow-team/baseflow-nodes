@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "Task",
     "icon": "",
     "desc": "Task任务: 测试任务",

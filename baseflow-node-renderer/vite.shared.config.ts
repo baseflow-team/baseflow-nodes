@@ -7,6 +7,7 @@ export default defineConfig({
     "process.env.NODE_ENV": JSON.stringify("production"),
   },
   build: {
+    target: "es2022",
     // 产出到 public/shared，由 renderer 主构建作为静态资源一并复制到 ../baseflow-preview/renderer/shared
     outDir: `public/${SharedOutputDir}`,
     emptyOutDir: true,

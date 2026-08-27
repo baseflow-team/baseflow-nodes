@@ -2,6 +2,7 @@ import { n as __toESM } from "./chunks/rolldown-runtime-BPOCksWG.js";
 import { t as require_react } from "./chunks/react-QzYZYktg.js";
 //#region src/shared/react.ts
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
+var { __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, __COMPILER_RUNTIME, unstable_useCacheRefresh } = import_react.default;
 var react_default = import_react.default;
 //#endregion
 var Activity = import_react.Activity;
@@ -12,10 +13,8 @@ var Profiler = import_react.Profiler;
 var PureComponent = import_react.PureComponent;
 var StrictMode = import_react.StrictMode;
 var Suspense = import_react.Suspense;
-var act = import_react.act;
 var cache = import_react.cache;
 var cacheSignal = import_react.cacheSignal;
-var captureOwnerStack = import_react.captureOwnerStack;
 var cloneElement = import_react.cloneElement;
 var createContext = import_react.createContext;
 var createElement = import_react.createElement;
@@ -45,4 +44,4 @@ var useState = import_react.useState;
 var useSyncExternalStore = import_react.useSyncExternalStore;
 var useTransition = import_react.useTransition;
 var version = import_react.version;
-export { Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext, createElement, createRef, react_default as default, forwardRef, isValidElement, lazy, memo, startTransition, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version };
+export { Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, __COMPILER_RUNTIME, cache, cacheSignal, cloneElement, createContext, createElement, createRef, react_default as default, forwardRef, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version };

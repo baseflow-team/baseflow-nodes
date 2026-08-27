@@ -1,13 +1,19 @@
 import React from "react";
 
+const ReactInternals = React as typeof React & {
+  __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE: unknown;
+  __COMPILER_RUNTIME: unknown;
+  unstable_useCacheRefresh: unknown;
+};
+
+export const { __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, __COMPILER_RUNTIME, unstable_useCacheRefresh } = ReactInternals;
+
 export {
   Activity,
-  act,
   Children,
   Component,
   cache,
   cacheSignal,
-  captureOwnerStack,
   cloneElement,
   createContext,
   createElement,

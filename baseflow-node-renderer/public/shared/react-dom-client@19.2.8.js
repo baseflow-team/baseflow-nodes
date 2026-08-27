@@ -9564,7 +9564,9 @@ var require_react_dom_client_production = /* @__PURE__ */ __commonJSMin(((export
 	};
 	exports.version = "19.2.8";
 }));
-var { createRoot, hydrateRoot } = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
+//#endregion
+//#region src/shared/reactDomClient.ts
+var import_client = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	function checkDCE() {
 		if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === "undefined" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE !== "function") return;
 		try {
@@ -9576,5 +9578,7 @@ var { createRoot, hydrateRoot } = /* @__PURE__ */ __toESM((/* @__PURE__ */ __com
 	checkDCE();
 	module.exports = require_react_dom_client_production();
 })))(), 1);
+var { createRoot, hydrateRoot, version } = import_client.default;
+var reactDomClient_default = import_client.default;
 //#endregion
-export { createRoot, hydrateRoot };
+export { createRoot, reactDomClient_default as default, hydrateRoot, version };

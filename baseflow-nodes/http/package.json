@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "Task",
     "icon": "",
     "desc": "HTTP请求：通过置请求参数发送HTTP请求，并输出响应数据",

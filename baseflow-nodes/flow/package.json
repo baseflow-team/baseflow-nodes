@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "Flow",
     "icon": "",
     "desc": "流程：定义一个独立的流程",

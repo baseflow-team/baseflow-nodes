@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "Loop",
     "icon": "",
     "desc": "Foreach循环：通过指定一个迭代源来循环执行子节点",

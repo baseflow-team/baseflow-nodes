@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "Group",
     "icon": "",
     "desc": "TryCatch：提供一个可以捕获子节点运行时错误的容器节点",

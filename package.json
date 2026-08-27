@@ -12,6 +12,7 @@
     "baseflow-nodes/*"
   ],
   "scripts": {
+    "test": "vitest run",
     "type:check": "tsc --noEmit && npm run type:check --workspaces --if-present",
     "lint": "biome check . && stylelint \"**/*.{css,scss}\"",
     "lint:fix": "biome check --write . && stylelint \"**/*.{css,scss}\" --fix",

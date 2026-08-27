@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "End",
     "icon": "",
     "desc": "流程结束：流程正常执行完成，可以设置返回数据",

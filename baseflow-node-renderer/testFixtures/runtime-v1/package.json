@@ -1,0 +1,8 @@
+{
+  "name": "@baseflow-test/runtime-v1-node",
+  "version": "1.0.0",
+  "type": "module",
+  "baseflow": {
+    "type": "RuntimeV1Fixture"
+  }
+}

@@ -1,5 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
-  "compilerOptions": {},
-  "include": ["src", "../env.d.ts"]
+  "compilerOptions": {
+    "allowJs": true
+  },
+  "include": ["src", "runtimeContract.js", "../env.d.ts"]
 }

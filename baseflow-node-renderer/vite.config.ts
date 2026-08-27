@@ -1,6 +1,6 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { SharedDependencyIds } from "./scripts/sharedDependencies.js";
+import { externalizeRendererSharedDependency } from "./scripts/sharedDependencies.js";
 import { sharedImportMapPlugin } from "./scripts/sharedImportMapPlugin.js";
 
 export default defineConfig({
@@ -13,7 +13,7 @@ export default defineConfig({
     minify: false,
     cssMinify: false,
     rollupOptions: {
-      external: SharedDependencyIds,
+      external: externalizeRendererSharedDependency,
     },
   },
 });

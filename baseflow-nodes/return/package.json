@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "Return",
     "icon": "",
     "desc": "流程返回：流程提前终止执行并返回，可以设置返回数据",

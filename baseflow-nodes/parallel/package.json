@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "Parallel",
     "icon": "",
     "desc": "并行执行：可添加多个[并行分支]，多个并行分支同时执行",

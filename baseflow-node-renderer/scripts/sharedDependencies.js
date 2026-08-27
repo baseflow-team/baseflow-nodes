@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
+import { RuntimeModuleIds } from "../runtimeContract.js";
 
 /**
  * 共享依赖的唯一事实来源。
@@ -15,32 +16,64 @@ export const SharedOutputDir = "shared";
 
 const Require = createRequire(import.meta.url);
 
-const SharedDependencyDefinitions = [
-  { id: "react", packageName: "react", name: "react", source: "src/shared/react.ts" },
-  { id: "react/jsx-runtime", packageName: "react", name: "react-jsx-runtime", source: "src/shared/reactJsxRuntime.ts" },
-  {
-    id: "react/jsx-dev-runtime",
-    packageName: "react",
-    name: "react-jsx-dev-runtime",
-    source: "src/shared/reactJsxDevRuntime.ts",
-  },
-  { id: "react-dom", packageName: "react-dom", name: "react-dom", source: "src/shared/reactDom.ts" },
-  { id: "react-dom/client", packageName: "react-dom", name: "react-dom-client", source: "src/shared/reactDomClient.ts" },
-  {
-    id: "@baseflow/render-react",
-    packageName: "@baseflow/render-react",
-    name: "baseflow-render-react",
-    source: "src/shared/renderReact.ts",
-  },
-];
+const SharedDependencyDefinitionsById = new Map([
+  ["react", { packageName: "react", name: "react", source: "src/shared/react.ts" }],
+  ["react/jsx-runtime", { packageName: "react", name: "react-jsx-runtime", source: "src/shared/reactJsxRuntime.ts" }],
+  ["react-dom", { packageName: "react-dom", name: "react-dom", source: "src/shared/reactDom.ts" }],
+  ["react-dom/client", { packageName: "react-dom", name: "react-dom-client", source: "src/shared/reactDomClient.ts" }],
+  [
+    "@baseflow/render-react",
+    {
+      packageName: "@baseflow/render-react",
+      name: "baseflow-render-react",
+      source: "src/shared/renderReact.ts",
+    },
+  ],
+]);
+
+const SharedDependencyDefinitions = RuntimeModuleIds.map((id) => {
+  const definition = SharedDependencyDefinitionsById.get(id);
+  if (!definition) throw new Error(`sharedDependencies: Runtime 契约中的 ${id} 缺少构建定义`);
+  return { id, ...definition };
+});
+
+if (SharedDependencyDefinitionsById.size !== RuntimeModuleIds.length) {
+  throw new Error("sharedDependencies: 共享依赖构建定义与 Runtime 契约不一致");
+}
 
 export const SharedDependencies = SharedDependencyDefinitions.map((dependency) => {
   const version = resolvePackageVersion(dependency.packageName);
   return { ...dependency, version, outputName: `${dependency.name}@${version}` };
 });
 
-/** rollupOptions.external：renderer 与节点物料都不打包这些包。 */
-export const SharedDependencyIds = SharedDependencies.map(({ id }) => id);
+/** Runtime v1 对节点公开的完整模块入口。 */
+export const SharedDependencyIds = RuntimeModuleIds;
+
+export const SharedPackageNames = [...new Set(SharedDependencies.map(({ packageName }) => packageName))];
+
+export function externalizeRendererSharedDependency(id) {
+  if (isSharedDependency(id)) return true;
+  if (id === "@baseflow/render-react/style.css") return false;
+
+  rejectUnsupportedSharedSubpath(id);
+  return false;
+}
+
+export function externalizeNodeSharedDependency(id) {
+  if (isSharedDependency(id)) return true;
+
+  rejectUnsupportedSharedSubpath(id);
+  return false;
+}
+
+function isSharedDependency(id) {
+  return SharedDependencyIds.includes(id);
+}
+
+function rejectUnsupportedSharedSubpath(id) {
+  const sharedPackageName = SharedPackageNames.find((packageName) => id.startsWith(`${packageName}/`));
+  if (sharedPackageName) throw new Error(`sharedDependencies: Runtime v1 不支持公共模块入口 "${id}"`);
+}
 
 /** vite.shared.config.ts 的 lib.entry，相对 renderer 根目录。 */
 export const SharedLibEntry = Object.fromEntries(SharedDependencies.map(({ outputName, source }) => [outputName, source]));

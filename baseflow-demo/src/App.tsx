@@ -77,6 +77,8 @@ const expressionUtils: SchemaModel = {
 };
 
 function App() {
+  const nodeRendererUrl = import.meta.env.VITE_NODE_RENDERER_URL || "/renderer/index.html";
+
   return (
     <ConfigProvider
       theme={{
@@ -90,7 +92,7 @@ function App() {
         widgets={widgets}
         monacoEditorUrl="/monaco/index.html"
         pureRunnerUrl="/pureRunner.worker-DAkP84-u.js"
-        nodeRendererUrl="/renderer/index.html"
+        nodeRendererUrl={nodeRendererUrl}
         expressionUtils={expressionUtils}
       >
         <Canvas data={MockFlow} />

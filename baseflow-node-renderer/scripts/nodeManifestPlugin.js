@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { RuntimeVersion } from "../runtimeContract.js";
 
 /**
  * 把节点自身的 package.json 作为产物发布到 outDir。
@@ -18,10 +19,16 @@ export function nodeManifestPlugin(packageDir) {
     name: "baseflow:node-manifest",
     apply: "build",
     async generateBundle() {
+      const source = await readFile(packageFile, "utf8");
+      const packageJson = JSON.parse(source);
+      if (packageJson.baseflow?.runtimeVersion !== RuntimeVersion) {
+        throw new Error(`${packageFile}: 官方节点必须声明 baseflow.runtimeVersion = ${RuntimeVersion}`);
+      }
+
       this.emitFile({
         type: "asset",
         fileName: "package.json",
-        source: await readFile(packageFile, "utf8"),
+        source,
       });
     },
   };

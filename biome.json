@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.10/schema.json",
   "files": {
-    "includes": ["**", "!!baseflow-preview", "!!**/public", "!**/*.svg"]
+    "includes": ["**", "!!baseflow-preview", "!!**/public", "!!baseflow-node-renderer/testFixtures/runtime-v1-break", "!**/*.svg"]
   },
   "formatter": {
     "enabled": true,

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "Choice",
     "icon": "",
     "desc": "条件选择：可添加多个[条件分支]，通过条件判断来控制分支执行",

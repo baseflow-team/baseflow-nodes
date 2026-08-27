@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { cssInjectedByJsPlugin } from "./cssInjectedByJsPlugin.js";
 import { nodeManifestPlugin } from "./nodeManifestPlugin.js";
-import { SharedDependencyIds } from "./sharedDependencies.js";
+import { externalizeNodeSharedDependency } from "./sharedDependencies.js";
 
 /** 节点文件夹名即节点 ID，kebab-case。 */
 const NodeIdPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -28,7 +28,11 @@ export function defineNodeConfig(packageDir) {
   return defineConfig({
     root: packageDir,
     plugins: [react(), cssInjectedByJsPlugin(), nodeManifestPlugin(packageDir)],
+    define: {
+      "process.env.NODE_ENV": JSON.stringify("production"),
+    },
     build: {
+      target: "es2022",
       outDir: resolve(packageDir, "../../baseflow-preview/nodes", nodeId),
       emptyOutDir: true,
       minify: false,
@@ -40,7 +44,7 @@ export function defineNodeConfig(packageDir) {
       },
       rollupOptions: {
         cwd: packageDir,
-        external: SharedDependencyIds,
+        external: externalizeNodeSharedDependency,
         output: {
           entryFileNames: "index.js",
         },

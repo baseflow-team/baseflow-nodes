@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "VariableUpdate",
     "icon": "",
     "desc": "变量修改：通过本节点可以修改[变量定义]节点中的变量值.",

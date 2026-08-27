@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "baseflow": {
+    "runtimeVersion": 1,
     "type": "Trigger",
     "icon": "",
     "desc": "webhook触发器：让流程能被指定的Http请求触发",
