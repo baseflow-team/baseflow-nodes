@@ -5,7 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const ScriptDir = dirname(fileURLToPath(import.meta.url));
 const WorkspaceRoot = resolve(ScriptDir, "../..");
 const PreviewDir = join(WorkspaceRoot, "baseflow-preview");
-const PreservedEntries = new Set([".git", "nodes", "renderer"]);
+const PreservedEntries = new Set([".git", "nodes", "runtime"]);
 
 function assertPreviewDir() {
   if (dirname(PreviewDir) !== WorkspaceRoot || PreviewDir !== join(WorkspaceRoot, "baseflow-preview")) {
@@ -42,7 +42,7 @@ export async function cleanPreview() {
     await rm(target, { recursive: true, force: true });
   }
 
-  console.log(`已清理 preview 应用产物，保留 nodes 和 renderer: ${PreviewDir}`);
+  console.log(`已清理 preview 应用产物，保留 nodes 和 runtime: ${PreviewDir}`);
 }
 
 const IsMain = process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href;

@@ -8,7 +8,7 @@ export default defineConfig({
   },
   build: {
     target: "es2022",
-    // 产出到 public/shared，由 renderer 主构建作为静态资源一并复制到 ../baseflow-preview/renderer/shared
+    // 产出到 public/shared，由 renderer 主构建复制到当前 Runtime release
     outDir: `public/${SharedOutputDir}`,
     emptyOutDir: true,
     // 不关掉会把 public 下的其它静态资源重复复制进 shared

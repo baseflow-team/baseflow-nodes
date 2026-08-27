@@ -43,12 +43,25 @@ npm run preview
 打开：
 
 ```text
-http://localhost:4173/renderer/index.html#/nodes/break/index.js
+http://localhost:4173/runtime/v1/20260827T051605Z/index.html#/nodes/break/index.js
 ```
 
 `npm run preview` 只启动已有静态产物，不会自动构建。源码变化后，需要重新构建对应 workspace 并刷新页面。
 
 当前根命令 `build:nodes` 只构建已经迁移的 `break` 节点。
+
+当前 Runtime 的版本和 release 由根 `package.json` 统一配置：
+
+```json
+{
+  "baseflow": {
+    "runtimeVersion": 1,
+    "runtimeReleaseId": "20260827T051605Z"
+  }
+}
+```
+
+renderer 输出目录、demo iframe 地址和 `build:verify` 校验目标都会从这里派生，不需要维护第二套本地路径或环境变量。
 
 ## 开发一个官方节点
 
@@ -184,7 +197,7 @@ React、React DOM 的内部 `__*`、编译器和实验性 API 即使当前可以
 | `npm run build:nodes` | 构建已迁移节点，当前只有 `break` |
 | `npm run build:renderer` | 构建 renderer 并复制 shared |
 | `npm run build:demo` | 生成 mock 并构建 demo |
-| `npm run build:verify` | 只读校验联合预览产物 |
+| `npm run build:verify` | 只读校验联合预览产物及当前 Runtime 引用 |
 | `npm run preview` | 启动 `baseflow-preview` |
 
 常见增量构建：
@@ -194,6 +207,7 @@ React、React DOM 的内部 `__*`、编译器和实验性 API 即使当前可以
 - 修改 shared 版本、门面或配置：运行 `build:shared`，再构建 renderer 和已迁移节点；
 - 修改 renderer：运行 `build:renderer`；
 - 修改 demo：运行 `build:demo`。
+- 修改根 `baseflow.runtimeReleaseId`：重新构建 renderer 和 demo；修改 `baseflow.runtimeVersion` 时还要同步并重建全部官方节点。
 
 完成后按变更范围运行测试、类型检查、Lint 和 `build:verify`。
 
@@ -207,16 +221,21 @@ baseflow-node-renderer/public/shared/
 
 entry 文件名包含实际安装版本，例如 `react@19.2.8.js`；shared chunk 使用内容 hash。这里是可覆盖的本地构建目录，entry 不需要额外增加 hash。
 
-当前仓库没有生产发布脚本。未来线上应将 renderer、Import Map 和整个 shared 目录作为一个不可变 Runtime release 发布，例如：
+renderer 构建会将页面、Import Map、assets 和整个 shared 目录直接写入当前 Runtime release：
 
 ```text
-/runtime/v1/YYYYMMDDTHHmmssZ/
-  index.html
-  assets/
-  shared/
+baseflow-preview/
+  runtime/v1/20260827T051605Z/
+    index.html
+    assets/
+    shared/
 ```
 
-时间戳使用 UTC。每次发布生成新目录，已经发布的目录不得覆盖。
+这与未来线上 `/runtime/v1/<release-id>/` 使用同一套布局。`runtimeReleaseId` 使用 UTC `YYYYMMDDTHHmmssZ`：未发布版本可在本地重复构建；准备发布兼容更新时先生成新的 runtimeReleaseId，线上已发布目录不得覆盖。
+
+`runtimeVersion` 只在五个公共入口、共享单例、NodeManifest 或节点加载协议发生破坏性变化时升级。Vite、依赖版本、chunk 或文件内容变化，只要历史节点仍兼容，就保持 Runtime v1，仅更新 runtimeReleaseId。未来 Runtime v2 在独立分支维护；同一分支不同时维护多个 Runtime ABI。
+
+当前仓库没有上传、切流或回滚生产 Runtime 的发布脚本。
 
 ## 当前限制
 

@@ -1,6 +1,7 @@
 import type { IBaseWidgets, SchemaModel } from "@baseflow/flow-react";
 import { DataType, FlowConfigProvider } from "@baseflow/flow-react";
 import { Button, ConfigProvider, Modal, message, Segmented, Spin, Switch } from "antd";
+import { RuntimeRendererUrl } from "../../baseflow-node-renderer/runtimeContract.js";
 import Canvas from "./Canvas";
 import DatePicker from "./components/DatePicker";
 import DescMD from "./components/DescMD";
@@ -77,8 +78,6 @@ const expressionUtils: SchemaModel = {
 };
 
 function App() {
-  const nodeRendererUrl = import.meta.env.VITE_NODE_RENDERER_URL || "/renderer/index.html";
-
   return (
     <ConfigProvider
       theme={{
@@ -92,7 +91,7 @@ function App() {
         widgets={widgets}
         monacoEditorUrl="/monaco/index.html"
         pureRunnerUrl="/pureRunner.worker-DAkP84-u.js"
-        nodeRendererUrl={nodeRendererUrl}
+        nodeRendererUrl={RuntimeRendererUrl}
         expressionUtils={expressionUtils}
       >
         <Canvas data={MockFlow} />

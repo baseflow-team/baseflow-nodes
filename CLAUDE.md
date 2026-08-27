@@ -24,11 +24,13 @@ baseflow-demo
 
 ### 产物边界
 
-- demo 构建到 `baseflow-preview/`；清理时保留 `nodes` 和 `renderer`。
-- renderer 构建到 `baseflow-preview/renderer/`，该目录每次清空重建。
+- 根 `package.json` 的 `baseflow.runtimeVersion` 和 `baseflow.runtimeReleaseId` 是当前分支 Runtime ABI 与 release 身份的唯一全局配置；一个分支只维护一个 Runtime ABI，不配置多版本映射。
+- `baseflow-node-renderer/runtimeContract.js` 负责校验并导出上述配置及派生路径；构建配置、demo iframe 地址和产物校验必须复用它，不得复制版本或 release 路径。
+- demo 构建到 `baseflow-preview/`；清理时保留 `nodes` 和 `runtime`。
+- renderer 直接构建到 `baseflow-preview/runtime/v<runtimeVersion>/<runtimeReleaseId>/`，当前 release 目录每次清空重建。
 - 节点构建到 `baseflow-preview/nodes/<node-id>/`，每个节点只拥有并清理自己的目录。
 - `baseflow-preview` 是生成产物，禁止手工修改；源码变更后重建对应 workspace。
-- 当前仓库没有生产 Runtime 发布脚本；`baseflow-preview` 只用于本地联合调试，不承担生产版本存档职责。
+- 当前仓库没有生产上传或发布脚本；本地构建已使用生产目标目录结构，但 `baseflow-preview` 不承担线上版本存档职责。
 
 ### 节点物料
 
@@ -51,11 +53,11 @@ export default defineNodeConfig(import.meta.dirname);
 ### 共享依赖
 
 - Runtime v1 只共享 `react`、`react/jsx-runtime`、`react-dom`、`react-dom/client` 和 `@baseflow/render-react` 五个完整 bare import；不提供包名前缀映射，`@baseflow/flow-react` 不共享。
-- `baseflow-node-renderer/runtimeContract.js` 是当前 Runtime 版本、历史缺省版本和五个公共模块 ID 的唯一契约源。
+- `baseflow-node-renderer/runtimeContract.js` 是根 Runtime 配置、派生 release 路径、历史缺省版本和五个公共模块 ID 的唯一契约源。
 - `baseflow-node-renderer/scripts/sharedDependencies.js` 在 Runtime 契约上补充包版本、门面源码和输出文件名，同时驱动 shared entry、external 和 Import Map；禁止在其它构建配置里复制公共模块列表。
 - 官方节点和 renderer 只将五个完整入口标记为 external；公共包的未登记子路径在构建期拒绝，其它运行时依赖默认打入节点 Bundle。renderer 仅允许将 `@baseflow/render-react/style.css` 作为私有样式打入自身产物。
 - shared 先构建到 `baseflow-node-renderer/public/shared/`，再由 renderer 复制到 preview。`public/shared` 纳入 Git 跟踪，但只能通过构建更新。
-- `public/shared` 和 `baseflow-preview` 都是本地可覆盖产物：shared 入口文件名包含实际安装版本，如 `react-dom@19.2.8.js`，不额外增加内容哈希；共享 chunk 使用内容哈希。
+- `public/shared` 和当前本地 release 目录都是可覆盖构建产物：shared 入口文件名包含实际安装版本，如 `react-dom@19.2.8.js`，不额外增加内容哈希；共享 chunk 使用内容哈希。线上已发布 release 仍禁止覆盖。
 - `package.json` 的 semver range 不代表 Runtime 可以自动漂移；实际 shared 版本由 lockfile、安装结果和生成产物共同确定，共享依赖升级必须按 Runtime ABI 兼容性判断。
 - Import Map 仅在 build 时动态注入。renderer 的 `vite dev` 不支持加载节点物料，联合调试使用生产预览。
 - `@baseflow/render-react/style.css` 由 renderer 统一加载，节点不重复导入。修改共享依赖、版本或 ESM 门面导出后，重建 renderer 和全部已接入节点；React 版本变化还需核对门面显式导出。
@@ -64,6 +66,7 @@ export default defineNodeConfig(import.meta.dirname);
 ### Runtime ABI 演进
 
 - `runtimeVersion` 表示节点可观察的 Runtime 契约，不表示构建工具版本、依赖包版本、文件内容或某次 release。Vite、Rollup、helper、chunk 划分、文件 hash 或 shared 字节变化后，只要既有契约保持兼容，仍使用 Runtime v1，并发布新的不可变 v1 release；历史节点不重建。
+- 当前分支的 `runtimeVersion` 只在发生不可兼容 ABI 变化时修改；兼容实现更新只生成新的 `runtimeReleaseId`。未来 Runtime v2 在独立分支维护，不在同一分支同时构建或加载 v1、v2。
 - 以下情况属于可观察 Runtime ABI 破坏性变化，需要升级 Runtime v2：
   - 删除或重命名五个公共模块入口之一；
   - 删除稳定的 named/default export，或改变其关键语义；
@@ -80,11 +83,13 @@ export default defineNodeConfig(import.meta.dirname);
 - 除五个公共 bare import 外，节点可以携带相对 URL 的本地 chunk，或静态、动态 import 完整 HTTP(S) ESM URL；其它未登记 bare import 由浏览器按标准模块解析规则报错，平台不代理、不改写、不自动补齐。
 - 第三方依赖、重复 React、CORS、MIME、CSP、外部 URL 稳定性、浏览器能力和性能由节点开发者自行测试和保证；平台不提供能够发现所有问题的严格 verify 或兼容兜底。
 
-### 生产发布边界（尚未实现）
+### Runtime release 与生产发布
 
-- 未来生产环境将 renderer、Import Map、assets 和整个 shared 目录作为一个不可变 Runtime release 发布；路径同时包含 ABI 版本和 UTC release 时间，如 `/runtime/v1/YYYYMMDDTHHmmssZ/`，已发布目录不得覆盖。
-- `runtimeVersion` 只选择 ABI，不是 release 身份；同一个 v1 可以有多个兼容 release。节点 manifest 的 ABI 选择应在具体 renderer 加载前由父页面或轻量 bootloader 完成，一个 renderer 实例不混用多套 Runtime ABI。
+- renderer 构建已将 Import Map、assets 和整个 shared 目录直接产出为一个完整 Runtime release；路径同时包含 ABI 版本和 UTC release 时间，如 `/runtime/v1/YYYYMMDDTHHmmssZ/`。
+- `runtimeVersion` 只表示 ABI，`runtimeReleaseId` 表示该 ABI 的一次具体实现，格式固定为 UTC `YYYYMMDDTHHmmssZ`。未发布 release 可在本地重复构建；发布前必须设置新的 runtimeReleaseId，线上已发布目录不得覆盖或复用为不同内容。
+- 一个分支和一个 renderer 实例只对应根配置指定的一套 Runtime ABI 与 release；历史 release 的保留与不同 ABI 的路由属于部署层职责，不在当前分支维护版本映射。
 - release 根目录直接包含 `index.html`、`assets/` 和 `shared/`。父级 release 路径已提供不可变身份，shared entry 继续使用依赖版本文件名，内部 chunk 保留内容哈希。
+- 当前仓库只负责生成该目录，不负责上传、切流、回滚或清理线上 release。
 - 正式节点使用“节点 ID + 精确版本”或“节点 ID + 内容哈希”作为不可变身份；同一身份下的 `index.js`、`package.json` 和私有 chunk 不覆盖。节点外部 URL 的不可变性由开发者负责。
 
 ### Monaco
@@ -121,12 +126,13 @@ npm run build:verify
 ```
 
 - `build:nodes`：构建已迁移节点，当前只包含 `break`；不清理其它旧节点目录。
-- `build:renderer`：校验已准备的 `public/shared`，再清理并构建 renderer，同时复制 shared 和注入 Import Map。
+- `build:renderer`：校验已准备的 `public/shared`，再按根 Runtime 配置清理并构建当前 release，同时复制 shared 和注入 Import Map。
 - `build:demo`：生成 mock、清理 demo 自有产物并构建父页面，不处理 Monaco。
-- `build:verify`：最后只读校验 HTML 资源、Import Map、shared 入口、Monaco 和已迁移节点产物，不构建、不修复，也不等价于真实浏览器、跨域或外部 ESM 兼容测试。
+- `build:verify`：最后只读校验 HTML 资源、demo 的当前 Runtime 引用、Import Map、shared 入口、Monaco 和已迁移节点产物，不构建、不修复，也不等价于真实浏览器、跨域或外部 ESM 兼容测试。
 - `npm run preview` 只启动生产预览，不执行构建。
 - 增量构建只运行发生变化的项目；shared 更新后必须再运行 `build:renderer`，节点 manifest 变更还需运行 `build:demo` 刷新 mock。
-- 完整链路使用 `http://localhost:4173/renderer/index.html#/nodes/break/index.js` 验证。预览期间重建后需刷新，缓存未更新时硬刷新。
+- 根 `baseflow.runtimeReleaseId` 变化后必须同时重建 renderer 和 demo；`baseflow.runtimeVersion` 变化时还必须同步官方节点 manifest，并重建全部官方节点。
+- 当前完整链路使用 `http://localhost:4173/runtime/v1/20260827T051605Z/index.html#/nodes/break/index.js` 验证；根 `baseflow.runtimeReleaseId` 变化后 URL 随之变化。预览期间重建后需刷新，缓存未更新时硬刷新。
 - 按变更范围运行 `npm run type:check`、Biome、Stylelint 和相关构建；不额外引入 `tsc --checkJs` 验收要求。
 
 ## 编码约定

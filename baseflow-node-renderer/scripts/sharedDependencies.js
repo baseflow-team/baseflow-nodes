@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
-import { RuntimeModuleIds } from "../runtimeContract.js";
+import { RuntimeModuleIds, RuntimeVersion } from "../runtimeContract.js";
 
 /**
  * 共享依赖的唯一事实来源。
@@ -46,7 +46,7 @@ export const SharedDependencies = SharedDependencyDefinitions.map((dependency) =
   return { ...dependency, version, outputName: `${dependency.name}@${version}` };
 });
 
-/** Runtime v1 对节点公开的完整模块入口。 */
+/** 当前 Runtime 对节点公开的完整模块入口。 */
 export const SharedDependencyIds = RuntimeModuleIds;
 
 export const SharedPackageNames = [...new Set(SharedDependencies.map(({ packageName }) => packageName))];
@@ -72,14 +72,14 @@ function isSharedDependency(id) {
 
 function rejectUnsupportedSharedSubpath(id) {
   const sharedPackageName = SharedPackageNames.find((packageName) => id.startsWith(`${packageName}/`));
-  if (sharedPackageName) throw new Error(`sharedDependencies: Runtime v1 不支持公共模块入口 "${id}"`);
+  if (sharedPackageName) throw new Error(`sharedDependencies: Runtime v${RuntimeVersion} 不支持公共模块入口 "${id}"`);
 }
 
 /** vite.shared.config.ts 的 lib.entry，相对 renderer 根目录。 */
 export const SharedLibEntry = Object.fromEntries(SharedDependencies.map(({ outputName, source }) => [outputName, source]));
 
 /**
- * Import Map 的 imports 字段。路径相对文档基址（/renderer/index.html），
+ * Import Map 的 imports 字段。路径相对当前 Runtime release 的 index.html，
  * 与 renderer 的 base: "./" 保持一致。
  */
 export function createSharedImports() {

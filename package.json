@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "baseflow": {
+    "runtimeVersion": 1,
+    "runtimeReleaseId": "20260827T051605Z"
+  },
   "engines": {
     "node": ">=22.12"
   },

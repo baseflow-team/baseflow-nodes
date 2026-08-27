@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import { basename, dirname, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseAst } from "rollup/parseAst";
-import { RuntimeVersion } from "../baseflow-node-renderer/runtimeContract.js";
+import { RuntimeReleaseDir, RuntimeRendererUrl, RuntimeVersion } from "../baseflow-node-renderer/runtimeContract.js";
 import { createSharedImports, SharedDependencies } from "../baseflow-node-renderer/scripts/sharedDependencies.js";
 
 const WorkspaceRoot = resolve(import.meta.dirname, "..");
@@ -110,16 +110,32 @@ async function readStaticEsmExports(file) {
 
 async function verifyPreview() {
   const demoHtml = resolve(PreviewDir, "index.html");
-  const rendererHtml = resolve(PreviewDir, "renderer/index.html");
+  const rendererHtml = resolve(PreviewDir, RuntimeReleaseDir, "index.html");
   const monacoHtml = resolve(PreviewDir, "monaco/index.html");
 
   await verifySharedDirectory(PublicSharedDir);
   await verifyHtmlAssets(demoHtml);
+  await verifyDemoRuntimeRenderer(demoHtml);
   await verifyHtmlAssets(rendererHtml);
   await verifyHtmlAssets(monacoHtml);
   await verifyImportMap(rendererHtml);
   await requireFile(resolve(PreviewDir, "mock.json"));
   for (const nodeId of MigratedNodeIds) await verifyNode(nodeId);
+}
+
+async function verifyDemoRuntimeRenderer(demoHtml) {
+  const html = await readFile(demoHtml, "utf8");
+  const metaTag = [...html.matchAll(/<meta\b[^>]*>/gi)].find((match) => readHtmlAttribute(match[0], "name") === "baseflow-runtime-renderer");
+  if (!metaTag) throw new Error(`${demoHtml}: 未找到 Runtime renderer 标记`);
+
+  const actualRendererUrl = readHtmlAttribute(metaTag[0], "content");
+  if (actualRendererUrl !== RuntimeRendererUrl) {
+    throw new Error(`${demoHtml}: Runtime renderer 标记应为 ${RuntimeRendererUrl}，实际为 ${String(actualRendererUrl)}；请重新构建 demo`);
+  }
+}
+
+function readHtmlAttribute(tag, name) {
+  return tag.match(new RegExp(`\\b${name}="([^"]*)"`, "i"))?.[1];
 }
 
 async function verifyHtmlAssets(htmlFile) {
