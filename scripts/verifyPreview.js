@@ -1,16 +1,16 @@
 import { deepStrictEqual } from "node:assert";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { basename, dirname, relative, resolve } from "node:path";
+import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseAst } from "rollup/parseAst";
-import { RuntimeReleaseDir, RuntimeRendererUrl, RuntimeVersion } from "../baseflow-node-renderer/runtimeContract.js";
-import { createSharedImports, SharedDependencies } from "../baseflow-node-renderer/scripts/sharedDependencies.js";
+import { RuntimeDir, RuntimeModuleIds, RuntimeRendererUrl, RuntimeVersion } from "../baseflow-node-renderer/runtimeContract.js";
+import { createSharedImports, readSharedManifest, SharedDependencies } from "../baseflow-node-renderer/scripts/sharedDependencies.js";
+import { listMigratedNodes } from "./migratedNodes.js";
 
 const WorkspaceRoot = resolve(import.meta.dirname, "..");
 const PreviewDir = resolve(WorkspaceRoot, "baseflow-preview");
 const PublicSharedDir = resolve(WorkspaceRoot, "baseflow-node-renderer/public/shared");
-const MigratedNodeIds = ["break"];
 const Require = createRequire(import.meta.url);
 
 const SharedExportContracts = [
@@ -25,21 +25,36 @@ async function verifySharedDirectory() {
   const sharedDir = PublicSharedDir;
   await requireDirectory(sharedDir);
 
-  for (const target of Object.values(createSharedImports())) {
-    await requireFile(resolve(sharedDir, basename(target)));
+  const sharedFiles = readSharedManifest();
+  const registeredFiles = Object.values(sharedFiles);
+  for (const fileName of registeredFiles) await requireFile(resolve(sharedDir, fileName));
+
+  // entry 带内容哈希后，旧构建的入口不会被同名覆盖，残留文件必须显式暴露
+  const sharedEntries = await readdir(sharedDir, { withFileTypes: true });
+  const strayFiles = sharedEntries
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".js") && !registeredFiles.includes(entry.name))
+    .map((entry) => entry.name);
+  if (strayFiles.length > 0) {
+    throw new Error(`${sharedDir}: 存在未登记的 shared 入口 ${strayFiles.join(", ")}，请重新执行 npm run build:shared`);
   }
 
-  await verifySharedExports();
+  await verifySharedModules(sharedDir, registeredFiles);
+  await verifySharedExports(sharedFiles);
 }
 
-async function verifySharedExports() {
+/** shared 入口是完全打包的产物，除相对 chunk 外不应残留任何 bare import。 */
+async function verifySharedModules(sharedDir, entryFileNames) {
+  for (const fileName of entryFileNames) await verifyModuleGraph(resolve(sharedDir, fileName));
+}
+
+async function verifySharedExports(sharedFiles) {
   process.env.NODE_ENV = "production";
 
   for (const contract of SharedExportContracts) {
     const dependency = SharedDependencies.find(({ id }) => id === contract.id);
     if (!dependency) throw new Error(`共享依赖表缺少 ${contract.id}`);
 
-    const outputFile = resolve(PublicSharedDir, `${dependency.outputName}.js`);
+    const outputFile = resolve(PublicSharedDir, sharedFiles[contract.id]);
     const outputUrl = pathToFileURL(outputFile);
     outputUrl.searchParams.set("verify", String(Date.now()));
 
@@ -60,15 +75,15 @@ async function verifySharedExports() {
     }
   }
 
-  for (const id of StaticSharedExportContracts) await verifyStaticSharedExports(id);
+  for (const id of StaticSharedExportContracts) await verifyStaticSharedExports(id, sharedFiles);
 }
 
-async function verifyStaticSharedExports(id) {
+async function verifyStaticSharedExports(id, sharedFiles) {
   const dependency = SharedDependencies.find((item) => item.id === id);
   if (!dependency) throw new Error(`共享依赖表缺少 ${id}`);
 
   const sourceFile = fileURLToPath(import.meta.resolve(id));
-  const outputFile = resolve(PublicSharedDir, `${dependency.outputName}.js`);
+  const outputFile = resolve(PublicSharedDir, sharedFiles[id]);
   const [sourceExports, outputExports] = await Promise.all([readStaticEsmExports(sourceFile), readStaticEsmExports(outputFile)]);
   deepStrictEqual(outputExports, sourceExports, `${outputFile}: ESM 导出与 ${id} 包不一致`);
 }
@@ -110,17 +125,17 @@ async function readStaticEsmExports(file) {
 
 async function verifyPreview() {
   const demoHtml = resolve(PreviewDir, "index.html");
-  const rendererHtml = resolve(PreviewDir, RuntimeReleaseDir, "index.html");
+  const rendererHtml = resolve(PreviewDir, RuntimeDir, "index.html");
   const monacoHtml = resolve(PreviewDir, "monaco/index.html");
 
-  await verifySharedDirectory(PublicSharedDir);
+  await verifySharedDirectory();
   await verifyHtmlAssets(demoHtml);
   await verifyDemoRuntimeRenderer(demoHtml);
   await verifyHtmlAssets(rendererHtml);
   await verifyHtmlAssets(monacoHtml);
   await verifyImportMap(rendererHtml);
   await requireFile(resolve(PreviewDir, "mock.json"));
-  for (const nodeId of MigratedNodeIds) await verifyNode(nodeId);
+  for (const { id } of await listMigratedNodes()) await verifyNode(id);
 }
 
 async function verifyDemoRuntimeRenderer(demoHtml) {
@@ -160,8 +175,69 @@ async function verifyImportMap(rendererHtml) {
   deepStrictEqual(actualImports, expectedImports, `${rendererHtml}: Import Map 与共享依赖表不一致`);
 
   for (const target of Object.values(actualImports)) {
-    await requireFile(resolve(dirname(rendererHtml), target));
+    const entryFile = resolve(dirname(rendererHtml), target);
+    await requireFile(entryFile);
+    // 只查入口存在不够：入口静态引用的 chunk 漏拷会在浏览器里才 404
+    await verifyModuleGraph(entryFile);
   }
+}
+
+/**
+ * 沿静态 import 遍历产物依赖图：相对引用必须存在，bare 引用必须在白名单内。
+ *
+ * 只解析静态 import。动态 import() 的目标由浏览器在运行时解析，这里看不到，
+ * 因此本校验不是完整门禁，不能据此断言产物没有未登记依赖。
+ */
+export async function verifyModuleGraph(entryFile, { allowedBareImports = [], allowedUrlProtocols = [] } = {}) {
+  const pending = [entryFile];
+  const visited = new Set();
+
+  while (pending.length > 0) {
+    const file = pending.pop();
+    if (visited.has(file)) continue;
+    visited.add(file);
+    await requireFile(file);
+
+    for (const specifier of await readStaticEsmImports(file)) {
+      if (specifier.startsWith(".")) {
+        pending.push(resolve(dirname(file), specifier));
+        continue;
+      }
+      // 绝对路径对浏览器合法，但会把产物钉死在某个部署根路径上，官方产物一律不使用
+      if (specifier.startsWith("/")) {
+        throw new Error(`${file}: 官方产物不得使用绝对路径引用 "${specifier}"，请改为相对路径或完整 URL`);
+      }
+
+      const protocol = specifier.match(/^([a-z][a-z\d+.-]*):/i)?.[1]?.toLowerCase();
+      if (protocol) {
+        const normalizedProtocol = `${protocol}:`;
+        if (allowedUrlProtocols.includes(normalizedProtocol)) continue;
+
+        const allowed = allowedUrlProtocols.length > 0 ? allowedUrlProtocols.join("、") : "无，该产物应完全打包";
+        throw new Error(`${file}: 引用了不允许的协议 import "${specifier}"；本产物允许的外部 URL 协议：${allowed}`);
+      }
+
+      if (!allowedBareImports.includes(specifier)) {
+        const allowed = allowedBareImports.length > 0 ? allowedBareImports.join("、") : "无，该产物应完全打包";
+        throw new Error(`${file}: 引用了未登记的 bare import "${specifier}"；本产物允许的公共入口：${allowed}`);
+      }
+    }
+  }
+}
+
+async function readStaticEsmImports(file) {
+  const ast = parseAst(await readFile(file, "utf8"));
+  const specifiers = new Set();
+
+  for (const statement of ast.body) {
+    const isImportOrReExport =
+      statement.type === "ImportDeclaration" || statement.type === "ExportNamedDeclaration" || statement.type === "ExportAllDeclaration";
+    if (isImportOrReExport && statement.source?.type === "Literal" && typeof statement.source.value === "string") {
+      specifiers.add(statement.source.value);
+    }
+  }
+
+  return [...specifiers];
 }
 
 async function verifyNode(nodeId) {
@@ -182,6 +258,11 @@ async function verifyNode(nodeId) {
   if (manifest.runtimeVersion !== RuntimeVersion) {
     throw new Error(`${outputPackage}: baseflow.runtimeVersion 必须为 ${RuntimeVersion}`);
   }
+
+  await verifyModuleGraph(resolve(outputDir, "index.js"), {
+    allowedBareImports: RuntimeModuleIds,
+    allowedUrlProtocols: ["http:", "https:"],
+  });
 
   const cssFiles = (await listFiles(outputDir)).filter((file) => file.endsWith(".css"));
   if (cssFiles.length > 0) throw new Error(`${outputDir}: 节点 CSS 应内联到 JS，发现 ${cssFiles.join(", ")}`);
@@ -216,6 +297,9 @@ function assertInsidePreview(file) {
 }
 
 const CommandArgs = process.argv.slice(2);
-if (CommandArgs.length === 0) await verifyPreview();
-else if (CommandArgs.length === 1 && CommandArgs[0] === "--shared") await verifySharedDirectory();
-else throw new Error("仅支持无参数或 --shared");
+const IsDirectExecution = process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
+if (IsDirectExecution) {
+  if (CommandArgs.length === 0) await verifyPreview();
+  else if (CommandArgs.length === 1 && CommandArgs[0] === "--shared") await verifySharedDirectory();
+  else throw new Error("仅支持无参数或 --shared");
+}

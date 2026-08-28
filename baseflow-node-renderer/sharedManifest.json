@@ -1,0 +1,10 @@
+{
+  "runtimeVersion": 1,
+  "files": {
+    "react": "react@19.2.8-0MBzoHze.js",
+    "react/jsx-runtime": "react-jsx-runtime@19.2.8-D6QZ5qeO.js",
+    "react-dom": "react-dom@19.2.8-jmo-hrGZ.js",
+    "react-dom/client": "react-dom-client@19.2.8-B3Jh0sPZ.js",
+    "@baseflow/render-react": "baseflow-render-react@0.0.4-B8Oka5-s.js"
+  }
+}

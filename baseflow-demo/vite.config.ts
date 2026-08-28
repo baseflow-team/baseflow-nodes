@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     {
-      name: "baseflow:runtime-release-marker",
+      name: "baseflow:runtime-renderer-marker",
       transformIndexHtml() {
         return [
           {

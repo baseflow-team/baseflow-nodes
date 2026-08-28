@@ -9565,7 +9565,7 @@ var require_react_dom_client_production = /* @__PURE__ */ __commonJSMin(((export
 	exports.version = "19.2.8";
 }));
 //#endregion
-//#region src/shared/reactDomClient.ts
+//#region shared/reactDomClient.ts
 var import_client = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	function checkDCE() {
 		if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === "undefined" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE !== "function") return;

@@ -3,5 +3,5 @@
   "compilerOptions": {
     "allowJs": true
   },
-  "include": ["src", "runtimeContract.js", "../env.d.ts"]
+  "include": ["src", "shared", "runtimeContract.js", "../env.d.ts"]
 }

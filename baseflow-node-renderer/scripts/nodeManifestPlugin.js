@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 import { RuntimeVersion } from "../runtimeContract.js";
 
 /**
@@ -14,21 +14,31 @@ import { RuntimeVersion } from "../runtimeContract.js";
  */
 export function nodeManifestPlugin(packageDir) {
   const packageFile = resolve(packageDir, "package.json");
+  const nodeId = basename(packageDir);
+  /** @type {string} */
+  let manifestSource;
 
   return {
     name: "baseflow:node-manifest",
     apply: "build",
-    async generateBundle() {
-      const source = await readFile(packageFile, "utf8");
-      const packageJson = JSON.parse(source);
+    // 放在 buildStart：manifest 不合法时不必等整包构建完才失败
+    async buildStart() {
+      manifestSource = await readFile(packageFile, "utf8");
+      const packageJson = JSON.parse(manifestSource);
+
       if (packageJson.baseflow?.runtimeVersion !== RuntimeVersion) {
         throw new Error(`${packageFile}: 官方节点必须声明 baseflow.runtimeVersion = ${RuntimeVersion}`);
       }
-
+      // 目录名是 node ID 的唯一事实来源，父页面按包名末段拼 /nodes/<id>/，两者不一致会静默指向错误目录
+      if (typeof packageJson.name !== "string" || packageJson.name.split("/").pop() !== nodeId) {
+        throw new Error(`${packageFile}: package.name 的末段必须与节点目录名 "${nodeId}" 一致，实际为 ${String(packageJson.name)}`);
+      }
+    },
+    generateBundle() {
       this.emitFile({
         type: "asset",
         fileName: "package.json",
-        source,
+        source: manifestSource,
       });
     },
   };

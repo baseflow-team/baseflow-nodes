@@ -1,6 +1,6 @@
 import { n as __toESM } from "./chunks/rolldown-runtime-BPOCksWG.js";
 import { t as require_react } from "./chunks/react-QzYZYktg.js";
-//#region src/shared/react.ts
+//#region shared/react.ts
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var { __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, __COMPILER_RUNTIME, unstable_useCacheRefresh } = import_react.default;
 var react_default = import_react.default;

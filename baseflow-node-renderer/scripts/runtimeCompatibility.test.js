@@ -7,7 +7,7 @@ import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { rollup } from "rollup";
 import { describe, expect, it } from "vitest";
-import { SharedDependencies } from "./sharedDependencies.js";
+import { readSharedManifest } from "./sharedDependencies.js";
 
 const RendererRoot = resolve(import.meta.dirname, "..");
 const FixtureFile = resolve(RendererRoot, "testFixtures/runtime-v1/index.js");
@@ -20,7 +20,7 @@ const RealFixtureHash = "f0ea82e636d0e91e0d86258e1d2d757be15e5a2cc7b17c92b266247
 const RealFixturePackageHash = "595a195e0df8bf58f3d152ccaac68811e07e7bcd3ed9a467ef9ce7e978a389d3";
 
 async function bundleFixture(input) {
-  const sharedFiles = new Map(SharedDependencies.map(({ id, outputName }) => [id, resolve(SharedDir, `${outputName}.js`)]));
+  const sharedFiles = new Map(Object.entries(readSharedManifest()).map(([id, fileName]) => [id, resolve(SharedDir, fileName)]));
   const bundle = await rollup({
     input,
     plugins: [

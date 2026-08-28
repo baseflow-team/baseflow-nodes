@@ -3,10 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "baseflow": {
-    "runtimeVersion": 1,
-    "runtimeReleaseId": "20260827T051605Z"
-  },
   "engines": {
     "node": ">=22.12"
   },
@@ -24,7 +20,7 @@
     "build:demo": "node ./scripts/assertWorkspaceRoot.js && npm run build --workspace baseflow-demo",
     "build:shared": "node ./scripts/assertWorkspaceRoot.js && npm run build:shared --workspace baseflow-node-renderer && node ./scripts/verifyPreview.js --shared",
     "build:renderer": "node ./scripts/assertWorkspaceRoot.js && node ./scripts/verifyPreview.js --shared && npm run build:app --workspace baseflow-node-renderer",
-    "build:nodes": "node ./scripts/assertWorkspaceRoot.js && npm run build --workspace @baseflow-nodes/break",
+    "build:nodes": "node ./scripts/assertWorkspaceRoot.js && node ./scripts/buildNodes.js",
     "build:verify": "node ./scripts/assertWorkspaceRoot.js && node ./scripts/verifyPreview.js",
     "preview": "npm run preview --workspace baseflow-demo"
   },

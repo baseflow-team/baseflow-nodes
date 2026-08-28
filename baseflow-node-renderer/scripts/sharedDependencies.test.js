@@ -4,6 +4,7 @@ import {
   createSharedImports,
   externalizeNodeSharedDependency,
   externalizeRendererSharedDependency,
+  SharedDependencies,
   SharedDependencyIds,
 } from "./sharedDependencies.js";
 
@@ -14,6 +15,15 @@ describe("Runtime v1 共享依赖", () => {
     expect(RuntimeModuleIds).toEqual(RuntimeV1Dependencies);
     expect(SharedDependencyIds).toEqual(RuntimeV1Dependencies);
     expect(Object.keys(createSharedImports())).toEqual(RuntimeV1Dependencies);
+  });
+
+  it("Import Map 指向带内容哈希的 shared 入口", () => {
+    const imports = createSharedImports();
+    for (const { id, outputName } of SharedDependencies) {
+      expect(imports[id]).not.toBe(`./shared/${outputName}.js`);
+      expect(imports[id].startsWith(`./shared/${outputName}-`)).toBe(true);
+      expect(imports[id].endsWith(".js")).toBe(true);
+    }
   });
 
   it.each(RuntimeV1Dependencies)("将 %s 标记为 external", (id) => {
