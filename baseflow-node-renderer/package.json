@@ -20,7 +20,6 @@
     "react": "*",
     "react-dom": "*",
     "antd": "*",
-    "dayjs": "*",
-    "@baseflow/render-react": "*"
+    "@baseflow/node-runtime-react": "*"
   }
 }

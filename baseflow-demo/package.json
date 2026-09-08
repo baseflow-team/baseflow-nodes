@@ -20,13 +20,16 @@
     "preview": "vite preview"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-json-view-lite": "^2.5.0",
+    "markdown-to-jsx": "^9.10.2",
+    "fast-xml-parser": "^5.11.0",
+    "fast-xml-builder": "^1.3.1",
+    "@baseflow/flow-react": "^1.0.0",
     "axios": "*",
-    "antd": "*",
     "lucide-react": "*",
-    "dayjs": "*",
-    "@baseflow/flow-react": "*"
+    "antd": "*"
   },
   "dependencies": {
     "reactflow": "^11.11.4"
