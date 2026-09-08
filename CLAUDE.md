@@ -55,7 +55,7 @@ export default defineNodeConfig(import.meta.dirname);
 
 - Runtime v1 只共享 `react`、`react/jsx-runtime`、`react-dom`、`react-dom/client` 和 `@baseflow/render-react` 五个完整 bare import；不提供包名前缀映射，`@baseflow/flow-react` 不共享。
 - `baseflow-node-renderer/runtimeContract.js` 是 Runtime 版本、派生 Runtime 路径、历史缺省版本和五个公共模块 ID 的唯一契约源。
-- `baseflow-node-renderer/scripts/sharedDependencies.js` 在 Runtime 契约上补充包版本、门面源码和入口名，驱动 shared entry 与 external；Import Map 的目标文件名带内容哈希，只能由 shared 构建产出的 `baseflow-node-renderer/sharedManifest.json` 提供，禁止在其它构建配置里复制公共模块列表或拼接产物文件名。
+- `baseflow-node-renderer/shared.config.js` 定义公共模块的包名、入口名和门面源码；`baseflow-node-renderer/scripts/sharedDependencies.js` 在 Runtime 契约和该配置上解析实际包版本，派生 shared entry 与 external。Import Map 的目标文件名带内容哈希，只能由 shared 构建产出的 `baseflow-node-renderer/sharedManifest.json` 提供，禁止复制公共模块列表或拼接产物文件名。
 - 官方节点和 renderer 只将五个完整入口标记为 external；公共包的未登记子路径在构建期拒绝，其它运行时依赖默认打入节点 Bundle。renderer 仅允许将 `@baseflow/render-react/style.css` 作为私有样式打入自身产物。
 - shared 先构建到 `baseflow-node-renderer/public/shared/`，再由 renderer 复制到 preview。`public/shared` 和 `sharedManifest.json` 纳入 Git 跟踪，但只能通过 `build:shared` 更新。
 - Runtime 目录不再提供不可变身份，因此 `/runtime/v<n>/` 下**全部生成文件必须内容寻址**：shared 入口为 `<name>@<version>-<hash>.js`（版本名保留，便于在 devtools 里辨认实际加载的包），chunk 和 renderer assets 同样带哈希。禁止为了减少 Git 噪音去掉入口哈希 —— 去掉后同名文件在两次构建间字节可变，客户端缓存会静默错配。

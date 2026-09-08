@@ -4,6 +4,8 @@
  * 这里刻意不从 package.json 读配置：本模块同时被构建脚本和浏览器代码 import，
  * 一旦引入 JSON module，整份根 package.json（含 devDependencies、scripts）会被
  * 打进 renderer 和 demo 产物，构建期的配置校验也会跟着发到浏览器。
+ *
+ * @type {number}
  */
 export const RuntimeVersion = 1;
 
@@ -18,8 +20,16 @@ export const RuntimeDir = `runtime/v${RuntimeVersion}`;
 
 export const RuntimeRendererUrl = `/${RuntimeDir}/index.html`;
 
-/** 缺少 runtimeVersion 的历史节点固定按 v1 解释，不随当前 Runtime 升级漂移。 */
+/**
+ * 缺少 runtimeVersion 的历史节点固定按 v1 解释，不随当前 Runtime 升级漂移。
+ *
+ * @type {1}
+ */
 export const LegacyDefaultRuntimeVersion = 1;
 
-/** 当前 Runtime 对节点公开的完整 bare import 入口。 */
+/**
+ * 当前 Runtime 对节点公开的完整 bare import 入口。
+ *
+ * @type {readonly string[]}
+ */
 export const RuntimeModuleIds = Object.freeze(["react", "react/jsx-runtime", "react-dom", "react-dom/client", "@baseflow/render-react"]);
