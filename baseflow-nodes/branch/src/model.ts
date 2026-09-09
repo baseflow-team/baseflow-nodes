@@ -1,4 +1,4 @@
-import type { Conditions, INodeProps } from "@baseflow/react";
+import type { Conditions, INodeProps } from "@baseflow/node-runtime-react";
 
 export interface NodeProps extends INodeProps {
   default?: boolean;

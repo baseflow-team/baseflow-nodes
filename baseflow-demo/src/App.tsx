@@ -1,47 +1,24 @@
-import type { IBaseWidgets, SchemaModel } from "@baseflow/flow-react";
+import type { IWidgets, SchemaModel } from "@baseflow/flow-react";
 import { DataType, FlowConfigProvider } from "@baseflow/flow-react";
-import { Button, ConfigProvider, Modal, message, Segmented, Spin, Switch } from "antd";
-import { RuntimeRendererUrl } from "../../baseflow-node-renderer/runtimeContract.js";
+import { ConfigProvider } from "antd";
+import { Button, confirm, DatePicker, Input, message, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-antd";
 import Canvas from "./Canvas";
-import DatePicker from "./components/DatePicker";
-import DescMD from "./components/DescMD";
-import StringInput from "./components/StringInput";
-import StringSelect from "./components/StringSelect";
-import TimePicker from "./components/TimePicker";
 import { MockFlow } from "./utils";
 
 const Locale = localStorage.getItem("baseflow-locale") || "";
 
-const widgets: Partial<IBaseWidgets> = {
-  Button: Button as any,
-  Spin: Spin as any,
+const widgets: Partial<IWidgets> = {
+  Button,
+  Spin,
   Segmented,
-  Input: StringInput,
-  Select: StringSelect,
-  Switch: Switch as any,
-  TextArea: StringInput as any,
+  Input,
+  Select,
+  Switch,
+  TextArea,
   DatePicker,
   TimePicker,
-  DescMD,
-  message: {
-    success: (text: string) => message.success(text),
-    error: (text: string) => message.error(text),
-    warning: (text: string) => message.warning(text),
-    info: (text: string) => message.info(text),
-  },
-  confirm: (message: string, callback: (ok: boolean) => void, props?: { title?: string; okText?: string; cancelText?: string }) => {
-    Modal.confirm({
-      title: "提示",
-      content: message,
-      ...props,
-      onOk() {
-        callback(true);
-      },
-      onCancel() {
-        callback(false);
-      },
-    });
-  },
+  message,
+  confirm,
 };
 
 const expressionUtils: SchemaModel = {
@@ -87,12 +64,12 @@ function App() {
       }}
     >
       <FlowConfigProvider
-        locale={Locale}
         widgets={widgets}
+        nodeRendererUrl="/node-render.html"
         monacoEditorUrl="/monaco/index.html"
         pureRunnerUrl="/pureRunner.worker-DAkP84-u.js"
-        nodeRendererUrl={RuntimeRendererUrl}
         expressionUtils={expressionUtils}
+        nodeOrigin="localhost"
       >
         <Canvas data={MockFlow} />
       </FlowConfigProvider>

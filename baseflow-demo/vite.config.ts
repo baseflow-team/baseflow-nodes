@@ -1,23 +1,8 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { RuntimeRendererUrl } from "../baseflow-node-renderer/runtimeContract.js";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    {
-      name: "baseflow:runtime-renderer-marker",
-      transformIndexHtml() {
-        return [
-          {
-            tag: "meta",
-            attrs: { name: "baseflow-runtime-renderer", content: RuntimeRendererUrl },
-            injectTo: "head",
-          },
-        ];
-      },
-    },
-  ],
+  plugins: [react()],
   build: {
     outDir: "../baseflow-preview",
     emptyOutDir: false,

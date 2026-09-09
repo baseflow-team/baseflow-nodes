@@ -1,6 +1,4 @@
-import type { INodeData } from "@baseflow/render-react";
-import styles from "./index.module.scss";
+import { createRoot } from "react-dom/client";
+import App from "./App";
 
-export default function Properties({ nodeData }: { nodeData: INodeData }) {
-  return <div className={styles.Break}>{nodeData.id + nodeData.meta.name}</div>;
-}
+createRoot(document.getElementById("root")!).render(<App />);

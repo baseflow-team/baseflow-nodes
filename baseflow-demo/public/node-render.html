@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>baseflow-node</title>
+    <script>
+        window.addEventListener("message", async (event) => {
+            if (event.data.action === "InitNode") {
+                const { url, nodeData, flowData } = event.data;
+                Object.assign(window, { __nodeData__: nodeData, __flowData__: flowData });
+                const module = await import(url);
+                const setup = module.default ?? module;
+                setup();
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+
+</html>

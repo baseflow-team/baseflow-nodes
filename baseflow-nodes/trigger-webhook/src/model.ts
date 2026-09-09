@@ -1,5 +1,5 @@
-import type { INodeProps, SchemaModel } from "@baseflow/react";
-import { DataType } from "@baseflow/react";
+import type { INodeProps, SchemaModel } from "@baseflow/node-runtime-react";
+import { DataType } from "@baseflow/node-runtime-react";
 
 export type IMethod = "get" | "post" | "put" | "delete";
 

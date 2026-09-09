@@ -1,13 +1,13 @@
-"use no memo";
-import type { Conditions, INodeInputPanel } from "@baseflow/react";
-import { ConditionSelector, useEvent, useNode } from "@baseflow/react";
+import type { Conditions, INodeInputFormProps } from "@baseflow/node-runtime-react";
+import { ConditionSelector } from "@baseflow/node-runtime-react";
 import { Typography } from "antd";
+import type { FC } from "react";
 import { memo } from "react";
 import type { NodeProps } from "../model";
+import { useEvent } from "../utils";
 
-const Component: INodeInputPanel<NodeProps> = ({ nodeData }) => {
+const Component: FC<INodeInputFormProps<NodeProps>> = ({ nodeData }) => {
   const nodeProps = nodeData.props;
-  const { node } = useNode(nodeData.id);
 
   const onConditionsChange = useEvent((conditions: Conditions | string | undefined) => {
     node.updateProps({ conditions });

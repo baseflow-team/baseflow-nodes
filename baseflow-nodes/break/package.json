@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
-    "runtimeVersion": 1,
+    "runtimeVersion": "1",
     "type": "Break",
     "icon": "",
     "desc": "循环Break：放置于[循环]节点中，退出整个循环",
@@ -24,8 +24,10 @@
     "type:check": "tsc --noEmit"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*",
-    "@baseflow/render-react": "*"
+    "react": "^19",
+    "react-dom": "^19",
+    "antd": "*",
+    "widgets-antd": "*",
+    "@baseflow/node-runtime-react": "^1"
   }
 }

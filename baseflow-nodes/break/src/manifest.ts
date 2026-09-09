@@ -1,5 +1,5 @@
-import type { NodeManifest } from "@baseflow/render-react";
-import { NodeType } from "@baseflow/render-react";
+import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { NodeType } from "@baseflow/node-runtime-react";
 
 const node: NodeManifest = {
   type: NodeType.Break,

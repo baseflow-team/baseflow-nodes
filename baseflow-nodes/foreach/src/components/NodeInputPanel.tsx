@@ -1,6 +1,6 @@
 "use no memo";
-import type { INodeInputPanel, SchemaInputPropsRender, SchemaModel, SchemaValue } from "@baseflow/react";
-import { DataType, SchemaValueForm, useEvent, useNode } from "@baseflow/react";
+import type { INodeInputPanel, SchemaInputPropsRender, SchemaModel, SchemaValue } from "@baseflow/node-runtime-react";
+import { DataType, SchemaValueForm, useEvent, useNode } from "@baseflow/node-runtime-react";
 import { memo } from "react";
 import type { NodeProps } from "../model";
 

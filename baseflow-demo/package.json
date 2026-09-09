@@ -27,6 +27,7 @@
     "fast-xml-parser": "^5.11.0",
     "fast-xml-builder": "^1.3.1",
     "@baseflow/flow-react": "^1.0.0",
+    "widgets-antd": "*",
     "axios": "*",
     "lucide-react": "*",
     "antd": "*"

@@ -1,6 +1,6 @@
 "use no memo";
-import type { INodeInputPanel, SchemaValue, ValueConfig } from "@baseflow/react";
-import { DataType, KeyValues, SchemaValueForm, SuperInput, useEvent, useGraph, useNode, ValueSource } from "@baseflow/react";
+import type { INodeInputPanel, SchemaValue, ValueConfig } from "@baseflow/node-runtime-react";
+import { DataType, KeyValues, SchemaValueForm, SuperInput, useEvent, useGraph, useNode, ValueSource } from "@baseflow/node-runtime-react";
 import type { RadioChangeEvent } from "antd";
 import { InputNumber, Radio, Switch, Tooltip } from "antd";
 import { CircleQuestionMark } from "lucide-react";

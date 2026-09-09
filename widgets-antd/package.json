@@ -1,0 +1,20 @@
+{
+  "name": "widgets-antd",
+  "version": "0.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {},
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "antd": "*",
+    "dayjs": "*"
+  }
+}

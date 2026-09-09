@@ -1,6 +1,6 @@
 "use no memo";
-import type { INodeInputPanel, SchemaModel } from "@baseflow/react";
-import { DataType, KeyValues, RequiredRule, SchemaModelForm, useEvent, useNode } from "@baseflow/react";
+import type { INodeInputPanel, SchemaModel } from "@baseflow/node-runtime-react";
+import { DataType, KeyValues, RequiredRule, SchemaModelForm, useEvent, useNode } from "@baseflow/node-runtime-react";
 import { BlurInput, PathToRegexp, StringSelect } from "@baseflow/widgets";
 import type { FormInstance } from "antd";
 import { Form } from "antd";

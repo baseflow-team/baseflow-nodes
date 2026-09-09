@@ -1,6 +1,6 @@
 "use no memo";
-import type { INodeInputPanel, SchemaLabelRender, SchemaModel, SchemaToolsFilter, SchemaValue } from "@baseflow/react";
-import { SchemaModelForm, SchemaValueForm, useNode, ValueSource } from "@baseflow/react";
+import type { INodeInputPanel, SchemaLabelRender, SchemaModel, SchemaToolsFilter, SchemaValue } from "@baseflow/node-runtime-react";
+import { SchemaModelForm, SchemaValueForm, useNode, ValueSource } from "@baseflow/node-runtime-react";
 import { Switch } from "antd";
 import { memo, useCallback } from "react";
 import type { NodeProps } from "../model";

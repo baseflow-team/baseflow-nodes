@@ -1,4 +1,4 @@
-import type { INodeProps, ValueConfig } from "@baseflow/react";
+import type { INodeProps, ValueConfig } from "@baseflow/node-runtime-react";
 
 export interface NodeProps extends INodeProps {
   scripts?: ValueConfig;
