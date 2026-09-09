@@ -1,5 +1,5 @@
 import type { JsonDSL, NodeManifest } from "@baseflow/flow-react";
-import { BaseWidgets } from "@baseflow/flow-react";
+import { Widgets } from "@baseflow/flow-react";
 import { useRef } from "react";
 
 export const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
@@ -59,7 +59,7 @@ export function onImportNode(source: string): Promise<NodeManifest> {
       return mod.default.baseflow;
     },
     (err) => {
-      BaseWidgets.message.error(err.message);
+      Widgets.message.error(err.message);
       throw err;
     },
   );
@@ -109,11 +109,10 @@ export function fetchFlow(): JsonDSL {
           ],
         },
         triggers: [],
-        extend: {},
       };
 }
 
-export interface IFLow {
+export interface IDoc {
   id: string;
   commitId: string;
   version: string;
@@ -121,7 +120,7 @@ export interface IFLow {
   flow: JsonDSL;
 }
 
-export const MockFlow: IFLow = {
+export const MockDoc: IDoc = {
   id: "xxx",
   commitId: "",
   version: "",

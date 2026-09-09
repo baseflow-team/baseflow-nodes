@@ -1,17 +1,17 @@
-import type { EnvStatus, FlowLogs, FlowLogsListItem, GraphData, INodeData, NodeManifest, RunState, SchemaValue } from "@baseflow/flow-react";
-import { DefalutGraphHooks, DslTools } from "@baseflow/flow-react";
-import { type IFLow, onImportNode, sleep } from "../utils";
+import type { EnvStatus, FlowData, FlowLogs, FlowLogsListItem, INodeData, NodeManifest, RunState, SchemaValue } from "@baseflow/flow-react";
+import { DefalutFlowHooks, flowToJson } from "@baseflow/flow-react";
+import type { IDoc } from "../utils";
+import { onImportNode, sleep } from "../utils";
 
-export class GraphHooks extends DefalutGraphHooks {
-  public doc: IFLow;
-  constructor(doc: IFLow) {
+export class FlowHooks extends DefalutFlowHooks {
+  public doc: IDoc;
+  constructor(doc: IDoc) {
     super();
     this.doc = doc;
   }
 
-  async onSave(data: GraphData): Promise<void> {
-    // const xml = DslTools.graphToXml(data);
-    const dsl = DslTools.graphToJson(data);
+  async onSave(data: FlowData): Promise<void> {
+    const dsl = flowToJson(data);
     localStorage.setItem("baseflow-dsl", JSON.stringify(dsl));
   }
 

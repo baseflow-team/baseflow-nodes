@@ -3,9 +3,7 @@ import { DataType, FlowConfigProvider } from "@baseflow/flow-react";
 import { ConfigProvider } from "antd";
 import { Button, confirm, DatePicker, Input, message, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-antd";
 import Canvas from "./Canvas";
-import { MockFlow } from "./utils";
-
-const Locale = localStorage.getItem("baseflow-locale") || "";
+import { MockDoc } from "./utils";
 
 const widgets: Partial<IWidgets> = {
   Button,
@@ -71,7 +69,7 @@ function App() {
         expressionUtils={expressionUtils}
         nodeOrigin="localhost"
       >
-        <Canvas data={MockFlow} />
+        <Canvas doc={MockDoc} />
       </FlowConfigProvider>
     </ConfigProvider>
   );

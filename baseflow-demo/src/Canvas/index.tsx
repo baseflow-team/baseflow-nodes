@@ -1,32 +1,33 @@
-import type { CreatorPayload, GraphData, IGraph, IGraphOptions, INodeData } from "@baseflow/flow-react";
-import { DslTools, Flow, getLocale, HistoryTools } from "@baseflow/flow-react";
+import type { CreatorPayload, FlowData, FlowOptions, IFlow, INodeData } from "@baseflow/flow-react";
+import { Graph, HistoryTools, jsonToFlow } from "@baseflow/flow-react";
 import { Modal, message, notification, Select, Spin } from "antd";
 import type { FC } from "react";
 import { memo, useCallback, useState } from "react";
 import NodeList from "../NodeList";
-import type { IFLow } from "../utils";
+import type { IDoc } from "../utils";
 import { useEvent } from "../utils";
-import { GraphHooks } from "./GraphHooks";
+import { FlowHooks } from "./FlowHooks";
 import styles from "./index.module.scss";
 
-const Component: FC<{ data: IFLow }> = (props) => {
-  const locale = getLocale();
-  const [graph, setGraph] = useState<IGraph>();
-  const [initGraphData] = useState<GraphData>(() => DslTools.jsonToGraph(props.data.flow));
-  const [graphOptions] = useState<IGraphOptions>({});
-  const [graphHooks] = useState(new GraphHooks(props.data));
+const Locale = localStorage.getItem("baseflow-locale") || "";
+
+const Component: FC<{ doc: IDoc }> = (props) => {
+  const [flow, setFlow] = useState<IFlow>();
+  const [initFlowData] = useState<FlowData>(() => jsonToFlow(props.doc.flow));
+  const [flowOptions] = useState<FlowOptions>();
+  const [flowHooks] = useState(new FlowHooks(props.doc));
   const [showNodeCreater, setShowNodeCreater] = useState<CreatorPayload>();
 
-  const onInit = useCallback((graph: IGraph) => {
+  const onInit = useCallback((flow: IFlow) => {
     // @ts-expect-error: dev test
-    window.graph = graph;
-    setGraph(graph);
+    window.flow = flow;
+    setFlow(flow);
   }, []);
 
   const onApplyNode = useEvent((newItem: { type: string; dsl: string }) => {
     const { sourceNode, place } = showNodeCreater!;
     const { sources, nodes } = JSON.parse(newItem.dsl) as { sources: { [tag: string]: string }; nodes: INodeData[] };
-    const result = newItem.type === "Trigger" ? graph!.applyTrigger(nodes, sources) : graph!.applyNode(sourceNode.getId(), place, nodes, sources);
+    const result = newItem.type === "Trigger" ? flow!.applyTrigger(nodes, sources) : flow!.applyNode(sourceNode.getId(), place, nodes, sources);
     result.then(
       (changedSources) => {
         setShowNodeCreater(undefined);
@@ -50,7 +51,7 @@ const Component: FC<{ data: IFLow }> = (props) => {
         <div className="left">
           <div className="title">
             <Select
-              value={locale}
+              value={Locale}
               options={[
                 { value: "en-US", label: "English" },
                 { value: "zh-CN", label: "中文简体" },
@@ -63,11 +64,11 @@ const Component: FC<{ data: IFLow }> = (props) => {
             />
           </div>
         </div>
-        <div className="right">{graph && <HistoryTools graph={graph} />}</div>
+        <div className="right">{flow && <HistoryTools flow={flow} />}</div>
       </div>
       <div className={`${styles.Canvas}__bd`}>
-        {initGraphData && graphHooks ? (
-          <Flow options={graphOptions} initialData={initGraphData} graphHooks={graphHooks} onInit={onInit} onShowCreater={setShowNodeCreater} />
+        {initFlowData && flowHooks ? (
+          <Graph flowOptions={flowOptions} initialData={initFlowData} flowHooks={flowHooks} onInit={onInit} onShowCreater={setShowNodeCreater} />
         ) : (
           <Spin />
         )}
