@@ -3,17 +3,18 @@ import { basename, resolve } from "node:path";
 import { baseflowRuntimeVersion } from "../package.json";
 
 /**
- * 把节点自身的 package.json 作为产物发布到 outDir。
+ * 生成约定格式的 package.json 作为产物发布到 outDir。
  *
  * 父页面通过 JSON module 直接 import /nodes/<id>/package.json 并取其中的
- * baseflow 字段作为 NodeManifest（见 baseflow-demo/src/utils.ts 的 onImportNode），
- * 所以它是运行时产物，不是构建残留。
+ * baseflow 字段作为 NodeManifest（见 baseflow-demo/src/utils.ts 的 onImportNode）
  *
  * @param {string} packageDir 节点包根目录。
  * @returns {import("vite").Plugin}
  */
 export function nodeManifestPlugin(packageDir) {
   const packageFile = resolve(packageDir, "package.json");
+  const manifestFile = resolve(packageDir, "src/manifest.ts");
+  //去掉 ts 类型，执行
   const nodeId = basename(packageDir);
   /** @type {string} */
   let manifestSource;
@@ -24,7 +25,7 @@ export function nodeManifestPlugin(packageDir) {
     // 放在 buildStart：manifest 不合法时不必等整包构建完才失败
     async buildStart() {
       const packageJson = await readFile(packageFile, "utf8");
-      const { name, version, baseflow } = JSON.parse(packageJson);
+      const { name, version } = JSON.parse(packageJson);
 
       // 目录名是 node ID 的唯一事实来源，父页面按包名末段拼 /nodes/<id>/，两者不一致会静默指向错误目录
       if (typeof name !== "string" || name.split("/").pop() !== nodeId) {
