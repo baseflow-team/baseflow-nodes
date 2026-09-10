@@ -4,15 +4,12 @@ import { resolve } from "node:path";
 const WorkspaceRoot = resolve(import.meta.dirname, "..");
 const NodesDir = resolve(WorkspaceRoot, "baseflow-nodes");
 
-/** 已迁移到官方 Vite 工厂的节点标记：package.json 的 build 脚本。 */
+/** 已准备就绪可以参与构建的节点：package.json 的 build 脚本。 */
 const MigratedBuildScript = "vite build";
 
 /**
- * 发现已接入官方浏览器 ESM 构建的节点。
  *
- * 构建命令和产物校验都从这里取清单，避免两处各自硬编码一份节点名单后漂移。
- *
- * @returns {Promise<{ id: string, packageName: string, packageDir: string }[]>}
+ * @returns {Promise<{ id: string, packageName: string, packageDir: string, hasUi: boolean }[]>}
  */
 export async function listMigratedNodes() {
   const entries = await readdir(NodesDir, { withFileTypes: true });
@@ -32,11 +29,13 @@ export async function listMigratedNodes() {
     if (packageJson.scripts?.build !== MigratedBuildScript) continue;
 
     const entryFile = resolve(packageDir, "src/index.tsx");
-    const entryStats = await stat(entryFile).catch(() => undefined);
-    if (!entryStats?.isFile()) {
-      throw new Error(`${packageFile}: 声明了官方构建脚本但缺少入口 ${entryFile}`);
-    }
-    migrated.push({ id: entry.name, packageName: packageJson.name, packageDir });
+    const entryStats = await stat(entryFile).catch((error) => {
+      if (/** @type {NodeJS.ErrnoException} */ (error).code === "ENOENT") return undefined;
+      throw error;
+    });
+    if (entryStats && !entryStats.isFile()) throw new Error(`${entryFile}: UI 入口必须是文件`);
+
+    migrated.push({ id: entry.name, packageName: packageJson.name, packageDir, hasUi: entryStats?.isFile() ?? false });
   }
 
   if (migrated.length === 0) throw new Error(`${NodesDir}: 未发现已迁移节点`);

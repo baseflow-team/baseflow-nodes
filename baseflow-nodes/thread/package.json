@@ -19,8 +19,6 @@
     "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/thread\"}],\"sources\":{\"@baseflow-nodes/thread\":\"@baseflow-nodes/thread@*\"}}"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rollup -c ../../../scripts/rollup.config.js",
-    "publish": "npm publish ../../../public/nodes/thread"
+    "typecheck": "tsc --noEmit"
   }
 }

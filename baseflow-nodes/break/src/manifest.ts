@@ -1,5 +1,4 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
-import type { NodeProps } from "./model";
 
 export default {
   type: "Break",
@@ -14,24 +13,5 @@ export default {
     },
     props: {},
   },
-  validate: (nodeData) => {
-    const props = nodeData.props;
-    if (props.default) {
-      return;
-    }
-    if (!props.conditions) {
-      return { error: "条件不能为空" };
-    }
-    if (typeof props.conditions !== "string") {
-      for (const groups of props.conditions.groups) {
-        for (const item of groups.items) {
-          if (!item.source.text || !item.target.text || !item.operator) {
-            return { error: "请输入" };
-          }
-        }
-      }
-    }
-    return;
-  },
   defaultDsl: { nodes: [{ tag: "@baseflow-nodes/break" }], sources: { "@baseflow-nodes/break": "@baseflow-nodes/break@*" } },
-} as NodeManifest<NodeProps>;
+} as NodeManifest<{}>;

@@ -24,8 +24,6 @@
     "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/variable-update\"}],\"sources\":{\"@baseflow-nodes/variable-update\":\"@baseflow-nodes/variable-update@*\"}}"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rollup -c ../../../scripts/rollup.config.js",
-    "publish": "npm publish ../../../public/nodes/variable-update"
+    "typecheck": "tsc --noEmit"
   }
 }

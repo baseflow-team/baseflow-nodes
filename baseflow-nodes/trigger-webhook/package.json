@@ -96,8 +96,6 @@
     "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/trigger-webhook\"}],\"sources\":{\"@baseflow-nodes/trigger-webhook\":\"@baseflow-nodes/trigger-webhook@*\"}}"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rollup -c ../../../scripts/rollup.config.js",
-    "publish": "npm publish ../../../public/nodes/trigger-webhook"
+    "typecheck": "tsc --noEmit"
   }
 }

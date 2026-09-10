@@ -43,13 +43,13 @@ baseflow-demo 父页面与 node-render 分属不同 JS Realm，不共享运行�
 export default defineNodeConfig(import.meta.dirname);
 ```
 
-- 节点产物为 `index.js` 和 `package.json`：CSS 内联到 JS 并自行注入，`package.json` 的 `baseflow` 字段作为 NodeManifest。
-- 新节点入口必须是目标浏览器可加载的标准 ESM，并 default export renderer 可挂载的 React Component；`mod.default ?? mod` 只用于历史产物兼容，不属于新节点标准。
-- 新版官方构建要求 NodeManifest 显式声明当前 `baseflow.runtimeVersion`；历史产物缺少该字段时固定按 Runtime v1 加载，显式无效值或不支持的版本在 import 节点入口前拒绝。
-- renderer 根据节点入口计算同目录 `package.json`，先解析 `baseflow` manifest 和检查 Runtime，再 import `index.js`；失败时展示原始错误，不自动改写依赖、回退版本或修复节点。
-- 官方节点构建固定 production JSX、ES2022 和 `process.env.NODE_ENV = "production"`；该配置不为任意依赖提供完整 `process.env` polyfill。
-- `index.js` 文件名由构建工厂强制固定；节点包仍应遵循仓库 ESM 约定，声明 `"type": "module"`。
-- 当前只有 `break` 完成浏览器 ESM 构建试点；其它节点接入时复用配置工厂并补齐 `build` 脚本。
+- 节点产物必须有 `package.json`，其中的 `baseflow` 字段作为 Manifest，定义节点的`元数据`信息。
+- 某些节点需要渲染 UI 界面，`index.js` 为其 UI Render 入口，必须是标准 ESM，并 default export 一个无参数的 `自启动函数`，该函数将被 `baseflow-demo/public/node-render.html` 中的 postMessage 触发加载和渲染。
+  - UI Render 允许生成额外 chunk、也允许动态 import 其它 ESM CDN 包，但入口只认 `index.js` 默认导出的`自启动函数`
+  - 例如 `baseflow-nodes/branch` 为具有 UI 界面的节点
+- 某些节点不需要 UI 界面，只需要 `manifest.ts` 定义`元数据`信息。
+  - 例如 `baseflow-nodes/break` 为无 UI 界面的节点
+- 目前 `branch` 和 `break` 作为范例可以参与真实构建，其它节点待准备好后才参与构建。通过 scripts/migratedNodes.js 临时过滤准备好的节点。
 
 ### Monaco
 

@@ -19,8 +19,6 @@
     "defaultDsl": ""
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rollup -c ../../../scripts/rollup.config.js",
-    "publish": "npm publish ../../../public/nodes/flow"
+    "typecheck": "tsc --noEmit"
   }
 }

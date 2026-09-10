@@ -19,7 +19,6 @@
     "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/task\"}],\"sources\":{\"@baseflow-nodes/task\":\"@baseflow-nodes/task@*\"}}"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rollup -c ../../../scripts/rollup.config.js"
+    "typecheck": "tsc --noEmit"
   }
 }

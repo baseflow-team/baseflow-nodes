@@ -40,8 +40,6 @@
     "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/http\"}],\"sources\":{\"@baseflow-nodes/http\":\"@baseflow-nodes/http@*\"}}"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rollup -c ../../../scripts/rollup.config.js",
-    "publish": "npm publish ../../../public/nodes/http"
+    "typecheck": "tsc --noEmit"
   }
 }

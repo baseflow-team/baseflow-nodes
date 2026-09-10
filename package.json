@@ -19,8 +19,7 @@
     "lint:fix": "biome check --write . && stylelint \"**/*.{css,scss}\" --fix",
     "prepare:monaco": "node ./scripts/assertWorkspaceRoot.js && npm run monaco:copy --workspace baseflow-demo",
     "build:demo": "node ./scripts/assertWorkspaceRoot.js && npm run build --workspace baseflow-demo",
-    "build:renderer": "node ./scripts/assertWorkspaceRoot.js && node ./scripts/verifyPreview.js --shared && npm run build:app --workspace baseflow-node-renderer",
-    "build:nodes": "node ./scripts/assertWorkspaceRoot.js && node ./scripts/buildNodes.js",
+    "build:nodes": "node ./scripts/buildNodes.js",
     "preview": "npm run preview --workspace baseflow-demo"
   },
   "dependencies": {
@@ -30,8 +29,8 @@
     "markdown-to-jsx": "^9.10.2",
     "fast-xml-parser": "^5.11.0",
     "fast-xml-builder": "^1.3.1",
-    "@baseflow/flow-react": "^1.0.9",
-    "@baseflow/node-runtime-react": "^1.0.9",
+    "@baseflow/flow-react": "^1.0.10",
+    "@baseflow/node-runtime-react": "^1.0.13",
     "antd": "^6.6.1",
     "dayjs": "^1",
     "axios": "^1.18.1",

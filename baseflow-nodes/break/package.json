@@ -3,31 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "baseflow": {
-    "runtimeVersion": "1",
-    "type": "Break",
-    "icon": "",
-    "desc": "循环Break：放置于[循环]节点中，退出整个循环",
-    "executor": {
-      "node": "@baseflow-executors/break@0.0.1"
-    },
-    "defaultData": {
-      "meta": {
-        "name": "循环Break"
-      },
-      "props": {}
-    },
-    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/break\"}],\"sources\":{\"@baseflow-nodes/break\":\"@baseflow-nodes/break@*\"}}"
-  },
   "scripts": {
-    "build": "vite build",
+    "build": "node ./scripts/buildNodeManifest.js",
     "type:check": "tsc --noEmit"
   },
   "peerDependencies": {
-    "react": "^19",
-    "react-dom": "^19",
-    "antd": "*",
-    "widgets-antd": "*",
     "@baseflow/node-runtime-react": "^1"
   }
 }
