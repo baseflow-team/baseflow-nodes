@@ -1,0 +1,17 @@
+import type { NodeManifest } from "@baseflow/node-runtime-react";
+
+export default {
+  type: "Break",
+  icon: "",
+  desc: "循环Continue：放置于[循环]节点中，跳过本次循环，继续下一次循环",
+  executor: {
+    node: "@baseflow-executors/continue@0.0.1",
+  },
+  defaultData: {
+    meta: {
+      name: "循环Continue",
+    },
+    props: {},
+  },
+  defaultDsl: { nodes: [{ tag: "@baseflow-nodes/continue" }], sources: { "@baseflow-nodes/continue": "@baseflow-nodes/continue@*" } },
+} as NodeManifest<{}>;

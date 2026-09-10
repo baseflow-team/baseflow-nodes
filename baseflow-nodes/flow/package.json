@@ -2,23 +2,12 @@
   "name": "@baseflow-nodes/flow",
   "version": "0.0.1",
   "private": true,
-  "baseflow": {
-    "runtimeVersion": "1",
-    "type": "Flow",
-    "icon": "",
-    "desc": "流程：定义一个独立的流程",
-    "executor": {
-      "node": "@baseflow-executors/flow@0.0.1"
-    },
-    "defaultData": {
-      "meta": {
-        "name": "流程"
-      },
-      "props": {}
-    },
-    "defaultDsl": ""
-  },
+  "type": "module",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "build": "node ../../scripts/buildNodeManifest.js",
+    "type:check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@baseflow/node-runtime-react": "^1"
   }
 }

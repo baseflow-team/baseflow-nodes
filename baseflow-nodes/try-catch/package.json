@@ -2,23 +2,12 @@
   "name": "@baseflow-nodes/try-catch",
   "version": "0.0.1",
   "private": true,
-  "baseflow": {
-    "runtimeVersion": "1",
-    "type": "Group",
-    "icon": "",
-    "desc": "TryCatch：提供一个可以捕获子节点运行时错误的容器节点",
-    "executor": {
-      "node": "@baseflow-executors/try-catch@0.0.1"
-    },
-    "defaultData": {
-      "meta": {
-        "name": "TryCatch"
-      },
-      "props": {}
-    },
-    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/try-catch\"}],\"sources\":{\"@baseflow-nodes/try-catch\":\"@baseflow-nodes/try-catch@*\"}}"
-  },
+  "type": "module",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "build": "node ../../scripts/buildNodeManifest.js",
+    "type:check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@baseflow/node-runtime-react": "^1"
   }
 }
