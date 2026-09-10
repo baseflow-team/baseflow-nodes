@@ -2,22 +2,6 @@
   "name": "@baseflow-nodes/task",
   "version": "0.0.1",
   "private": true,
-  "baseflow": {
-    "runtimeVersion": "1",
-    "type": "Task",
-    "icon": "",
-    "desc": "Task任务: 测试任务",
-    "executor": {
-      "node": "@baseflow-executors/task@0.0.1"
-    },
-    "defaultData": {
-      "meta": {
-        "name": "Task任务"
-      },
-      "props": {}
-    },
-    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/task\"}],\"sources\":{\"@baseflow-nodes/task\":\"@baseflow-nodes/task@*\"}}"
-  },
   "scripts": {
     "typecheck": "tsc --noEmit"
   }

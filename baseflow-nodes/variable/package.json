@@ -2,33 +2,16 @@
   "name": "@baseflow-nodes/variable",
   "version": "0.0.1",
   "private": true,
-  "baseflow": {
-    "runtimeVersion": "1",
-    "type": "Variable",
-    "icon": "",
-    "desc": "变量定义：通过本节点可以定义多个流程变量",
-    "executor": {
-      "node": "@baseflow-executors/variable@0.0.1"
-    },
-    "defaultData": {
-      "meta": {
-        "name": "变量定义",
-        "outputSchema": {
-          "name": "output",
-          "type": "ͼOBJECTͼ",
-          "children": [
-            {
-              "name": "newVariable",
-              "type": "ͼSTRINGͼ"
-            }
-          ]
-        }
-      },
-      "props": {}
-    },
-    "defaultDsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/variable\"}],\"sources\":{\"@baseflow-nodes/variable\":\"@baseflow-nodes/variable@*\"}}"
-  },
+  "type": "module",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "build": "node ../../scripts/buildNodeManifest.js && vite build",
+    "type:check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "antd": "*",
+    "widgets-antd": "*",
+    "@baseflow/node-runtime-react": "^1"
   }
 }
