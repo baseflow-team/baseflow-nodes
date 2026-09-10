@@ -113,7 +113,20 @@ if (typeof name !== "string" || name.split("/").pop() !== NodeId) {
 }
 
 const baseflow = createBaseflowManifest(await loadNodeManifest());
-const manifestSource = JSON.stringify({ type: "module", name, version, baseflow }, null, 2);
+const manifestSource = JSON.stringify(
+  {
+    private: false,
+    publishConfig: {
+      access: "public",
+    },
+    type: "module",
+    name,
+    version,
+    baseflow,
+  },
+  null,
+  2,
+);
 
 await rm(OutputDir, { recursive: true, force: true });
 await mkdir(OutputDir, { recursive: true });

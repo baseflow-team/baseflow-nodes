@@ -1,6 +1,6 @@
 # Baseflow Nodes
 
-节点由独立的 renderer iframe 动态加载：
+Baseflow 节点开发脚手架。节点构建为独立 npm package，发布后可由 Baseflow 通过 jsDelivr CDN 加载；仓库内同时提供本地 Workflow 演示页面用于联合调试。
 
 ```text
 baseflow-demo
@@ -8,24 +8,21 @@ baseflow-demo
        └─ import: baseflow-nodes/*
 ```
 
-- `baseflow-demo`：Workflow 演示父页面；
-- `node-render.html`：加载节点 ESM、并触发其自启动渲染函数；
-- `baseflow-nodes/*`：节点源码；
-- `baseflow-preview`：三者联合构建后的本地静态预览。
-
-## 环境要求
+## 环境准备
 
 - Node.js `>=22.12`
 - npm workspaces
 
-首次安装依赖后，在仓库根目录准备低频公共资源（不需要每次开发时执行）：
+首次检出后，在仓库根目录执行：
 
 ```bash
 npm install
 npm run prepare:monaco
 ```
 
-## 快速开始
+`prepare:monaco` 只需在首次准备、生成目录丢失或 `monaco-editor` 版本变化时重新执行。
+
+## 本地预览
 
 在仓库根目录依次执行：
 
@@ -35,11 +32,19 @@ npm run build:demo
 npm run preview
 ```
 
-- `npm run preview` 只启动已有静态产物，不会自动构建。源码变化后，需要重新构建对应 workspace 并刷新页面。
+- `build:nodes`：构建节点到 `baseflow-preview/nodes/<node-id>/`。
+- `build:demo`：根据节点产物生成 `mock.json`，并构建演示页面到 `baseflow-preview/`。
+- `preview`：启动已有静态产物，不会自动重新构建。
 
-## 开发一个节点
+常见增量构建：
 
-节点目录名是 node ID，使用 kebab-case：
+- 只修改节点 UI：重新构建该节点并刷新页面。
+- 修改 NodeManifest 或新增节点：重新构建节点，再运行 `npm run build:demo` 更新 `mock.json`。
+- 修改 demo：运行 `npm run build:demo`。
+
+## 创建节点
+
+节点目录名就是 node ID，必须使用 kebab-case：
 
 ```text
 baseflow-nodes/example-node/
@@ -47,39 +52,100 @@ baseflow-nodes/example-node/
   tsconfig.json
   src/
     manifest.ts
-    index.tsx        # 仅有 UI 的节点需要
-  vite.config.ts     # 仅有 UI 的节点需要
+    index.tsx        # 仅 UI 节点需要
+  vite.config.ts     # 仅 React UI 节点需要
 ```
 
-### 1. 声明 NodeManifest
+### 1. 配置 package.json
 
-NodeManifest 由 `src/manifest.ts` 默认导出，构建时生成产物 `package.json` 中的 `baseflow` 字段。
+React UI 节点示例：
 
-- 有 UI 的节点：请设置字段 inputForm: "index.js"
-- 无 UI 的节点：无需设置 inputForm 或 inputForm: ""
+```json
+{
+  "name": "@baseflow-nodes/example-node",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node ../../scripts/buildNodeManifest.js && vite build",
+    "type:check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "@baseflow/node-runtime-react": "^1"
+  }
+}
+```
 
-### 2. 有 UI 的节点使用统一 Vite 配置
+无 UI 节点不需要 Vite 构建：
+
+```json
+{
+  "scripts": {
+    "build": "node ../../scripts/buildNodeManifest.js",
+    "type:check": "tsc --noEmit"
+  }
+}
+```
+
+节点统一使用以下 `tsconfig.json`：
+
+```json
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {},
+  "include": ["src", "../../env.d.ts"]
+}
+```
+
+`package.json#name` 的末段必须与 node ID 一致。`npm run build:nodes` 会构建所有声明了非空 `scripts.build` 的节点。
+
+### 2. 声明 NodeManifest
+
+`src/manifest.ts` 必须默认导出一个对象，并且只能使用 `import type`：
 
 ```ts
-// vite.config.ts
+import type { NodeManifest } from "@baseflow/node-runtime-react";
+
+export default {
+  type: "Task",
+  icon: "",
+  desc: "示例节点",
+  executor: {
+    node: "@baseflow-executors/example-node@0.0.1",
+  },
+  inputForm: "index.js",
+  defaultData: {
+    meta: {
+      name: "示例节点",
+    },
+    props: {},
+  },
+  defaultDsl: {
+    nodes: [{ tag: "@baseflow-nodes/example-node" }],
+    sources: {
+      "@baseflow-nodes/example-node": "@baseflow-nodes/example-node@*",
+    },
+  },
+} as NodeManifest;
+```
+
+- UI 节点设置 `inputForm: "index.js"`。
+- 无 UI 节点省略 `inputForm`，也不需要 `src/index.tsx` 和 `vite.config.ts`。
+- `runtimeVersion` 由构建脚本统一写入产物，无需在节点中声明。
+
+### 3. 构建 React UI
+
+`vite.config.ts`：
+
+```ts
 import { defineNodeConfig } from "../../scripts/defineNodeConfig.js";
 
 export default defineNodeConfig(import.meta.dirname);
 ```
 
-配置工厂统一处理：
-
-- production JSX 和 ES2022；
-- `process.env.NODE_ENV = "production"`；
-- Runtime 共享依赖 external；
-- CSS 内联和注入；
-- 固定输出 `index.js`；
-- 保留第一步生成的 NodeManifest；
-- 输出到 `baseflow-preview/nodes/<node-id>/`。
-
-> 该配置仅为推荐配置。也可以使用其它构建工具，只要最终产物满足标准 ESM 并 export default 自启动函数。
-
-### 3. 默认导出自启动函数
+`src/index.tsx` 默认导出一个无参数的自启动函数：
 
 ```tsx
 import { createRoot } from "react-dom/client";
@@ -88,15 +154,62 @@ import App from "./App";
 export default () => createRoot(document.getElementById("root")!).render(<App />);
 ```
 
-- UI 入口必须 default export 一个无参数自启动函数，由 `node-render` iframe 加载后调用。
+统一配置会生成标准 ESM 入口 `index.js`，并将样式注入该入口。使用其他框架或构建工具时，也必须生成相同的入口和产物结构。
 
-## 节点开发规范
+### 4. 构建单个节点
 
-- 节点由 iframe 隔离运行，与 flow 窗口的唯一交互方式为原生的 postMessage。
-- 推荐使用封装后的 Runtime SDK：`@baseflow/node-runtime-react`；如果你想使用其它非 react 框架（比如 vue），请使用更基础的 `@baseflow/node-runtime`；
-- 节点最终的挂载和渲染都由自己的`自启动函数`封装，可以使用任何技术栈、框架、UI库，也支持动态 import esm cdn。
-- 本项目的脚手架和构建脚本并非唯一的落地途径。
+在节点目录中执行：
 
-## 产物与发布
+```bash
+npm run build
+```
 
-本项目最终有价值的产物为各节点构建后的 `npm package`，位于 `baseflow-preview/nodes` 目录下，你可以将其 npm publish 发布到公网并最终使用。
+产物位于：
+
+```text
+baseflow-preview/nodes/example-node/
+  package.json
+  index.js       # 仅 UI 节点存在
+```
+
+## 验证
+
+根据改动范围，在仓库根目录执行：
+
+```bash
+npm run type:check
+npm run lint
+npm test
+```
+
+## 发布与使用
+
+发布前，先在源码节点的 `package.json` 中更新 `version`，再重新构建节点：
+
+```bash
+npm run build --workspace @baseflow-nodes/example-node
+```
+
+发布构建后的节点产物：
+
+```bash
+npm publish ./baseflow-preview/nodes/example-node
+```
+
+不要直接修改或发布 `baseflow-nodes/<node-id>` 源码目录，也不要手工修改 `baseflow-preview` 中的生成产物。产物 `package.json` 已默认包含公开发布配置。
+
+发布成功后，使用与 npm package 一致的固定版本访问 jsDelivr：
+
+```text
+https://cdn.jsdelivr.net/npm/@baseflow-nodes/example-node@0.0.1/package.json
+https://cdn.jsdelivr.net/npm/@baseflow-nodes/example-node@0.0.1/index.js
+```
+
+其中 `package.json#baseflow` 是节点 Manifest；UI 节点的 `index.js` 是由 renderer iframe 动态 import 的 ESM 入口。
+
+## 节点运行约定
+
+- 节点 UI 运行在独立 iframe Realm 中，避免与 Workflow 父页面共享 JS 运行时和样式。
+- 节点与父页面通过 Runtime SDK 封装的 `postMessage`/RPC 通信。React 节点使用 `@baseflow/node-runtime-react`；其他框架可使用基础的 `@baseflow/node-runtime`。
+- 节点可以使用自己的框架和 UI 库，也可以动态 import 其他 ESM CDN 依赖。
+- 当前本地 preview 使用无 `sandbox` 的同源 iframe，只提供 Realm、DOM 和 CSS 隔离，不是恶意代码安全边界。

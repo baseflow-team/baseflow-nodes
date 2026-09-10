@@ -4,7 +4,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ScriptDir = dirname(fileURLToPath(import.meta.url));
 const WorkspaceRoot = resolve(ScriptDir, "../..");
-const DefaultNodesDir = join(WorkspaceRoot, "baseflow-nodes");
+const DefaultNodesDir = join(WorkspaceRoot, "baseflow-preview/nodes");
 const DefaultOutputFile = join(WorkspaceRoot, "baseflow-demo/public/mock.json");
 const CollaborationApplyValues = new Set(["readonly", "modify"]);
 

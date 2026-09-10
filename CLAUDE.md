@@ -4,10 +4,11 @@
 
 - npm workspaces Monorepo；Node.js `>=22.12`，TypeScript `5.x`，React `19.x`，ESM，Vite `8.x`，Vitest `4.x`。
 - 代码使用 Biome；样式使用 Sass 和 Stylelint。
+- Package `widgets-antd`：供 demo 和 React 节点复用的 Ant Design 组件适配层。
 - Package `baseflow-demo`：Web App 父页面，负责 Workflow 演示。
   - `baseflow-demo/public/node-render.html`：嵌入 demo 的 iframe 子页面，负责隔离运行和挂载节点 UI。
 - Package `baseflow-nodes/*`：由 `node-render.html` 动态加载的节点物料。
-- `baseflow-preview`：由以上 2 者联合构建后的静态目录，其 `preview` 命令在 `baseflow-demo/package.json` 中定义。
+- `baseflow-preview`：由 demo 与节点产物联合构成的静态目录，其 `preview` 命令在 `baseflow-demo/package.json` 中定义。
 
 ## preview 运行架构
 
@@ -17,33 +18,35 @@ baseflow-demo
        └─ import: baseflow-nodes/*
 ```
 
-> `node-render` iframe 由 `baseflow-demo` 页面动态创建，并通父页面的 `postMessage` 事件来驱动 node 动态 `import` 并执行。
+> `node-render` iframe 由 `baseflow-demo` 页面动态创建，并通过父页面的 `postMessage` 事件驱动 node 动态 `import` 并执行。
 
 baseflow-demo 父页面与 node-render 分属不同 JS Realm，不共享运行时实例；这是必须保留的运行隔离边界。当前本地 preview 是没有 `sandbox` 的同源 iframe，只提供 Realm、DOM 和 CSS 隔离，不视为恶意代码安全边界。联合调试统一走生产构建后的 `baseflow-preview`，不使用跨子项目的 Vite dev 动态加载。
 
 ## 项目定位
 
-- 本项目提供用来开发 `baseflow-nodes/*` 节点的脚手架工程，通过构建得到各 node 的最终生产交付产物。
-- `baseflow-demo` 及 `baseflow-preview` 仅作为配套演示，不代表最终生产交付产物。
+- 本项目提供用来开发 `baseflow-nodes/*` 节点的脚手架工程。
+- `baseflow-preview/nodes/<node-id>/` 是节点的最终生产交付产物，发布为公开 npm package，并通过固定版本的 jsDelivr URL 提供 Manifest 和 ESM 入口。
+- `baseflow-demo` 以及 `baseflow-preview` 中除 `nodes` 以外的内容仅用于配套演示，不属于节点生产交付产物。
 
 ## 构建契约
 
 ### 产物边界
 
-- `baseflow-demo` 构建到 `baseflow-preview/`；清理时保留 `nodes`。
+- `baseflow-demo` 构建到 `baseflow-preview/`；清理 demo 产物时只保留 `nodes`。
 - `baseflow-nodes/*` 节点构建到 `baseflow-preview/nodes/<node-id>/`，每个节点只拥有并清理自己的目录。
-- `baseflow-preview` 由以上 2 者联合构建，禁止手工修改；
+- `baseflow-preview` 由 demo 与节点产物联合构建，禁止手工修改。
 
 ### 节点物料
 
 - 节点文件夹名是 node ID 的唯一事实来源，必须为 kebab-case。
-- 有 UI 的节点统一使用 `scripts/defineNodeConfig.js`：
+- 仓库内使用 React 的 UI 节点统一使用 `scripts/defineNodeConfig.js`：
 
 ```ts
 export default defineNodeConfig(import.meta.dirname);
 ```
 
 - 节点产物必须有 `package.json`，其中的 `baseflow` 字段作为 Manifest，定义节点的`元数据`信息。
+- `manifest.ts` 必须 default export 对象，只允许 `import type`；`runtimeVersion` 由根 `package.json#baseflowRuntimeVersion` 统一注入。
 - 单节点构建由节点 `package.json` 的 `scripts.build` 定义：第一步运行 `node ../../scripts/buildNodeManifest.js` 生成元数据，有 UI 时第二步再运行 `vite build`。
 - 某些节点需要渲染 UI 界面，`index.js` 为其 UI Render 入口，必须是标准 ESM，并 default export 一个无参数的 `自启动函数`，该函数将被 `baseflow-demo/public/node-render.html` 中的 postMessage 触发加载和渲染。
   - UI Render 允许生成额外 chunk、也允许动态 import 其它 ESM CDN 包，但入口只认 `index.js` 默认导出的`自启动函数`
@@ -70,7 +73,7 @@ export default defineNodeConfig(import.meta.dirname);
 
 ### 日常项目构建
 
-node 物料、renderer 和 demo 的构建输入和输出互相独立，可任意排序或分别执行；需联合刷新时建议执行：
+节点和 demo 可以分别构建；联合刷新时必须先构建节点产物，再构建依赖这些产物生成 mock 的 demo：
 
 ```bash
 npm run build:nodes
@@ -78,9 +81,9 @@ npm run build:demo
 ```
 
 - `build:nodes`：由 `scripts/buildNodes.js` 发现并依次构建包含 `scripts.build` 的节点，每个节点只清理自己的产物目录。
-- `build:demo`：生成 mock、清理 demo 自有产物并构建父页面，不处理 Monaco。
+- `build:demo`：清理 demo 自有产物、根据节点产物生成 mock 并构建父页面，不处理 Monaco。
 - `npm run preview` 只启动生产预览，不执行构建。
-- 按变更范围运行 `npm run type:check`、Biome、Stylelint 和相关构建；不额外引入 `tsc --checkJs` 验收要求。
+- 按变更范围运行 `npm run type:check`、`npm run lint`、`npm test` 和相关构建；不额外引入 `tsc --checkJs` 验收要求。
 
 ## 编码约定
 
