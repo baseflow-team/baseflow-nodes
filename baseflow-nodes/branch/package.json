@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node ./scripts/buildNodeManifest.js && vite build",
+    "build": "node ../../scripts/buildNodeManifest.js && vite build",
     "type:check": "tsc --noEmit"
   },
   "peerDependencies": {

@@ -1,26 +1,34 @@
 import { spawnSync } from "node:child_process";
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { listMigratedNodes } from "./migratedNodes.js";
-import { compileNodeManifest } from "./nodeManifestPlugin.js";
 
 const NpmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+const WorkspaceRoot = resolve(import.meta.dirname, "..");
+const NodesDir = resolve(WorkspaceRoot, "baseflow-nodes");
+const Entries = await readdir(NodesDir, { withFileTypes: true });
+const BuildableNodes = [];
 
-const MigratedNodes = await listMigratedNodes();
-console.log(`构建已迁移节点: ${MigratedNodes.map(({ id }) => id).join(", ")}`);
+for (const entry of Entries.filter((item) => item.isDirectory()).sort((left, right) => left.name.localeCompare(right.name))) {
+  const packageFile = resolve(NodesDir, entry.name, "package.json");
+  const source = await readFile(packageFile, "utf8").catch((error) => {
+    if (/** @type {NodeJS.ErrnoException} */ (error).code === "ENOENT") return undefined;
+    throw error;
+  });
+  if (source === undefined) continue;
 
-for (const { id, packageName, packageDir, hasUi } of MigratedNodes) {
-  if (!hasUi) {
-    const manifestSource = await compileNodeManifest(packageDir);
-    const outputDir = resolve(packageDir, "../../baseflow-preview/nodes", id);
-
-    await rm(outputDir, { recursive: true, force: true });
-    await mkdir(outputDir, { recursive: true });
-    await writeFile(resolve(outputDir, "package.json"), `${manifestSource}\n`);
-    console.log(`节点无 UI，已生成 manifest: ${packageName}`);
-    continue;
+  const packageJson = JSON.parse(source);
+  if (typeof packageJson.scripts?.build !== "string" || packageJson.scripts.build.trim() === "") continue;
+  if (typeof packageJson.name !== "string" || packageJson.name === "") {
+    throw new Error(`${packageFile}: 可构建节点必须声明 package.name`);
   }
 
+  BuildableNodes.push({ id: entry.name, packageName: packageJson.name });
+}
+
+if (BuildableNodes.length === 0) throw new Error(`${NodesDir}: 未发现可构建节点`);
+console.log(`构建已准备节点: ${BuildableNodes.map(({ id }) => id).join(", ")}`);
+
+for (const { packageName } of BuildableNodes) {
   const result = spawnSync(NpmCommand, ["run", "build", "--workspace", packageName], { stdio: "inherit" });
   if (result.status !== 0) {
     if (result.error) {

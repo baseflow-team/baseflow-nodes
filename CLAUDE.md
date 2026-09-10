@@ -37,19 +37,20 @@ baseflow-demo 父页面与 node-render 分属不同 JS Realm，不共享运行�
 ### 节点物料
 
 - 节点文件夹名是 node ID 的唯一事实来源，必须为 kebab-case。
-- Vite 配置统一使用 `baseflow-node-renderer/scripts/defineNodeConfig.js`：
+- 有 UI 的节点统一使用 `scripts/defineNodeConfig.js`：
 
 ```ts
 export default defineNodeConfig(import.meta.dirname);
 ```
 
 - 节点产物必须有 `package.json`，其中的 `baseflow` 字段作为 Manifest，定义节点的`元数据`信息。
+- 单节点构建由节点 `package.json` 的 `scripts.build` 定义：第一步运行 `node ../../scripts/buildNodeManifest.js` 生成元数据，有 UI 时第二步再运行 `vite build`。
 - 某些节点需要渲染 UI 界面，`index.js` 为其 UI Render 入口，必须是标准 ESM，并 default export 一个无参数的 `自启动函数`，该函数将被 `baseflow-demo/public/node-render.html` 中的 postMessage 触发加载和渲染。
   - UI Render 允许生成额外 chunk、也允许动态 import 其它 ESM CDN 包，但入口只认 `index.js` 默认导出的`自启动函数`
   - 例如 `baseflow-nodes/branch` 为具有 UI 界面的节点
 - 某些节点不需要 UI 界面，只需要 `manifest.ts` 定义`元数据`信息。
   - 例如 `baseflow-nodes/break` 为无 UI 界面的节点
-- 目前 `branch` 和 `break` 作为范例可以参与真实构建，其它节点待准备好后才参与构建。通过 scripts/migratedNodes.js 临时过滤准备好的节点。
+- 节点 `package.json` 中存在非空 `scripts.build` 即视为已准备好，由 `scripts/buildNodes.js` 自动发现。
 
 ### Monaco
 
@@ -59,7 +60,7 @@ export default defineNodeConfig(import.meta.dirname);
 
 ## 构建与验证
 
-所有准备和构建子命令必须在仓库根目录执行，并会在写入前校验执行目录。根命令直接调用对应 workspace，当前不提供总构建命令。
+根级准备和构建命令必须在仓库根目录执行。单节点可在自身目录中运行 `npm run build`，直接构建到 `baseflow-preview/nodes/<node-id>/`。
 
 ### 低频外围依赖
 
@@ -76,7 +77,7 @@ npm run build:nodes
 npm run build:demo
 ```
 
-- `build:nodes`：按 `scripts/migratedNodes.js` 发现的清单构建已迁移节点（当前只有 `break`），不清理其它旧节点目录；节点是否已迁移以 `package.json` 的 `"build": "vite build"` 为准。
+- `build:nodes`：由 `scripts/buildNodes.js` 发现并依次构建包含 `scripts.build` 的节点，每个节点只清理自己的产物目录。
 - `build:demo`：生成 mock、清理 demo 自有产物并构建父页面，不处理 Monaco。
 - `npm run preview` 只启动生产预览，不执行构建。
 - 按变更范围运行 `npm run type:check`、Biome、Stylelint 和相关构建；不额外引入 `tsc --checkJs` 验收要求。

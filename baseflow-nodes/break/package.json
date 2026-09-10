@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node ./scripts/buildNodeManifest.js",
+    "build": "node ../../scripts/buildNodeManifest.js",
     "type:check": "tsc --noEmit"
   },
   "peerDependencies": {
