@@ -8,8 +8,16 @@
     <script>
         window.addEventListener("message", async (event) => {
             if (event.data.action === "InitNode") {
-                const { url, nodeData, flowData } = event.data;
-                Object.assign(window, { __nodeData__: nodeData, __flowData__: flowData });
+                const { url, nodeData, flowData, flowInputSchema, flowReturnSchema } = event.data;
+                window.baseflow = {
+                    _nodeData: nodeData,
+                    _flowData: flowData,
+                    _flowInputSchema: flowInputSchema,
+                    _flowReturnSchema: flowReturnSchema,
+                    nodeData,
+                    flowInputSchema,
+                    flowReturnSchema
+                }
                 const module = await import(url);
                 const setup = module.default ?? module;
                 setup();

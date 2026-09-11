@@ -1,7 +1,7 @@
-"use no memo";
-import type { INodeInputPanel, SchemaLabelRender, SchemaModel, SchemaToolsFilter, SchemaValue } from "@baseflow/node-runtime-react";
-import { SchemaModelForm, SchemaValueForm, useNode, ValueSource } from "@baseflow/node-runtime-react";
+import type { SchemaModel, SchemaToolsFilter, SchemaValue } from "@baseflow/node-runtime-react";
+import { SchemaModelForm, SchemaValueForm, useNodeRuntime, ValueSource } from "@baseflow/node-runtime-react";
 import { Switch } from "antd";
+import type { FC } from "react";
 import { memo, useCallback } from "react";
 import type { NodeProps } from "../model";
 import styles from "./index.module.scss";
@@ -10,20 +10,11 @@ const toolsFilter: SchemaToolsFilter = (item, parent) => {
   if (!parent) {
     return { addNext: false, edit: false, delete: false };
   }
-};
-const schemaLabelRender: SchemaLabelRender = (item, parent) => {
-  if (!parent) {
-    return { name: "变量定义", label: "" };
-  }
-};
-const valueLabelRender: SchemaLabelRender = (item, parent) => {
-  if (!parent) {
-    return { name: "变量初始化", label: "" };
-  }
+  return;
 };
 
-const Component: INodeInputPanel<NodeProps> = ({ nodeData }) => {
-  const { node } = useNode(nodeData.id);
+const Component: FC = () => {
+  const { nodeData, updateNodeProps, updateNodeMeta } = useNodeRuntime<NodeProps>();
   const nodeProps = nodeData.props;
   const outputSchema = nodeData.meta.outputSchema!;
   const initialValue = nodeProps.initialValue;
@@ -32,7 +23,7 @@ const Component: INodeInputPanel<NodeProps> = ({ nodeData }) => {
   const onShowAssignmentChange = useCallback(
     (show?: boolean) => {
       if (!show) {
-        node.updateProps({ initialValue: undefined });
+        updateNodeProps({ initialValue: undefined });
       } else {
         const { name, type, optional, children } = outputSchema;
         const newValue: SchemaValue = {
@@ -48,54 +39,39 @@ const Component: INodeInputPanel<NodeProps> = ({ nodeData }) => {
             value: { type, optional, source: ValueSource.Variable, text: "" },
           })),
         };
-        node.updateProps({ initialValue: newValue });
+        updateNodeProps({ initialValue: newValue });
       }
     },
-    [node, outputSchema],
+    [updateNodeProps, outputSchema],
   );
 
   const onSchemaChange = useCallback(
     (schema?: SchemaModel) => {
-      node.updateOutputSchema(schema);
+      updateNodeMeta({ outputSchema: schema });
       const names = (schema?.children || []).map((item) => item.name);
       const show = names.slice(0, 3);
       if (show.length < names.length) {
         show.push("...");
       }
-      node.updateMeta({ summary: show.join(", ") });
+      updateNodeMeta({ summary: show.join(", ") });
     },
-    [node],
+    [updateNodeMeta],
   );
 
   const onValueChange = useCallback(
     (initialValue?: SchemaValue) => {
-      node.updateProps({ initialValue });
+      updateNodeProps({ initialValue });
     },
-    [node],
+    [updateNodeProps],
   );
 
   return (
-    <div className={styles.variable}>
-      <SchemaModelForm
-        variant="borderless"
-        labelRender={schemaLabelRender}
-        toolsFilter={toolsFilter}
-        value={outputSchema}
-        onChange={onSchemaChange}
-      />
+    <div className={styles.root}>
+      <SchemaModelForm variant="borderless" toolsFilter={toolsFilter} value={outputSchema} onChange={onSchemaChange} />
       <div className="initial-assignment">
         <Switch value={showAssignment} checkedChildren="初始赋值" unCheckedChildren="初始赋值" onChange={onShowAssignmentChange} />
       </div>
-      {initialValue && (
-        <SchemaValueForm
-          variant="filled"
-          showRootTools
-          labelRender={valueLabelRender}
-          schema={outputSchema}
-          value={initialValue}
-          onChange={onValueChange}
-        />
-      )}
+      {initialValue && <SchemaValueForm variant="filled" showRootTools schema={outputSchema} value={initialValue} onChange={onValueChange} />}
     </div>
   );
 };

@@ -12,6 +12,7 @@
     "react-dom": "^19",
     "antd": "*",
     "widgets-antd": "*",
-    "@baseflow/node-runtime-react": "^1"
+    "@baseflow/node-runtime-react": "^1",
+    "path-to-regexp": "^8"
   }
 }

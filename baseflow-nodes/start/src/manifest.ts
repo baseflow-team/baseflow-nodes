@@ -7,6 +7,7 @@ export default {
   executor: {
     node: "@baseflow-executors/start@0.0.1",
   },
+  inputForm: "index.js",
   defaultData: {
     meta: {
       name: "流程开始",

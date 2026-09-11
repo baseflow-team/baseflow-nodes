@@ -8,6 +8,7 @@ export default {
   executor: {
     node: "@baseflow-executors/trigger-webhook@0.0.1",
   },
+  inputForm: "index.js",
   defaultData: {
     meta: {
       name: "webhook触发器",

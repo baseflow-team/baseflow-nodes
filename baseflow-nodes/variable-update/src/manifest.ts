@@ -14,6 +14,7 @@ export default {
     },
     props: {},
   },
+  inputForm: "index.js",
   validate: (nodeData) => {
     if (!nodeData.props.scripts && !nodeData.props.variable) {
       return "Required!";

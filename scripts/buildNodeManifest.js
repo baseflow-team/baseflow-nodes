@@ -95,7 +95,18 @@ function createBaseflowManifest(manifest) {
   const baseflow = { runtimeVersion: BaseflowRuntimeVersion };
 
   for (const [key, value] of Object.entries(manifest)) {
-    baseflow[key] = typeof value === "function" ? Function.prototype.toString.call(value) : value;
+    if (typeof value === "function") {
+      baseflow[key] = Function.prototype.toString.call(value);
+    } else if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+      baseflow[key] = Object.fromEntries(
+        Object.entries(value).map(([childKey, childValue]) => [
+          childKey,
+          typeof childValue === "function" ? Function.prototype.toString.call(childValue) : childValue,
+        ]),
+      );
+    } else {
+      baseflow[key] = value;
+    }
   }
 
   if (typeof baseflow.defaultDsl !== "string") {
