@@ -1,15 +1,15 @@
-import type { Conditions } from "@baseflow/node-runtime-react";
-import { ConditionSelector, useNodeRuntime } from "@baseflow/node-runtime-react";
+import type { Conditions, INodeData } from "@baseflow/node-runtime-react";
+import { ConditionSelector, useEvent } from "@baseflow/node-runtime-react";
 import { Typography } from "antd";
 import type { FC } from "react";
 import { memo } from "react";
 import type { NodeProps } from "../model";
-import { useEvent } from "../utils";
 
-const Component: FC = () => {
-  const { nodeData, updateNodeProps } = useNodeRuntime<NodeProps>();
+const Component: FC<{ nodeData: INodeData<NodeProps>; updateNodeProps: (newProps: Partial<NodeProps>) => void }> = ({
+  nodeData,
+  updateNodeProps,
+}) => {
   const nodeProps = nodeData.props;
-
   const onConditionsChange = useEvent((conditions: Conditions | string | undefined) => {
     updateNodeProps({ conditions });
   });
