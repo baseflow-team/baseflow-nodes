@@ -1,14 +1,20 @@
-import type { SchemaModel } from "@baseflow/node-runtime-react";
-import { DataType, SchemaModelForm, useEvent, useNodeRuntime } from "@baseflow/node-runtime-react";
+import type { INodeMeta, SchemaModel } from "@baseflow/node-runtime-react";
+import { DataType, SchemaModelForm, useEvent } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo } from "react";
 
 const defaultInput: SchemaModel = { name: "input", type: DataType.Object, children: [] };
 const defaultReturn: SchemaModel = { name: "return", type: DataType.Object, children: [] };
 
-const Component: FC = () => {
-  const { updateNodeMeta, updateFlowInputSchema, updateFlowReturnSchema, flowInputSchema, flowReturnSchema } = useNodeRuntime<{}>();
+interface Props {
+  flowInputSchema: SchemaModel | undefined;
+  flowReturnSchema: SchemaModel | undefined;
+  updateNodeMeta: (newMeta: Partial<INodeMeta>) => void;
+  updateFlowInputSchema: (schema: SchemaModel | undefined) => void;
+  updateFlowReturnSchema: (schema: SchemaModel | undefined) => void;
+}
 
+const Component: FC<Props> = ({ flowReturnSchema, flowInputSchema, updateNodeMeta, updateFlowInputSchema, updateFlowReturnSchema }) => {
   const onInputSchemaChange = useEvent((inputSchema: SchemaModel | undefined) => {
     updateFlowInputSchema(inputSchema);
     updateNodeMeta({ summary: [inputSchema && "[✓入参]", flowReturnSchema && "[✓返回]"].filter(Boolean).join(", ") });

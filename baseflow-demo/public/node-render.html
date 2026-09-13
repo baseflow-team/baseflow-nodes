@@ -14,9 +14,6 @@
                     _flowData: flowData,
                     _flowInputSchema: flowInputSchema,
                     _flowReturnSchema: flowReturnSchema,
-                    nodeData,
-                    flowInputSchema,
-                    flowReturnSchema
                 }
                 const module = await import(url);
                 const setup = module.default ?? module;
