@@ -1,5 +1,5 @@
-import type { SchemaModel, SchemaValue } from "@baseflow/node-runtime-react";
-import { DataType, SchemaValueForm, useEvent, useNodeRuntime } from "@baseflow/node-runtime-react";
+import type { INodeData, SchemaModel, SchemaValue } from "@baseflow/node-runtime-react";
+import { DataType, SchemaValueForm, useEvent } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo } from "react";
 import type { NodeProps } from "../model";
@@ -7,23 +7,27 @@ import type { NodeProps } from "../model";
 const inputSchema: SchemaModel = {
   name: "request",
   label: "Request",
-  type: "ͼOBJECTͼ",
+  type: DataType.Object,
   children: [
-    { name: "url", type: "ͼSTRINGͼ" },
-    { name: "method", type: "ͼSTRINGͼ" },
+    { name: "url", type: DataType.String },
+    { name: "method", type: DataType.String },
     { name: "https", type: DataType.Bool },
     { name: "data", type: DataType.Date },
   ],
 };
+interface Props {
+  nodeData: INodeData<NodeProps>;
+  updateNodeProps: (newProps: Partial<NodeProps>) => void;
+}
 
-const Component: FC = () => {
-  const { nodeData, updateNodeProps } = useNodeRuntime<NodeProps>();
+const Component: FC<Props> = ({ nodeData, updateNodeProps }) => {
+  const nodeProps = nodeData.props;
   const onInputChange = useEvent((input: SchemaValue | undefined) => {
     updateNodeProps({ input });
   });
   return (
     <div>
-      <SchemaValueForm schema={inputSchema} value={nodeData.props.input} onChange={onInputChange} />
+      <SchemaValueForm schema={inputSchema} value={nodeProps.input} onChange={onInputChange} />
     </div>
   );
 };

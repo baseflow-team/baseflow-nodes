@@ -58,7 +58,7 @@ baseflow-nodes/example-node/
 
 ### 1. 配置 package.json
 
-React UI 节点示例：
+#### React UI 节点示例
 
 ```json
 {
@@ -78,7 +78,7 @@ React UI 节点示例：
 }
 ```
 
-无 UI 节点不需要 Vite 构建：
+#### 无 UI 节点不需要 Vite 构建
 
 ```json
 {
@@ -89,7 +89,7 @@ React UI 节点示例：
 }
 ```
 
-节点统一使用以下 `tsconfig.json`：
+#### 节点统一使用以下 `tsconfig.json`
 
 ```json
 {
@@ -115,7 +115,6 @@ export default {
   executor: {
     node: "@baseflow-executors/example-node@0.0.1",
   },
-  inputForm: "index.js",
   defaultData: {
     meta: {
       name: "示例节点",
@@ -131,8 +130,7 @@ export default {
 } as NodeManifest;
 ```
 
-- UI 节点设置 `inputForm: "index.js"`。
-- 无 UI 节点省略 `inputForm`，也不需要 `src/index.tsx` 和 `vite.config.ts`。
+- `runtimeUI` 由构建脚本统一写入产物，无需在节点中声明。
 - `runtimeVersion` 由构建脚本统一写入产物，无需在节点中声明。
 
 ### 3. 构建 React UI

@@ -1,5 +1,5 @@
-import type { INodeProps, SchemaValue } from "@baseflow/node-runtime-react";
+import type { SchemaValue } from "@baseflow/node-runtime-react";
 
-export interface NodeProps extends INodeProps {
+export interface NodeProps {
   initialValue?: SchemaValue;
 }

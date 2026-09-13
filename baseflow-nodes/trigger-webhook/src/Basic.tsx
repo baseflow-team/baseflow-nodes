@@ -5,15 +5,16 @@ import InputForm from "./components/InputForm";
 import OutputForm from "./components/OutputForm";
 import Readme from "./components/Readme";
 import type { NodeProps } from "./model";
-import { validateNodeData } from "./model";
+import { InternalPropsMapping, validateNodeData } from "./model";
 
 const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
-  const { nodeData, updateNodeProps } = setup({
+  const { nodeData, updateNodeMeta } = setup({
     onBeforeUnload: () => {
-      const error = validateNodeData(nodeData.props);
+      const props = InternalPropsMapping.out(internalProps);
+      const error = validateNodeData(props);
       return {
-        nodeData: { ...nodeData, meta: { ...nodeData.meta, configurationErrors: error || undefined } },
+        nodeData: { ...nodeData, meta: { ...nodeData.meta, configurationErrors: error || undefined }, props },
       };
     },
     onBeforeNavigate: (target) => {
@@ -21,9 +22,18 @@ const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
     },
   });
 
+  const [internalProps, setInternalProps] = useState(() => InternalPropsMapping.in(nodeData.props));
+
   return (
     <div>
-      {currentTab === "input" && <InputForm nodeData={nodeData} updateNodeProps={updateNodeProps} />}
+      {currentTab === "input" && (
+        <InputForm
+          internalProps={internalProps}
+          outputSchema={nodeData.meta.outputSchema!}
+          setInternalProps={setInternalProps}
+          updateNodeMeta={updateNodeMeta}
+        />
+      )}
       {currentTab === "output" && <OutputForm />}
       {currentTab === "readme" && <Readme />}
     </div>

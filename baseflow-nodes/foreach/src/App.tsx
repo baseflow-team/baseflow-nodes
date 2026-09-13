@@ -1,7 +1,7 @@
 import type { IWidgets } from "@baseflow/node-runtime-react";
 import { NodeConfigProvider } from "@baseflow/node-runtime-react";
 import { Button, DatePicker, Input, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-antd";
-import InputForm from "./components/InputForm";
+import Basic from "./Basic";
 
 const widgets: Partial<IWidgets> = {
   Button,
@@ -18,7 +18,7 @@ const widgets: Partial<IWidgets> = {
 function App() {
   return (
     <NodeConfigProvider widgets={widgets} flowOrigin="www.baseflow.run">
-      <InputForm />
+      {(setup) => <Basic setup={setup} />}
     </NodeConfigProvider>
   );
 }

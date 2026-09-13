@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
 import { parse, transformWithOxc } from "vite";
 import WorkspacePackage from "../package.json" with { type: "json" };
@@ -9,6 +9,7 @@ const PackageDir = process.cwd();
 const NodeId = basename(PackageDir);
 const PackageFile = resolve(PackageDir, "package.json");
 const ManifestFile = resolve(PackageDir, "src/manifest.ts");
+const RuntimeUIFile = resolve(PackageDir, "src/index.tsx");
 const OutputDir = resolve(WorkspaceRoot, "baseflow-preview/nodes", NodeId);
 const NodeIdPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const BaseflowRuntimeVersion = WorkspacePackage.baseflowRuntimeVersion;
@@ -88,13 +89,15 @@ async function loadNodeManifest() {
 
 /**
  * @param {Record<string, unknown>} manifest
+ * @param {string} runtimeUI
  * @returns {Record<string, unknown>}
  */
-function createBaseflowManifest(manifest) {
+function createBaseflowManifest(manifest, runtimeUI) {
   /** @type {Record<string, unknown>} */
-  const baseflow = { runtimeVersion: BaseflowRuntimeVersion };
+  const baseflow = { runtimeVersion: BaseflowRuntimeVersion, runtimeUI };
 
   for (const [key, value] of Object.entries(manifest)) {
+    if (key === "runtimeVersion" || key === "runtimeUI") continue;
     if (typeof value === "function") {
       baseflow[key] = Function.prototype.toString.call(value);
     } else {
@@ -115,7 +118,14 @@ if (typeof name !== "string" || name.split("/").pop() !== NodeId) {
   throw new Error(`${PackageFile}: package.name 的末段必须与节点目录名 "${NodeId}" 一致，实际为 ${name}`);
 }
 
-const baseflow = createBaseflowManifest(await loadNodeManifest());
+const runtimeUI = await access(RuntimeUIFile).then(
+  () => "index.js",
+  (error) => {
+    if (error?.code === "ENOENT") return "";
+    throw error;
+  },
+);
+const baseflow = createBaseflowManifest(await loadNodeManifest(), runtimeUI);
 const manifestSource = JSON.stringify(
   {
     private: false,

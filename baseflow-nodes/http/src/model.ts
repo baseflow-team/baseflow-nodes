@@ -1,5 +1,12 @@
-import type { INodeProps, SchemaValue } from "@baseflow/node-runtime-react";
+import type { SchemaValue } from "@baseflow/node-runtime-react";
 
-export interface NodeProps extends INodeProps {
+export interface NodeProps {
   input?: SchemaValue;
+}
+
+export function validateNodeData(props: NodeProps): string | undefined {
+  if (!props.input) {
+    return "Http input is required!";
+  }
+  return;
 }

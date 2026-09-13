@@ -1,5 +1,5 @@
-import type { SchemaModel, SchemaToolsFilter, SchemaValue } from "@baseflow/node-runtime-react";
-import { SchemaModelForm, SchemaValueForm, useNodeRuntime, ValueSource } from "@baseflow/node-runtime-react";
+import type { INodeData, INodeMeta, SchemaModel, SchemaToolsFilter, SchemaValue } from "@baseflow/node-runtime-react";
+import { SchemaModelForm, SchemaValueForm, ValueSource } from "@baseflow/node-runtime-react";
 import { Switch } from "antd";
 import type { FC } from "react";
 import { memo, useCallback } from "react";
@@ -13,8 +13,13 @@ const toolsFilter: SchemaToolsFilter = (item, parent) => {
   return;
 };
 
-const Component: FC = () => {
-  const { nodeData, updateNodeProps, updateNodeMeta } = useNodeRuntime<NodeProps>();
+interface Props {
+  nodeData: INodeData<NodeProps>;
+  updateNodeProps: (newProps: Partial<NodeProps>) => void;
+  updateNodeMeta: (newMeta: Partial<INodeMeta>) => void;
+}
+
+const Component: FC<Props> = ({ nodeData, updateNodeProps, updateNodeMeta }) => {
   const nodeProps = nodeData.props;
   const outputSchema = nodeData.meta.outputSchema!;
   const initialValue = nodeProps.initialValue;

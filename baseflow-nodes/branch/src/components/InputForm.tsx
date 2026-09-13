@@ -5,10 +5,12 @@ import type { FC } from "react";
 import { memo } from "react";
 import type { NodeProps } from "../model";
 
-const Component: FC<{ nodeData: INodeData<NodeProps>; updateNodeProps: (newProps: Partial<NodeProps>) => void }> = ({
-  nodeData,
-  updateNodeProps,
-}) => {
+interface Props {
+  nodeData: INodeData<NodeProps>;
+  updateNodeProps: (newProps: Partial<NodeProps>) => void;
+}
+
+const Component: FC<Props> = ({ nodeData, updateNodeProps }) => {
   const nodeProps = nodeData.props;
   const onConditionsChange = useEvent((conditions: Conditions | string | undefined) => {
     updateNodeProps({ conditions });

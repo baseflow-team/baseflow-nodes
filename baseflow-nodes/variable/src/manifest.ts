@@ -8,7 +8,6 @@ export default {
   executor: {
     node: "@baseflow-executors/variable@0.0.1",
   },
-  inputForm: "index.js",
   defaultData: {
     meta: {
       name: "变量定义",

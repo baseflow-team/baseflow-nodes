@@ -1,11 +1,11 @@
-import type { SchemaModel } from "@baseflow/node-runtime-react";
-import { DataType, KeyValues, SchemaModelForm, useEvent, useNodeRuntime } from "@baseflow/node-runtime-react";
+import type { INodeMeta, SchemaModel } from "@baseflow/node-runtime-react";
+import { DataType, KeyValues, SchemaModelForm, useEvent } from "@baseflow/node-runtime-react";
 import type { FormInstance } from "antd";
 import { Form, Input, Select } from "antd";
 import { pathToRegexp } from "path-to-regexp";
 import type { FC } from "react";
 import { memo, useEffect, useRef } from "react";
-import type { NodeProps } from "../model";
+import type { InternalProps } from "../model";
 import { ContentTypeOptions, DefaultHeaders, MethodOptions } from "../model";
 
 const RequiredRule = [{ required: true }];
@@ -55,16 +55,19 @@ function mergeSchema(outputSchema: SchemaModel, data: Partial<{ [key: string]: S
   };
 }
 
-const Component: FC = () => {
-  const { nodeData, updateNodeProps, updateNodeMeta } = useNodeRuntime<NodeProps>();
+interface Props {
+  internalProps: InternalProps;
+  outputSchema: SchemaModel;
+  setInternalProps: (newProps: InternalProps) => void;
+  updateNodeMeta: (newMeta: Partial<INodeMeta>) => void;
+}
 
-  const nodeProps = nodeData.props;
+const Component: FC<Props> = ({ internalProps, setInternalProps, outputSchema, updateNodeMeta }) => {
   const formRef = useRef<FormInstance>(null);
   const inited = useRef(false);
 
-  const onFormChange = useEvent((updates: Partial<NodeProps>) => {
-    updateNodeProps(updates);
-    const outputSchema = nodeData.meta.outputSchema!;
+  const onFormChange = useEvent((updates: Partial<InternalProps>) => {
+    setInternalProps({ ...internalProps, ...updates });
     if (Object.hasOwn(updates, "path")) {
       updateNodeMeta({ outputSchema: mergeSchema(outputSchema, { params: buildPathSchema(updates.path) }) });
     }
@@ -92,7 +95,7 @@ const Component: FC = () => {
 
   return (
     <div>
-      <Form ref={formRef} className="nd-form" layout="vertical" initialValues={nodeProps} autoComplete="off" onValuesChange={onFormChange}>
+      <Form ref={formRef} className="nd-form" layout="vertical" initialValues={internalProps} autoComplete="off" onValuesChange={onFormChange}>
         <Form.Item label="监听地址" tooltip="path" name="path" rules={RequiredRule}>
           <Input allowClear prefix="BaseUrl / " placeholder="输入规划的url路径" />
         </Form.Item>

@@ -1,11 +1,11 @@
-import type { SchemaValue, ValueConfig } from "@baseflow/node-runtime-react";
-import { DataType, KeyValues, SchemaValueForm, SuperInput, useEvent, useNodeRuntime, ValueSource } from "@baseflow/node-runtime-react";
+import type { INodeMeta, SchemaModel, SchemaValue, ValueConfig } from "@baseflow/node-runtime-react";
+import { DataType, KeyValues, SchemaValueForm, SuperInput, useEvent, ValueSource } from "@baseflow/node-runtime-react";
 import type { RadioChangeEvent } from "antd";
 import { InputNumber, Radio, Switch, Tooltip } from "antd";
 import { CircleQuestionMark } from "lucide-react";
 import type { FC } from "react";
 import { memo, useEffect, useMemo, useRef } from "react";
-import type { NodeProps } from "../model";
+import type { InternalProps } from "../model";
 import styles from "./index.module.scss";
 
 const Actions = [
@@ -14,14 +14,19 @@ const Actions = [
   { label: "移除一段元素", value: "remove" },
 ];
 
-const Component: FC = () => {
-  const { nodeData, updateNodeProps, updateNodeMeta, getVariableSchema } = useNodeRuntime<NodeProps>();
-  const nodeProps = nodeData.props;
+interface Props {
+  internalProps: InternalProps;
+  updateInternalProps: (newProps: InternalProps) => void;
+  updateNodeMeta: (newMeta: Partial<INodeMeta>) => void;
+  getVariableSchema: (variable: string) => Promise<SchemaModel | undefined>;
+}
+
+const Component: FC<Props> = ({ internalProps, updateInternalProps, updateNodeMeta, getVariableSchema }) => {
   const inited = useRef(false);
 
   const onModeChange = useEvent((useScripts: boolean) => {
     if (useScripts) {
-      updateNodeProps({
+      updateInternalProps({
         scripts: { type: DataType.Any, source: ValueSource.Expression, text: "" },
         variable: undefined,
         action: undefined,
@@ -30,44 +35,44 @@ const Component: FC = () => {
       });
       updateNodeMeta({ summary: "scripts" });
     } else {
-      updateNodeProps({ scripts: undefined });
+      updateInternalProps({ scripts: undefined });
       updateNodeMeta({ summary: undefined });
     }
   });
   const onScriptsChange = useEvent((scripts: ValueConfig) => {
-    updateNodeProps({ scripts });
+    updateInternalProps({ scripts });
   });
   const onVariableChange = useEvent((variable: ValueConfig) => {
-    updateNodeProps({ variable, action: undefined, at: undefined, removeTargets: undefined });
+    updateInternalProps({ variable, action: undefined, at: undefined, removeTargets: undefined });
     updateNodeMeta({ valueReference: undefined });
   });
   const onActionChange = useEvent((e: RadioChangeEvent) => {
     const action: "assign" | "insert" | "remove" = e.target.value;
     if (action === "remove") {
-      updateNodeProps({ action });
+      updateInternalProps({ action });
       updateNodeMeta({ valueReference: undefined });
     } else {
-      updateNodeProps({ action, removeTargets: undefined });
+      updateInternalProps({ action, removeTargets: undefined });
     }
   });
   const onAtChange = useEvent((at: number | null) => {
-    updateNodeProps({ at: at || undefined });
+    updateInternalProps({ at: at || undefined });
   });
 
   const onRemoveKeysChange = useEvent((keys: { value: string; label?: string | undefined }[]) => {
-    updateNodeProps({ removeTargets: keys });
+    updateInternalProps({ removeTargets: keys });
   });
 
   const onRemoveLengthChange = useEvent((num: number | null) => {
-    updateNodeProps({ removeTargets: num || undefined });
+    updateInternalProps({ removeTargets: num || undefined });
   });
 
   const onVariableValueChange = useEvent((value?: SchemaValue) => {
-    updateNodeMeta({ valueReference: { path: nodeProps.variable!.text, value } });
+    updateNodeMeta({ valueReference: { path: internalProps.variable!.text, value } });
   });
 
   const variableSchema = useMemo(async () => {
-    const text = nodeProps.variable?.text;
+    const text = internalProps.variable?.text;
     if (text) {
       const schema = await getVariableSchema(text);
       if (inited.current && schema) {
@@ -81,7 +86,7 @@ const Component: FC = () => {
       return schema;
     }
     return undefined;
-  }, [nodeProps.variable, getVariableSchema, updateNodeMeta]);
+  }, [internalProps.variable, getVariableSchema, updateNodeMeta]);
 
   useEffect(() => {
     inited.current = true;

@@ -1,8 +1,8 @@
-import type { SchemaModel, SchemaValue, SuperInputPropsRender } from "@baseflow/node-runtime-react";
-import { DataType, SchemaValueForm, useEvent, useNodeRuntime } from "@baseflow/node-runtime-react";
+import type { INodeMeta, SchemaModel, SchemaValue, SuperInputPropsRender } from "@baseflow/node-runtime-react";
+import { DataType, SchemaValueForm, useEvent } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo } from "react";
-import type { NodeProps } from "../model";
+import type { InternalProps } from "../model";
 
 const inputSchema: SchemaModel = { name: "source", label: "迭代源", type: DataType.Array };
 
@@ -13,14 +13,19 @@ const inputPropsRender: SuperInputPropsRender = (item) => {
   return;
 };
 
-const Component: FC = () => {
-  const { nodeData, updateNodeMeta, updateNodeProps } = useNodeRuntime<NodeProps>();
+interface Props {
+  internalProps: InternalProps;
+  setInternalProps: (newProps: InternalProps) => void;
+  updateNodeMeta: (newMeta: Partial<INodeMeta>) => void;
+}
+
+const Component: FC<Props> = ({ internalProps, setInternalProps, updateNodeMeta }) => {
   const onInputChange = useEvent((source: SchemaValue | undefined) => {
     if (source) {
       // children and arrayType that allows to recognize it as a mapping mode
       source = { ...source, children: [] };
     }
-    updateNodeProps({ source });
+    setInternalProps({ source });
     const sourceVar = source?.value.text;
     if (sourceVar) {
       if (/\D/.test(sourceVar) && !sourceVar.startsWith("_number(")) {
@@ -54,7 +59,7 @@ const Component: FC = () => {
   });
   return (
     <div>
-      <SchemaValueForm superInputPropsRender={inputPropsRender} schema={inputSchema} value={nodeData.props.source} onChange={onInputChange} />
+      <SchemaValueForm superInputPropsRender={inputPropsRender} schema={inputSchema} value={internalProps.source} onChange={onInputChange} />
     </div>
   );
 };

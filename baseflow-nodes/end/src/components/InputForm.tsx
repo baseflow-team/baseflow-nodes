@@ -1,11 +1,15 @@
-import type { SchemaValue } from "@baseflow/node-runtime-react";
-import { SchemaValueForm, useEvent, useNodeRuntime } from "@baseflow/node-runtime-react";
+import type { INodeData, INodeMeta, SchemaModel, SchemaValue } from "@baseflow/node-runtime-react";
+import { SchemaValueForm, useEvent } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo } from "react";
 
-const Component: FC = () => {
-  const { nodeData, updateNodeMeta, flowReturnSchema } = useNodeRuntime<{}>();
+interface Props {
+  nodeData: INodeData<{}>;
+  flowReturnSchema: SchemaModel | undefined;
+  updateNodeMeta: (newMeta: Partial<INodeMeta>) => void;
+}
 
+const Component: FC<Props> = ({ nodeData, flowReturnSchema, updateNodeMeta }) => {
   const flowReturnValue = nodeData.meta.valueReference?.value;
 
   const onReturnChange = useEvent((value: SchemaValue | undefined) => {
