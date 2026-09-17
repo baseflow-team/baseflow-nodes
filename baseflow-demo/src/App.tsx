@@ -67,7 +67,7 @@ function App() {
         monacoEditorUrl="/monaco/index.html"
         pureRunnerUrl="/pureRunner.worker-DAkP84-u.js"
         expressionUtils={expressionUtils}
-        nodeOrigin="localhost"
+        nodeOrigin={window.origin}
       >
         <Canvas doc={MockDoc} />
       </FlowConfigProvider>
