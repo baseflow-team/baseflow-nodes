@@ -18,7 +18,7 @@ baseflow-demo
        └─ import: baseflow-nodes/*
 ```
 
-> `node-render` iframe 由 `baseflow-demo` 页面动态创建，并通过父页面的 `postMessage` 事件驱动 node 动态 `import` 并执行。
+> `node-render` iframe 由 `baseflow-demo` 页面动态创建，通过封装的初始化消息处理逻辑准备节点运行环境，再动态 `import` 节点入口；节点在模块执行时自行挂载 UI。
 
 baseflow-demo 父页面与 node-render 分属不同 JS Realm，不共享运行时实例；这是必须保留的运行隔离边界。当前本地 preview 是没有 `sandbox` 的同源 iframe，只提供 Realm、DOM 和 CSS 隔离，不视为恶意代码安全边界。联合调试统一走生产构建后的 `baseflow-preview`，不使用跨子项目的 Vite dev 动态加载。
 
@@ -48,8 +48,9 @@ export default defineNodeConfig(import.meta.dirname);
 - 节点产物必须有 `package.json`，其中的 `baseflow` 字段作为 Manifest，定义节点的`元数据`信息。
 - `manifest.ts` 必须 default export 对象，只允许 `import type`；`runtimeVersion` 由根 `package.json#baseflowRuntimeVersion` 统一注入。
 - 单节点构建由节点 `package.json` 的 `scripts.build` 定义：第一步运行 `node ../../scripts/buildNodeManifest.js` 生成元数据，有 UI 时第二步再运行 `vite build`。
-- 某些节点需要渲染 UI 界面，`index.js` 为其 UI Render 入口，必须是标准 ESM，并 default export 一个无参数的 `自启动函数`，该函数将被 `baseflow-demo/public/node-render.html` 中的 postMessage 触发加载和渲染。
-  - UI Render 允许生成额外 chunk、也允许动态 import 其它 ESM CDN 包，但入口只认 `index.js` 默认导出的`自启动函数`
+- 某些节点需要渲染 UI 界面，`index.js` 为其 UI Render 入口，必须是标准 ESM，在模块执行时直接挂载 UI；`baseflow-demo/public/node-render.html` 的加载器只需动态 `import` 该入口。
+  - 每个 iframe 只初始化一次，重新启动节点必须重建 iframe。
+  - UI Render 允许生成额外 chunk，也允许动态 import 其它 ESM CDN 包，但加载入口固定为 `index.js`。
   - 例如 `baseflow-nodes/branch` 为具有 UI 界面的节点
 - 某些节点不需要 UI 界面，只需要 `manifest.ts` 定义`元数据`信息。
   - 例如 `baseflow-nodes/break` 为无 UI 界面的节点

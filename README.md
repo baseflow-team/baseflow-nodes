@@ -143,16 +143,16 @@ import { defineNodeConfig } from "../../scripts/defineNodeConfig.js";
 export default defineNodeConfig(import.meta.dirname);
 ```
 
-`src/index.tsx` 默认导出一个无参数的自启动函数：
+`src/index.tsx` 在模块执行时直接挂载 UI：
 
 ```tsx
 import { createRoot } from "react-dom/client";
 import App from "./App";
 
-export default () => createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(<App />);
 ```
 
-统一配置会生成标准 ESM 入口 `index.js`，并将样式注入该入口。使用其他框架或构建工具时，也必须生成相同的入口和产物结构。
+统一配置会生成标准 ESM 入口 `index.js`，并将样式注入该入口。加载器准备好节点运行环境后，只需执行 `import(url)` 即可触发 UI 挂载。使用其他框架或构建工具时，也必须生成相同的入口和产物结构，并在模块执行时自行挂载 UI。
 
 ### 4. 构建单个节点
 
@@ -208,6 +208,7 @@ https://cdn.jsdelivr.net/npm/@baseflow-nodes/example-node@0.0.1/index.js
 ## 节点运行约定
 
 - 节点 UI 运行在独立 iframe Realm 中，避免与 Workflow 父页面共享 JS 运行时和样式。
+- 每个 iframe 只初始化一次，节点随入口模块加载而启动；重新启动节点必须重建 iframe。
 - 节点与父页面通过 Runtime SDK 封装的 `postMessage`/RPC 通信。React 节点使用 `@baseflow/node-runtime-react`；其他框架可使用基础的 `@baseflow/node-runtime`。
 - 节点可以使用自己的框架和 UI 库，也可以动态 import 其他 ESM CDN 依赖。
 - 当前本地 preview 使用无 `sandbox` 的同源 iframe，只提供 Realm、DOM 和 CSS 隔离，不是恶意代码安全边界。
