@@ -9,12 +9,12 @@ import type { NodeProps } from "./model";
 const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
   const { nodeData, updateNodeProps, updateNodeMeta } = setup({
-    onBeforeUnload: () => {
+    onSubmit: () => {
       return {
         nodeData,
       };
     },
-    onBeforeNavigate: (target) => {
+    onNavigate: (target) => {
       setCurrentTab(target);
     },
   });

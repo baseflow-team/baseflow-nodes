@@ -8,13 +8,13 @@ import Readme from "./components/Readme";
 const Component: FC<{ setup: NodeSetup<{}> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
   const { nodeData, flowReturnSchema, updateNodeMeta } = setup({
-    onBeforeUnload: () => {
+    onSubmit: () => {
       return {
         nodeData,
         flowReturnSchema,
       };
     },
-    onBeforeNavigate: (target) => {
+    onNavigate: (target) => {
       setCurrentTab(target);
     },
   });

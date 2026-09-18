@@ -10,13 +10,13 @@ import { validateNodeData } from "./model";
 const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
   const { nodeData, updateNodeProps } = setup({
-    onBeforeUnload: () => {
+    onSubmit: () => {
       const error = validateNodeData(nodeData.props);
       return {
         nodeData: { ...nodeData, meta: { ...nodeData.meta, configurationErrors: error || undefined } },
       };
     },
-    onBeforeNavigate: (target) => {
+    onNavigate: (target) => {
       setCurrentTab(target);
     },
   });

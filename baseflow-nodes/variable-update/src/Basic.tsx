@@ -10,14 +10,14 @@ import { InternalPropsMapping, validateNodeData } from "./model";
 const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
   const { nodeData, updateNodeMeta, getVariableSchema } = setup({
-    onBeforeUnload: () => {
+    onSubmit: () => {
       const props = InternalPropsMapping.out(internalProps);
       const error = validateNodeData(props);
       return {
         nodeData: { ...nodeData, meta: { ...nodeData.meta, configurationErrors: error || undefined }, props },
       };
     },
-    onBeforeNavigate: (target) => {
+    onNavigate: (target) => {
       setCurrentTab(target);
     },
   });

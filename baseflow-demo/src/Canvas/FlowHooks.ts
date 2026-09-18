@@ -1,7 +1,7 @@
-import type { EnvStatus, FlowData, FlowLogs, FlowLogsListItem, INodeData, NodeManifest, RunState, SchemaValue } from "@baseflow/flow-react";
+import type { EnvStatus, FlowData, FlowLogs, FlowLogsListItem, INodeData, NodeSource, RunState, SchemaValue } from "@baseflow/flow-react";
 import { DefalutFlowHooks, flowToJson } from "@baseflow/flow-react";
 import type { IDoc } from "../utils";
-import { onImportNode, sleep } from "../utils";
+import { sleep } from "../utils";
 
 export class FlowHooks extends DefalutFlowHooks {
   public doc: IDoc;
@@ -15,8 +15,12 @@ export class FlowHooks extends DefalutFlowHooks {
     localStorage.setItem("baseflow-dsl", JSON.stringify(dsl));
   }
 
-  async onImportNode(source: string): Promise<NodeManifest> {
-    return onImportNode(source);
+  async onNodeSourceQuery({ packageName }: NodeSource): Promise<{ actualVersion: string; baseUrl: string }> {
+    const arr = packageName.split(/[/@]/);
+    if (arr[1] === "baseflow-nodes") {
+      return { actualVersion: "1.0.0", baseUrl: `/nodes/${arr[2]}/` };
+    }
+    return { actualVersion: "2.0.0", baseUrl: "" };
   }
 
   async onUploadNodeData(node: INodeData): Promise<void> {

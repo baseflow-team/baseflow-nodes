@@ -44,27 +44,6 @@ export async function fetchNodes(): Promise<NodeEntity[]> {
     .filter((item) => item.dsl);
 }
 
-function nodeSourceToUrl(source: string) {
-  const arr = source.split(/[/@]/);
-  if (arr[1] === "baseflow-nodes") {
-    return `/nodes/${arr[2]}/package.json`;
-  }
-  return source;
-}
-
-export function onImportNode(source: string): Promise<NodeManifest> {
-  const url = nodeSourceToUrl(source);
-  return import(/* @vite-ignore */ url, { with: { type: "json" } }).then(
-    (mod) => {
-      return mod.default.baseflow;
-    },
-    (err) => {
-      Widgets.message.error(err.message);
-      throw err;
-    },
-  );
-}
-
 export function fetchFlow(): JsonDSL {
   const graphContent = localStorage.getItem("baseflow-dsl");
   return graphContent

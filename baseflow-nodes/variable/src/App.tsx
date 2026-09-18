@@ -16,11 +16,7 @@ const widgets: Partial<IWidgets> = {
 };
 
 function App() {
-  return (
-    <NodeConfigProvider widgets={widgets} flowOrigin="www.baseflow.run">
-      {(setup) => <Basic setup={setup} />}
-    </NodeConfigProvider>
-  );
+  return <NodeConfigProvider widgets={widgets}>{(setup) => <Basic setup={setup} />}</NodeConfigProvider>;
 }
 
 export default App;

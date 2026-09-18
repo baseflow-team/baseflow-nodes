@@ -63,7 +63,7 @@ function App() {
     >
       <FlowConfigProvider
         widgets={widgets}
-        nodeRendererUrl="/node-render.html"
+        nodeRendererUrl="http://localhost:4173/node-render.html"
         monacoEditorUrl="/monaco/index.html"
         pureRunnerUrl="/pureRunner.worker-DAkP84-u.js"
         expressionUtils={expressionUtils}
