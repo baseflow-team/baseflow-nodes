@@ -13,6 +13,11 @@ export default {
     },
     props: {},
   },
+  uiForm: {
+    inputSchema: null,
+    outputEditable: false,
+    readme: "",
+  },
   defaultDsl: {
     nodes: [
       { tag: "@baseflow-nodes/parallel", id: "parallel1", childrenIds: ["thread1", "thread2"] },

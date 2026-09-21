@@ -14,5 +14,6 @@ export default {
     },
     props: {},
   },
+  uiForm: "index.js",
   defaultDsl: { nodes: [{ tag: "@baseflow-nodes/foreach" }], sources: { "@baseflow-nodes/foreach": "@baseflow-nodes/foreach@*" } },
 } as NodeManifest<NodeProps>;

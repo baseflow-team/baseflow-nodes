@@ -14,6 +14,7 @@ export default {
     },
     props: {},
   },
+  uiForm: "index.js",
   defaultDsl: {
     nodes: [{ tag: "@baseflow-nodes/variable-update" }],
     sources: { "@baseflow-nodes/variable-update": "@baseflow-nodes/variable-update@*" },

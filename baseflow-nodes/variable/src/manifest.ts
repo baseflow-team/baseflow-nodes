@@ -24,5 +24,6 @@ export default {
     },
     props: {},
   },
+  uiForm: "index.js",
   defaultDsl: { nodes: [{ tag: "@baseflow-nodes/variable" }], sources: { "@baseflow-nodes/variable": "@baseflow-nodes/variable@*" } },
 } as NodeManifest<NodeProps>;

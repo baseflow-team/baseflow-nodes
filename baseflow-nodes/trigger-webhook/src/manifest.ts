@@ -84,6 +84,7 @@ export default {
       contentType: "json",
     },
   },
+  uiForm: "index.js",
   defaultDsl: {
     nodes: [{ tag: "@baseflow-nodes/trigger-webhook" }],
     sources: { "@baseflow-nodes/trigger-webhook": "@baseflow-nodes/trigger-webhook@*" },

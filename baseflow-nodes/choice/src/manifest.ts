@@ -13,6 +13,11 @@ export default {
     },
     props: {},
   },
+  uiForm: {
+    inputSchema: null,
+    outputEditable: false,
+    readme: "",
+  },
   defaultDsl: {
     nodes: [
       { tag: "@baseflow-nodes/choice", id: "choice1", childrenIds: ["branch1", "branch2"] },

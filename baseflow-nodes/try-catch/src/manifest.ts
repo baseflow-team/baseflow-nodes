@@ -13,5 +13,10 @@ export default {
     },
     props: {},
   },
+  uiForm: {
+    inputSchema: null,
+    outputEditable: false,
+    readme: "",
+  },
   defaultDsl: { nodes: [{ tag: "@baseflow-nodes/try-catch" }], sources: { "@baseflow-nodes/try-catch": "@baseflow-nodes/try-catch@*" } },
 } as NodeManifest<{}>;

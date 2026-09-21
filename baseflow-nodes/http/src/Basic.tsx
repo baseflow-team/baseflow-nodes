@@ -1,4 +1,5 @@
 import type { NodeNavigation, NodeSetup, SchemaModel } from "@baseflow/node-runtime-react";
+import { NodeMock } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo, useCallback, useState } from "react";
 import InputForm from "./components/InputForm";
@@ -27,6 +28,7 @@ const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
     <div>
       {currentTab === "input" && <InputForm nodeData={nodeData} updateNodeProps={updateNodeProps} />}
       {currentTab === "output" && <OutputForm outputSchema={nodeData.meta.outputSchema} onChange={onOutputChange} />}
+      {currentTab === "mock" && <NodeMock nodeData={nodeData} updateNodeMeta={updateNodeMeta} />}
       {currentTab === "readme" && <Readme />}
     </div>
   );

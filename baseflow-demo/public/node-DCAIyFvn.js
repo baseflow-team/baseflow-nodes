@@ -117,17 +117,17 @@ function deserializeError(serialized) {
 */
 var RpcDefaults = {
 	/** 频道用于隔离同一个页面上其它无关的 postMessage 流量。 */
-	channel: "iframe-rpc",
+	channel: "baseflow-node-rpc",
 	/** 单次 RPC 调用超时。 */
-	timeout: 3e3,
+	timeout: 1e3,
 	/** 父端从挂载到 iframe 首次 load。 */
 	loadTimeout: 5e3,
 	/** 父端从首次 load 到收到合法 ack。 */
-	handshakeTimeout: 3e3,
+	handshakeTimeout: 1e3,
 	/** 本端作为 server 时同时未完成任务数的上限。调用方按对端容量分批时可直接对齐这个值。 */
-	maxInflight: 50,
+	maxInflight: 5,
 	/** 父端每秒允许的无配额入站消息数。 */
-	floodMaxPerSecond: 20
+	floodMaxPerSecond: 10
 };
 //#endregion
 //#region src/endpoint.ts
@@ -348,9 +348,9 @@ var BaseEndpoint = class {
 		const call = this.#takeCall(id);
 		if (call) call.reject(error);
 	}
-	/** 先快照 key 再遍历：#rejectCall 会在过程中删除条目。 */
+	/** 先快照调用再遍历：#rejectCall 会在过程中删除条目。 */
 	#rejectAllPending(error) {
-		for (const id of [...this.#pending.keys()]) this.#rejectCall(id, error);
+		for (const { id, method } of [...this.#pending.values()]) this.#rejectCall(id, new RpcError(error.code, `调用 '${method}' 失败（id=${id}）：${error.message}`, { cause: error }));
 	}
 	#onRequest(message) {
 		const task = {
@@ -524,8 +524,8 @@ function isFlooding(flood, target, origin) {
 * 出站 req 为入站授权一条额度。
 *
 * 入站计数分不清「对端主动灌来的」和「我自己请求的应答」——要分清就得读
-* `event.data`，那正是限速要避免的事。于是一次合法的并发突发（`maxInflight`
-* 默认 50）应答回来也可能显著消耗限额。读本端自己构造的信封是零成本的，
+* `event.data`，那正是限速要避免的事。于是一次合法的并发突发
+* 应答回来也可能显著消耗限额。读本端自己构造的信封是零成本的，
 * 用它换额度即可。
 *
 * 额度不与具体应答关联：下一条入站消息无论类型都会消耗。因此它表达的是「本端每发起

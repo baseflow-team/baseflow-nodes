@@ -130,7 +130,7 @@ export default {
 } as NodeManifest;
 ```
 
-- `runtimeUI` 由构建脚本统一写入产物，无需在节点中声明。
+- `uiForm` 由构建脚本统一写入产物，无需在节点中声明。
 - `runtimeVersion` 由构建脚本统一写入产物，无需在节点中声明。
 
 ### 3. 构建 React UI

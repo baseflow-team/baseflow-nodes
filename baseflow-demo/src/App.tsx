@@ -1,9 +1,14 @@
 import type { IWidgets, SchemaModel } from "@baseflow/flow-react";
 import { DataType, FlowConfigProvider } from "@baseflow/flow-react";
-import { ConfigProvider } from "antd";
-import { Button, confirm, DatePicker, Input, message, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-antd";
+import { ConfigProvider, Modal, message } from "antd";
+import { useCallback } from "react";
+import { Button, DatePicker, Input, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-antd";
 import Canvas from "./Canvas";
 import { MockDoc } from "./utils";
+
+message.config({
+  top: 50,
+});
 
 const widgets: Partial<IWidgets> = {
   Button,
@@ -15,8 +20,6 @@ const widgets: Partial<IWidgets> = {
   TextArea,
   DatePicker,
   TimePicker,
-  message,
-  confirm,
 };
 
 const expressionUtils: SchemaModel = {
@@ -53,6 +56,51 @@ const expressionUtils: SchemaModel = {
 };
 
 function App() {
+  const showMessage = useCallback((type: "success" | "error" | "warning" | "info", text: string, holdOn?: boolean) => {
+    if (holdOn) {
+      message[type](
+        <>
+          <span>{text}</span>
+          <span
+            style={{
+              fontSize: "12px",
+              display: "inline-block",
+              background: "var(--bf-primary)",
+              color: "#fff",
+              padding: "0 10px",
+              cursor: "pointer",
+              marginLeft: "10px",
+              borderRadius: "3px",
+            }}
+            onClick={() => message.destroy()}
+          >
+            ok
+          </span>
+        </>,
+        0,
+      );
+    } else {
+      message[type](text);
+    }
+  }, []);
+
+  const showConfirm = useCallback(
+    (message: string, callback: (ok: boolean) => void, props?: { title?: string; okText?: string; cancelText?: string }) => {
+      Modal.confirm({
+        title: null,
+        content: message,
+        ...props,
+        onOk() {
+          callback(true);
+        },
+        onCancel() {
+          callback(false);
+        },
+      });
+    },
+    [],
+  );
+
   return (
     <ConfigProvider
       theme={{
@@ -67,6 +115,8 @@ function App() {
         monacoEditorUrl="/monaco/index.html"
         pureRunnerUrl="/pureRunner.worker-DAkP84-u.js"
         expressionUtils={expressionUtils}
+        showMessage={showMessage}
+        showConfirm={showConfirm}
         nodeOrigin={window.origin}
       >
         <Canvas doc={MockDoc} />

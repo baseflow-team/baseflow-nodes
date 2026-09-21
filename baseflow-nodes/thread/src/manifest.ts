@@ -13,5 +13,10 @@ export default {
     },
     props: {},
   },
+  uiForm: {
+    inputSchema: null,
+    outputEditable: false,
+    readme: "",
+  },
   defaultDsl: { nodes: [{ tag: "@baseflow-nodes/thread" }], sources: { "@baseflow-nodes/thread": "@baseflow-nodes/thread@*" } },
 } as NodeManifest<{}>;

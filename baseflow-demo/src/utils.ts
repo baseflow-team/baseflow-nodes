@@ -1,5 +1,4 @@
-import type { JsonDSL, NodeManifest } from "@baseflow/flow-react";
-import { Widgets } from "@baseflow/flow-react";
+import type { JsonDSL } from "@baseflow/flow-react";
 import { useRef } from "react";
 
 export const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
