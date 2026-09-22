@@ -84,22 +84,20 @@ function App() {
     }
   }, []);
 
-  const showConfirm = useCallback(
-    (message: string, callback: (ok: boolean) => void, props?: { title?: string; okText?: string; cancelText?: string }) => {
-      Modal.confirm({
-        title: null,
-        content: message,
-        ...props,
-        onOk() {
-          callback(true);
-        },
-        onCancel() {
-          callback(false);
-        },
-      });
-    },
-    [],
-  );
+  const showConfirm = useCallback((message: string, labels: { yes: string; no: string }, callback: (ok: boolean) => void) => {
+    Modal.confirm({
+      title: null,
+      content: message,
+      okText: labels.yes,
+      cancelText: labels.no,
+      onOk() {
+        callback(true);
+      },
+      onCancel() {
+        callback(false);
+      },
+    });
+  }, []);
 
   return (
     <ConfigProvider

@@ -1,13 +1,27 @@
-import type { EnvStatus, FlowData, FlowLogs, FlowLogsListItem, INodeData, NodeSource, RunState, SchemaValue } from "@baseflow/flow-react";
-import { DefalutFlowHooks, flowToJson } from "@baseflow/flow-react";
+import type {
+  EnvStatus,
+  FlowData,
+  FlowHooksApi,
+  FlowLogs,
+  FlowLogsListItem,
+  IFlow,
+  INodeData,
+  NodeSource,
+  RunState,
+  SchemaValue,
+} from "@baseflow/flow-react";
+import { flowToJson } from "@baseflow/flow-react";
 import type { IDoc } from "../utils";
 import { sleep } from "../utils";
 
-export class FlowHooks extends DefalutFlowHooks {
+export class FlowHooks implements FlowHooksApi {
   public doc: IDoc;
+  declare public flow: IFlow;
   constructor(doc: IDoc) {
-    super();
     this.doc = doc;
+  }
+  setFlow(flow: IFlow) {
+    this.flow = flow;
   }
 
   async onSave(data: FlowData): Promise<void> {
