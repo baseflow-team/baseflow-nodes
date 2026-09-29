@@ -111,7 +111,7 @@ function App() {
         widgets={widgets}
         nodeRendererUrl="http://localhost:4173/node-render.html"
         monacoEditorUrl="/monaco/index.html"
-        pureRunnerUrl="/pureRunner.worker-DAkP84-u.js"
+        pureRunnerUrl="/pureRunner.worker-p0AIJc02.js"
         expressionUtils={expressionUtils}
         showMessage={showMessage}
         showConfirm={showConfirm}
