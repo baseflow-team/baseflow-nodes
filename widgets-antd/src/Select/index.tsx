@@ -16,7 +16,7 @@ interface ISelectProps {
   placeholder?: string;
 }
 
-const Component: FC<ISelectProps> = ({ value, onChange, multiple, ...others }) => {
+const Component: FC<ISelectProps> = ({ value, multiple, ...others }) => {
   return <Select {...others} value={value || undefined} mode={multiple ? "multiple" : undefined} />;
 };
 

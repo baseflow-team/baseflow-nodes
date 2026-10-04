@@ -1,27 +1,30 @@
-import type { INodeData, INodeMeta, SchemaModel, SchemaValue } from "@baseflow/node-runtime-react";
+import type { INodeData, SchemaModel, SchemaValue } from "@baseflow/node-runtime-react";
 import { SchemaValueForm, useEvent } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo } from "react";
+import Lang from "../i18n/en";
+import styles from "../index.module.scss";
+import type { NodeProps } from "../model";
 
 interface Props {
-  nodeData: INodeData<{}>;
+  nodeData: INodeData<NodeProps>;
   flowReturnSchema: SchemaModel | undefined;
-  updateNodeMeta: (newMeta: Partial<INodeMeta>) => void;
+  updateNodeProps: (newProps: Partial<NodeProps>) => void;
 }
 
-const Component: FC<Props> = ({ nodeData, flowReturnSchema, updateNodeMeta }) => {
-  const flowReturnValue = nodeData.meta.valueReference?.value;
+const Component: FC<Props> = ({ nodeData, flowReturnSchema, updateNodeProps }) => {
+  const flowReturnValue = nodeData.props.returnValue;
 
   const onReturnChange = useEvent((value: SchemaValue | undefined) => {
-    updateNodeMeta({ valueReference: { path: "flow", value } });
+    updateNodeProps({ returnValue: value });
   });
 
   return (
     <div>
       {(flowReturnSchema || flowReturnValue) && (
-        <div className="nd-form-layout">
+        <div className={styles.FormLayout}>
           <div className="form-item">
-            <div className="label-item require">设置返回参数</div>
+            <div className="label-item require">{Lang.setFlowReturn}</div>
             <div className="input-item">
               <SchemaValueForm variant="filled" schema={flowReturnSchema} value={flowReturnValue} onChange={onReturnChange} />
             </div>

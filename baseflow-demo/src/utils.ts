@@ -1,6 +1,13 @@
 import type { JsonDSL } from "@baseflow/flow-react";
 import { useRef } from "react";
 
+const params = new URLSearchParams(location.search);
+const _lang_ = params.get("_lang_") || "en";
+
+export function getLocale(): string {
+  return _lang_;
+}
+
 export const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
 export function useEvent<F extends Function>(fn: F): F {
@@ -48,7 +55,6 @@ export function fetchFlow(): JsonDSL {
   return graphContent
     ? JSON.parse(graphContent)
     : {
-        layout: "dagre",
         sources: {
           "@baseflow-nodes/flow": "@baseflow-nodes/flow@1.0.0",
           "@baseflow-nodes/start": "@baseflow-nodes/start@1.0.0",

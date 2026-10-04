@@ -76,6 +76,13 @@
     "desc": "流程开始：表示流程开始执行，可以定义流程入参返回数据结构.",
     "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/start\"}],\"sources\":{\"@baseflow-nodes/start\":\"@baseflow-nodes/start@*\"}}"
   },
+  "@baseflow-nodes/task": {
+    "type": "Task",
+    "name": "Task任务",
+    "icon": "",
+    "desc": "Task任务: 测试任务",
+    "dsl": "{\"nodes\":[{\"tag\":\"@baseflow-nodes/task\"}],\"sources\":{\"@baseflow-nodes/task\":\"@baseflow-nodes/task@*\"}}"
+  },
   "@baseflow-nodes/thread": {
     "type": "Thread",
     "name": "并行分支",

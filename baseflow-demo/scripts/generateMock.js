@@ -6,7 +6,6 @@ const ScriptDir = dirname(fileURLToPath(import.meta.url));
 const WorkspaceRoot = resolve(ScriptDir, "../..");
 const DefaultNodesDir = join(WorkspaceRoot, "baseflow-preview/nodes");
 const DefaultOutputFile = join(WorkspaceRoot, "baseflow-demo/public/mock.json");
-const CollaborationApplyValues = new Set(["readonly", "modify"]);
 
 function compareNames(left, right) {
   if (left < right) return -1;
@@ -43,13 +42,6 @@ export function mapPackageManifest(packageJson, packageFile) {
     desc: requireString(baseflow.desc, "package.baseflow.desc", packageFile),
     dsl: requireString(baseflow.defaultDsl, "package.baseflow.defaultDsl", packageFile),
   };
-
-  if (Object.hasOwn(baseflow, "collaborationApply")) {
-    if (!CollaborationApplyValues.has(baseflow.collaborationApply)) {
-      throw new Error(`${packageFile}: package.baseflow.collaborationApply 必须是 readonly 或 modify`);
-    }
-    mapped.collaborationApply = baseflow.collaborationApply;
-  }
 
   return { packageName, mapped };
 }

@@ -4,7 +4,8 @@ import { ConfigProvider, Modal, message } from "antd";
 import { useCallback } from "react";
 import { Button, DatePicker, Input, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-antd";
 import Canvas from "./Canvas";
-import { MockDoc } from "./utils";
+import { FlowBaseLang, NodeBaseLang } from "./i18n/en";
+import { getLocale, MockDoc } from "./utils";
 
 message.config({
   top: 50,
@@ -108,8 +109,10 @@ function App() {
       }}
     >
       <FlowConfigProvider
+        flowBaseLang={FlowBaseLang}
+        nodeBaseLang={NodeBaseLang}
         widgets={widgets}
-        nodeRendererUrl="http://localhost:4173/node-render.html"
+        nodeRendererUrl={`http://localhost:4173/node-render.html?_lang_=${getLocale()}`}
         monacoEditorUrl="/monaco/index.html"
         pureRunnerUrl="/pureRunner.worker-p0AIJc02.js"
         expressionUtils={expressionUtils}

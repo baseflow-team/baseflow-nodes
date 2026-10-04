@@ -16,8 +16,12 @@ const widgets: Partial<IWidgets> = {
   TimePicker,
 };
 
-function App() {
-  return <NodeConfigProvider widgets={widgets}>{(setup) => <Basic setup={setup} />}</NodeConfigProvider>;
+function App(props: { container: HTMLElement }) {
+  return (
+    <NodeConfigProvider container={props.container} widgets={widgets}>
+      {(setup) => <Basic setup={setup} />}
+    </NodeConfigProvider>
+  );
 }
 
 export default App;

@@ -13,13 +13,10 @@
       overflow: hidden;
     }
   </style>
-  <script src="./index-B29PTAlD.js"></script>
-  <script src="./monaco-editor@0.56.0/min/vs/nls/lang/zh-cn.js"></script>
+  <script src="./index-DzRcX_TX.js"></script>
   <script src="./monaco-editor@0.56.0/min/vs/loader.js"></script>
   <script>
-    // 'vs/nls' 是 require.config 的顶层配置项，不是 paths 映射；
-    // 放进 paths 会让 loader 把它当路径前缀，拼出 [object Object].messages-loader.js
-    const initBaseflowMonaco = window.monaco.initMonaco;
+    // 语言包必须在 editor.main 之前加载；
     require.config({
       paths: {
         vs: window.location.origin + '/monaco/monaco-editor@0.56.0/min/vs',
@@ -28,7 +25,7 @@
 
     require(
       ['vs/editor/editor.main'],
-      initBaseflowMonaco,
+      BaseflowMonaco.initMonaco,
       console.error,
     );
   </script>

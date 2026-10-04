@@ -5,11 +5,9 @@ import type { FC } from "react";
 import { memo, useCallback, useState } from "react";
 import NodeList from "../NodeList";
 import type { IDoc } from "../utils";
-import { useEvent } from "../utils";
+import { getLocale, useEvent } from "../utils";
 import { FlowHooks } from "./FlowHooks";
 import styles from "./index.module.scss";
-
-const Locale = localStorage.getItem("baseflow-locale") || "";
 
 const Component: FC<{ doc: IDoc }> = (props) => {
   const [flow, setFlow] = useState<IFlow>();
@@ -51,15 +49,13 @@ const Component: FC<{ doc: IDoc }> = (props) => {
         <div className="left">
           <div className="title">
             <Select
-              value={Locale}
+              value={getLocale()}
               options={[
-                { value: "en-US", label: "English" },
-                { value: "zh-CN", label: "中文简体" },
-                { value: "zh-TW", label: "中文繁體" },
+                { value: "en", label: "English" },
+                { value: "zh-hans", label: "中文简体" },
               ]}
               onChange={(locale) => {
-                localStorage.setItem("baseflow-locale", locale);
-                window.location.reload();
+                window.location.href = `?_lang_=${locale}`;
               }}
             />
           </div>

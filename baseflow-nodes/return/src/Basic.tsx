@@ -4,14 +4,16 @@ import { memo, useState } from "react";
 import InputForm from "./components/InputForm";
 import OutputForm from "./components/OutputForm";
 import Readme from "./components/Readme";
+import type { NodeProps } from "./model";
+import { validateNodeData } from "./model";
 
-const Component: FC<{ setup: NodeSetup<{}> }> = ({ setup }) => {
+const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
-  const { nodeData, flowReturnSchema, updateNodeMeta } = setup({
+  const { nodeData, flowReturnSchema, updateNodeProps } = setup({
     onSubmit: () => {
+      const error = validateNodeData(flowReturnSchema, nodeData.props);
       return {
-        nodeData,
-        flowReturnSchema,
+        nodeData: { ...nodeData, meta: { ...nodeData.meta, configurationErrors: error || undefined } },
       };
     },
     onNavigate: (target) => {
@@ -21,7 +23,7 @@ const Component: FC<{ setup: NodeSetup<{}> }> = ({ setup }) => {
 
   return (
     <div>
-      {currentTab === "input" && <InputForm nodeData={nodeData} flowReturnSchema={flowReturnSchema} updateNodeMeta={updateNodeMeta} />}
+      {currentTab === "input" && <InputForm nodeData={nodeData} flowReturnSchema={flowReturnSchema} updateNodeProps={updateNodeProps} />}
       {currentTab === "output" && <OutputForm />}
       {currentTab === "readme" && <Readme />}
     </div>

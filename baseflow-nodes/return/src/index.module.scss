@@ -1,0 +1,27 @@
+:global {
+  :local(.FormLayout) {
+    > .form-item {
+      margin-bottom: 20px;
+
+      > .label-item {
+        padding-bottom: 15px;
+        font-weight: 500;
+        line-height: 1.4;
+
+        &.require {
+          &::before {
+            margin-right: 3px;
+            color: var(--bf-special);
+            content: "*";
+          }
+        }
+
+        em {
+          margin-right: 3px;
+          font-style: normal;
+          color: var(--bf-special);
+        }
+      }
+    }
+  }
+}

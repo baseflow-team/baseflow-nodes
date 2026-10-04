@@ -1,4 +1,5 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import type { NodeProps } from "./model";
 
 export default {
   type: "Return",
@@ -10,12 +11,23 @@ export default {
   defaultData: {
     meta: {
       name: "流程返回",
-      valueReference: {
-        path: "flow",
+      watchExternalProps: {
+        flow: { outputSchema: "The flowReturnSchema has been modified and needs to be confirmed" },
       },
     },
     props: {},
   },
+  updateOnSelfCreated: (nodeData, flowSchema) => {
+    if (flowSchema.output) {
+      if (!nodeData.props.returnValue) {
+        return { updateMeta: { configurationErrors: "Please set the flow return value" } };
+      } else {
+        return { updateMeta: { externalNotices: { [nodeData.id]: "Please set the flow return value" } } };
+      }
+    } else {
+      return { updateProps: { returnValue: undefined }, updateMeta: { configurationErrors: undefined, externalNotices: undefined } };
+    }
+  },
   uiForm: "index.js",
   defaultDsl: { nodes: [{ tag: "@baseflow-nodes/return" }], sources: { "@baseflow-nodes/return": "@baseflow-nodes/return@0.0.1" } },
-} as NodeManifest<{}>;
+} satisfies NodeManifest<NodeProps>;
