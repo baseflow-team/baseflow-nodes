@@ -1,0 +1,13 @@
+:focus-visible {
+  outline: none;
+}
+
+.mantine-Button-root {
+  --button-height-xs: 26px;
+  --button-height-sm: 32px;
+}
+
+.mantine-Input-wrapper {
+  --input-height-xs: 26px;
+  --input-height-sm: 32px;
+}

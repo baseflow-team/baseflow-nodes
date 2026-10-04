@@ -16,20 +16,24 @@ interface ISelectProps {
   placeholder?: string;
 }
 
-const Component: FC<ISelectProps> = ({ value, multiple, ...others }) => {
+const Component: FC<ISelectProps> = ({ value, multiple, options, ...others }) => {
   const size = others.size === "small" ? "xs" : "sm";
   const variant = others.variant === "borderless" ? "unstyled" : "default";
 
   if (multiple) {
-    return <MultiSelect {...others} size={size} variant={variant} value={Array.isArray(value) ? value : []} />;
+    const multipleValue = value === undefined ? undefined : Array.isArray(value) ? value : [];
+    return <MultiSelect {...others} data={options} size={size} variant={variant} value={multipleValue} />;
   }
+
+  const selectValue = value === undefined ? undefined : typeof value === "string" && value ? value : null;
 
   return (
     <Select
       {...others}
+      data={options}
       size={size}
       variant={variant}
-      value={typeof value === "string" && value ? value : null}
+      value={selectValue}
       onChange={(nextValue) => others.onChange?.(nextValue ?? undefined)}
     />
   );

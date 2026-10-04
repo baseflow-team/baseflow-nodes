@@ -13,7 +13,12 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "scripts": {},
+  "scripts": {
+    "dev": "vite --config demo/vite.config.ts",
+    "build": "vite build --config demo/vite.config.ts",
+    "preview": "vite preview --config demo/vite.config.ts",
+    "type:check": "tsc --noEmit"
+  },
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19",

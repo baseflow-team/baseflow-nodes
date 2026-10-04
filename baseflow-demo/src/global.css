@@ -1,11 +1,17 @@
-html,
-body,
-#root {
+html {
   height: 100%;
-  padding: 0;
+  font-size: 14px;
+}
+
+body {
+  height: 100%;
   margin: 0;
   font-size: 13px;
   color: var(--bf-tx-body);
+}
+
+#root {
+  height: 100%;
 }
 
 :focus-visible {
