@@ -1,4 +1,4 @@
-import { Segmented } from "antd";
+import { SegmentedControl } from "@mantine/core";
 import type { FC } from "react";
 import { memo } from "react";
 
@@ -12,8 +12,8 @@ export interface ISegmentedProps {
   className?: string;
 }
 
-const Component: FC<ISegmentedProps> = (props) => {
-  return <Segmented {...props} />;
+const Component: FC<ISegmentedProps> = ({ options, ...others }) => {
+  return <SegmentedControl {...others} data={options} />;
 };
 
 export default memo(Component) as typeof Component;

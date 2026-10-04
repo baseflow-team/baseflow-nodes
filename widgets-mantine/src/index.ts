@@ -1,3 +1,19 @@
+import "@mantine/core/styles/baseline.css";
+import "@mantine/core/styles/global.css";
+import "@mantine/core/styles/Button.css";
+import "@mantine/core/styles/CloseButton.css";
+import "@mantine/core/styles/Combobox.css";
+import "@mantine/core/styles/Input.css";
+import "@mantine/core/styles/Loader.css";
+import "@mantine/core/styles/Pill.css";
+import "@mantine/core/styles/PillsInput.css";
+import "@mantine/core/styles/Popover.css";
+import "@mantine/core/styles/ScrollArea.css";
+import "@mantine/core/styles/SegmentedControl.css";
+import "@mantine/core/styles/Switch.css";
+import "@mantine/core/styles/VisuallyHidden.css";
+
+export { MantineProvider } from "@mantine/core";
 export { default as Button } from "./Button";
 export { default as DatePicker } from "./DatePicker";
 export { default as Input } from "./Input";

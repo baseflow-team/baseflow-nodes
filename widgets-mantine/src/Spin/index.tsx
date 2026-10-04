@@ -1,4 +1,4 @@
-import { Spin } from "antd";
+import { Loader } from "@mantine/core";
 import type { FC } from "react";
 import { memo } from "react";
 
@@ -7,7 +7,7 @@ export interface ISpinProps {
 }
 
 const Component: FC<ISpinProps> = (props) => {
-  return <Spin {...props} />;
+  return <Loader size={props.size === "small" ? "xs" : "sm"} />;
 };
 
 export default memo(Component) as typeof Component;

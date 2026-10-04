@@ -1,4 +1,4 @@
-import { Input } from "antd";
+import { Textarea } from "@mantine/core";
 import type { FC, FocusEvent } from "react";
 import { memo } from "react";
 
@@ -13,7 +13,7 @@ export interface ITextAreaProps {
 }
 
 const Component: FC<ITextAreaProps> = ({ onChange, ...others }) => {
-  return <Input.TextArea {...others} onChange={(e) => onChange?.(e.target.value.trim())} />;
+  return <Textarea {...others} onChange={(event) => onChange?.(event.currentTarget.value.trim())} />;
 };
 
 export default memo(Component) as typeof Component;

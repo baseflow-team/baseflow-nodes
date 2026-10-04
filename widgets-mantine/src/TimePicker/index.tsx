@@ -1,7 +1,6 @@
-import { TimePicker } from "antd";
-import dayjs from "dayjs";
+import { Input } from "@mantine/core";
 import type { FC } from "react";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 
 export interface ITimePickerProps {
   value?: string;
@@ -11,13 +10,14 @@ export interface ITimePickerProps {
 }
 
 const Component: FC<ITimePickerProps> = ({ value, onChange, ...others }) => {
-  const dataValue = useMemo(() => (value ? dayjs(value, "HH:mm:ss") : null), [value]);
   return (
-    <TimePicker
+    <Input
       {...others}
-      value={dataValue}
-      onChange={(_, date) => {
-        onChange?.(date as string);
+      type="time"
+      step={1}
+      value={value ?? ""}
+      onChange={(event) => {
+        onChange?.(event.currentTarget.value);
       }}
     />
   );

@@ -1,8 +1,11 @@
 {
-  "name": "widgets-antd",
+  "name": "widgets-mantine",
   "version": "0.0.0",
   "private": true,
-  "sideEffects": false,
+  "sideEffects": [
+    "./src/index.ts",
+    "**/*.css"
+  ],
   "type": "module",
   "engines": {
     "node": ">=22.12"
@@ -14,7 +17,6 @@
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19",
-    "dayjs": "*",
     "@mantine/core": "^9",
     "@mantine/hooks": "^9"
   }

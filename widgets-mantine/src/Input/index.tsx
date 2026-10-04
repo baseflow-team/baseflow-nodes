@@ -1,4 +1,4 @@
-import { Input } from "antd";
+import { TextInput } from "@mantine/core";
 import type { FC, FocusEvent } from "react";
 import { memo } from "react";
 
@@ -12,7 +12,7 @@ export interface IInputProps {
 }
 
 const Component: FC<IInputProps> = ({ onChange, ...others }) => {
-  return <Input {...others} onChange={(e) => onChange?.(e.target.value.trim())} />;
+  return <TextInput {...others} onChange={(event) => onChange?.(event.currentTarget.value.trim())} />;
 };
 
 export default memo(Component);

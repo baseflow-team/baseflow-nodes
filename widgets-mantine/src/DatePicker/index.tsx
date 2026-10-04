@@ -1,7 +1,6 @@
-import { DatePicker } from "antd";
-import dayjs from "dayjs";
+import { Input } from "@mantine/core";
 import type { FC } from "react";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 
 export interface IDatePickerProps {
   value?: string;
@@ -11,15 +10,18 @@ export interface IDatePickerProps {
   className?: string;
 }
 
-const Component: FC<IDatePickerProps> = ({ value, onChange, ...others }) => {
-  const dataValue = useMemo(() => (value ? dayjs(value) : null), [value]);
+const Component: FC<IDatePickerProps> = ({ value, onChange, showTime, ...others }) => {
+  const inputValue = showTime ? value?.replace(" ", "T") : value;
 
   return (
-    <DatePicker
+    <Input
       {...others}
-      value={dataValue}
-      onChange={(_, date) => {
-        onChange?.(date as string);
+      type={showTime ? "datetime-local" : "date"}
+      step={showTime ? 1 : undefined}
+      value={inputValue ?? ""}
+      onChange={(event) => {
+        const nextValue = event.currentTarget.value;
+        onChange?.(showTime ? nextValue.replace("T", " ") : nextValue);
       }}
     />
   );
