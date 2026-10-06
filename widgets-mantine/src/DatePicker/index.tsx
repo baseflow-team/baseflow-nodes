@@ -1,30 +1,36 @@
 import { Input } from "@mantine/core";
-import type { FC } from "react";
+import type { ChangeEvent, FC } from "react";
 import { memo } from "react";
+import { useEvent } from "../utils";
 
 export interface IDatePickerProps {
-  value?: string;
-  onChange?: (value?: string) => void;
+  value?: string | null;
+  onChange?: (value: string | null) => void;
   showTime?: boolean;
   placeholder?: string;
+  borderless?: boolean;
   className?: string;
 }
 
-const Component: FC<IDatePickerProps> = ({ value, onChange, showTime, ...others }) => {
+const Component: FC<IDatePickerProps> = ({ value, onChange, showTime, placeholder, borderless, className }) => {
   const inputValue = showTime ? value?.replace(" ", "T") : value;
+  const _className = [className, borderless && "borderless"].filter(Boolean).join(" ");
+
+  const _onChange = useEvent((event: ChangeEvent<any>) => {
+    const nextValue = event.currentTarget.value;
+    onChange?.(showTime ? nextValue.replace("T", " ") : nextValue);
+  });
 
   return (
     <Input
-      {...others}
+      className={_className}
+      placeholder={placeholder}
       type={showTime ? "datetime-local" : "date"}
       step={showTime ? 1 : undefined}
       value={inputValue ?? ""}
-      onChange={(event) => {
-        const nextValue = event.currentTarget.value;
-        onChange?.(showTime ? nextValue.replace("T", " ") : nextValue);
-      }}
+      onChange={_onChange}
     />
   );
 };
 
-export default memo(Component) as typeof Component;
+export default memo(Component);

@@ -1,40 +1,34 @@
-import { MultiSelect, Select } from "@mantine/core";
+import { Select } from "@mantine/core";
 import type { FC } from "react";
 import { memo } from "react";
 
 interface ISelectProps {
-  value?: string | string[];
+  value?: string | null;
+  onChange?: (value: string | null) => void;
+  size?: "small";
+  require?: boolean;
+  placeholder?: string;
+  borderless?: boolean;
+  className?: string;
   options: {
     value: string;
     label: string;
   }[];
-  onChange?: (value?: string | string[]) => void;
-  size?: "small";
-  variant?: "borderless";
-  multiple?: boolean;
-  className?: string;
-  placeholder?: string;
 }
 
-const Component: FC<ISelectProps> = ({ value, multiple, options, ...others }) => {
-  const size = others.size === "small" ? "xs" : "sm";
-  const variant = others.variant === "borderless" ? "unstyled" : "default";
-
-  if (multiple) {
-    const multipleValue = value === undefined ? undefined : Array.isArray(value) ? value : [];
-    return <MultiSelect {...others} data={options} size={size} variant={variant} value={multipleValue} />;
-  }
-
-  const selectValue = value === undefined ? undefined : typeof value === "string" && value ? value : null;
+const Component: FC<ISelectProps> = ({ value, borderless, options, require, size, className, onChange, placeholder }) => {
+  const _size = size === "small" ? "xs" : "sm";
+  const _className = [className, borderless && "borderless"].filter(Boolean).join(" ");
 
   return (
     <Select
-      {...others}
+      error={require && value === null}
+      className={_className}
       data={options}
-      size={size}
-      variant={variant}
-      value={selectValue}
-      onChange={(nextValue) => others.onChange?.(nextValue ?? undefined)}
+      size={_size}
+      value={value}
+      placeholder={placeholder}
+      onChange={onChange}
     />
   );
 };

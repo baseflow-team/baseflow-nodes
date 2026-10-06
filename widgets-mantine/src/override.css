@@ -1,0 +1,37 @@
+:focus-visible {
+  outline: none;
+}
+
+.mantine-Button-root {
+  --button-height-xs: 26px;
+  --button-height-sm: 32px;
+}
+
+.mantine-Input-wrapper {
+  --input-height-xs: 26px;
+  --input-height-sm: 32px;
+}
+
+:root {
+  --mantine-font-size-xs: 12px;
+  --mantine-font-size-sm: 13px;
+  --mantine-webkit-font-smoothing: auto;
+  --mantine-moz-font-smoothing: auto;
+}
+.mantine-Switch-labelWrapper {
+  font-size: 12px;
+}
+.mantine-InputWrapper-root.borderless {
+  .mantine-Input-input {
+    height: calc(var(--input-size) - 2px);
+    min-height: calc(var(--input-size) - 2px);
+    border: none;
+  }
+}
+.mantine-Input-wrapper.borderless {
+  .mantine-Input-input {
+    height: calc(var(--input-size) - 2px);
+    min-height: calc(var(--input-size) - 2px);
+    border: none;
+  }
+}

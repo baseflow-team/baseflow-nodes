@@ -1,6 +1,6 @@
-import { StrictMode } from "react";
+import { MantineProvider } from "@mantine/core";
 import { createRoot } from "react-dom/client";
-import { MantineProvider } from "widgets-mantine";
+import { BrandTheme } from "widgets-mantine";
 import List from "./List";
 import "./styles.css";
 
@@ -11,9 +11,7 @@ if (!container) {
 }
 
 createRoot(container).render(
-  <StrictMode>
-    <MantineProvider>
-      <List />
-    </MantineProvider>
-  </StrictMode>,
+  <MantineProvider theme={BrandTheme}>
+    <List />
+  </MantineProvider>,
 );

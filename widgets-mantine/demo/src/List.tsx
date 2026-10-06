@@ -55,7 +55,7 @@ export default function List() {
         <h2>other</h2>
         <div className="WidgetsPreview__row WidgetsPreview__row--fields">
           <Switch label="启用" />
-          <Switch size="small" />
+          <Switch label="启用" size="small" />
         </div>
       </section>
 

@@ -16,21 +16,23 @@ interface IButtonProps {
   onClick?: MouseEventHandler<HTMLElement>;
 }
 
-const Component: FC<IButtonProps> = (props) => {
-  const { block, icon, iconPosition, size, type, ...others } = props;
-  const variant =
-    type === "primary" ? "filled" : type === "text" ? "subtle" : type === "link" ? "transparent" : type === "dashed" ? "outline" : "default";
-
+const Component: FC<IButtonProps> = ({ ref, className, loading, disabled, children, block, icon, iconPosition, size, type, onClick }) => {
   return (
     <Button
-      {...others}
+      ref={ref}
+      className={className}
+      loading={loading}
+      disabled={disabled}
       fullWidth={block}
       leftSection={iconPosition !== "end" ? icon : undefined}
       rightSection={iconPosition === "end" ? icon : undefined}
       size={size === "small" ? "xs" : "sm"}
-      variant={variant}
-    />
+      variant={type === "primary" ? "filled" : type === "text" ? "subtle" : type === "link" ? "transparent" : "default"}
+      onClick={onClick}
+    >
+      {children}
+    </Button>
   );
 };
 
-export default memo(Component) as typeof Component;
+export default memo(Component);

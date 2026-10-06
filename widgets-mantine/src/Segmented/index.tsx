@@ -12,8 +12,8 @@ export interface ISegmentedProps {
   className?: string;
 }
 
-const Component: FC<ISegmentedProps> = ({ options, ...others }) => {
-  return <SegmentedControl {...others} data={options} />;
+const Component: FC<ISegmentedProps> = ({ options, value, onChange, className }) => {
+  return <SegmentedControl value={value} className={className} data={options} onChange={onChange} />;
 };
 
 export default memo(Component) as typeof Component;

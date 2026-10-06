@@ -1,8 +1,8 @@
 import type { IWidgets, SchemaModel } from "@baseflow/flow-react";
 import { DataType, FlowConfigProvider } from "@baseflow/flow-react";
-import { Modal, message } from "antd";
+import { ConfigProvider, Modal, message } from "antd";
 import { useCallback } from "react";
-import { Button, DatePicker, Input, MantineProvider, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-mantine";
+import { Button, DatePicker, Input, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-antd";
 import Canvas from "./Canvas";
 import { FlowBaseLang, NodeBaseLang } from "./i18n/en";
 import { getLocale, MockDoc } from "./utils";
@@ -101,7 +101,13 @@ function App() {
   }, []);
 
   return (
-    <MantineProvider>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontSize: 13,
+        },
+      }}
+    >
       <FlowConfigProvider
         flowBaseLang={FlowBaseLang}
         nodeBaseLang={NodeBaseLang}
@@ -116,7 +122,7 @@ function App() {
       >
         <Canvas doc={MockDoc} />
       </FlowConfigProvider>
-    </MantineProvider>
+    </ConfigProvider>
   );
 }
 
