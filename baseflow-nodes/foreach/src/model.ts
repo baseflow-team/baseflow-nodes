@@ -1,5 +1,6 @@
 import type { IValueSource, SchemaValue } from "@baseflow/node-runtime-react";
 import { DataType, ValueSource } from "@baseflow/node-runtime-react";
+import Lang from "./i18n/en";
 export interface NodeProps {
   source?: string;
 }
@@ -10,7 +11,7 @@ export interface InternalProps {
 
 export function validateNodeData(props: NodeProps): string | undefined {
   if (!props.source) {
-    return "Foreach source is required!";
+    return Lang.iterationSourceRequire;
   }
   return;
 }

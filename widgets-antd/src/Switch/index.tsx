@@ -11,7 +11,12 @@ export interface ISwitchProps {
 }
 
 const Component: FC<ISwitchProps> = ({ value, onChange, className, size, label }) => {
-  return <Switch value={value} onChange={onChange} className={className} size={size} checkedChildren={label} unCheckedChildren={label} />;
+  return (
+    <span className="ant-label-switch">
+      <Switch value={value} onChange={onChange} className={className} size={size} />
+      <label>{label}</label>
+    </span>
+  );
 };
 
 export default memo(Component);

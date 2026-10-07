@@ -2,9 +2,10 @@ import type { INodeMeta, SchemaModel, SchemaValue, SuperInputPropsRender } from 
 import { DataType, SchemaValueForm, useEvent } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo } from "react";
+import Lang from "../i18n/en";
 import type { InternalProps } from "../model";
 
-const inputSchema: SchemaModel = { name: "source", label: "迭代源", type: DataType.Array };
+const inputSchema: SchemaModel = { name: "source", label: Lang.iterationSource, type: DataType.Array, children: [] };
 
 const inputPropsRender: SuperInputPropsRender = (item) => {
   if (item.name === "source") {

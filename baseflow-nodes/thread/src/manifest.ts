@@ -19,4 +19,4 @@ export default {
     readme: "",
   },
   defaultDsl: { nodes: [{ tag: "@baseflow-nodes/thread" }], sources: { "@baseflow-nodes/thread": "@baseflow-nodes/thread@1" } },
-} satisfies NodeManifest<NodeProps>;
+} satisfies NodeManifest<{}>;

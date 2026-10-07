@@ -11,6 +11,7 @@ export default {
   defaultData: {
     meta: {
       name: "Foreach循环",
+      configurationErrors: "Please set the iteration source...",
     },
     props: {},
   },

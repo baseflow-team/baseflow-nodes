@@ -19,4 +19,4 @@ export default {
     readme: "",
   },
   defaultDsl: { nodes: [{ tag: "@baseflow-nodes/task" }], sources: { "@baseflow-nodes/task": "@baseflow-nodes/task@1" } },
-} satisfies NodeManifest<NodeProps>;
+} satisfies NodeManifest<{}>;

@@ -10,9 +10,8 @@ const inputSchema: SchemaModel = {
   type: DataType.Object,
   children: [
     { name: "url", type: DataType.String },
-    { name: "method", type: DataType.String },
+    { name: "method", type: DataType.String, enums: [{ value: "GET" }, { value: "POST" }, { value: "PUT" }, { value: "DELETE" }] },
     { name: "https", type: DataType.Bool },
-    { name: "data", type: DataType.Date },
   ],
 };
 interface Props {

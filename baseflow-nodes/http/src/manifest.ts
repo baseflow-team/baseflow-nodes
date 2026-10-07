@@ -12,7 +12,7 @@ export default {
     meta: {
       name: "HTTP请求",
       outputSchema: {
-        name: "output",
+        name: "response",
         type: "ͼOBJECTͼ",
         children: [
           {
@@ -26,7 +26,16 @@ export default {
         ],
       },
     },
-    props: {},
+    props: {
+      input: {
+        name: "request",
+        value: {
+          type: "ͼOBJECTͼ",
+          source: "ͼVARIABLEͼ",
+          text: "",
+        },
+      },
+    },
   },
   uiForm: "index.js",
   defaultDsl: { nodes: [{ tag: "@baseflow-nodes/http" }], sources: { "@baseflow-nodes/http": "@baseflow-nodes/http@1" } },

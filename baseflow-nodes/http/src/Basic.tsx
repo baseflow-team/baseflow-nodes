@@ -5,15 +5,13 @@ import { memo, useCallback, useState } from "react";
 import InputForm from "./components/InputForm";
 import OutputForm from "./components/OutputForm";
 import type { NodeProps } from "./model";
-import { validateNodeData } from "./model";
 
 const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
   const { nodeData, packageInfo, updateNodeProps, updateNodeMeta } = setup({
-    onSubmit: (onUnload) => {
-      const error = validateNodeData(nodeData.props);
+    onSubmit: () => {
       return {
-        nodeData: { ...nodeData, meta: { ...nodeData.meta, configurationErrors: error || undefined } },
+        nodeData,
       };
     },
     onNavigate: (target) => {

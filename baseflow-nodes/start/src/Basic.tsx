@@ -1,13 +1,12 @@
 import type { NodeNavigation, NodeSetup } from "@baseflow/node-runtime-react";
+import { NodeNameplate, SchemaShow } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo, useState } from "react";
 import InputForm from "./components/InputForm";
-import OutputForm from "./components/OutputForm";
-import Readme from "./components/Readme";
 
 const Component: FC<{ setup: NodeSetup<{}> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
-  const { flowInputSchema, flowReturnSchema, updateNodeMeta, updateFlowInputSchema, updateFlowReturnSchema } = setup({
+  const { packageInfo, flowInputSchema, flowReturnSchema, updateNodeMeta, updateFlowInputSchema, updateFlowReturnSchema } = setup({
     onSubmit: () => {
       return {
         flowInputSchema,
@@ -30,8 +29,8 @@ const Component: FC<{ setup: NodeSetup<{}> }> = ({ setup }) => {
           updateNodeMeta={updateNodeMeta}
         />
       )}
-      {currentTab === "output" && <OutputForm />}
-      {currentTab === "readme" && <Readme />}
+      {currentTab === "output" && flowInputSchema && <SchemaShow schema={flowInputSchema} />}
+      {currentTab === "readme" && <NodeNameplate packageInfo={packageInfo} />}
     </div>
   );
 };
