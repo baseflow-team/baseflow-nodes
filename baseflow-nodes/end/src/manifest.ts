@@ -1,4 +1,5 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import type { NodeProps } from "./model";
 
 export default {
   type: "End",
@@ -9,13 +10,13 @@ export default {
   },
   defaultData: {
     meta: {
-      name: "流程结束",
-      valueReference: {
-        path: "flow",
+      name: "流程返回",
+      watchExternalProps: {
+        flow: { outputSchema: "The flowReturnSchema has been modified and needs to be confirmed" },
       },
     },
     props: {},
   },
   uiForm: "index.js",
-  defaultDsl: { nodes: [{ tag: "@baseflow-nodes/end" }], sources: { "@baseflow-nodes/end": "@baseflow-nodes/end@*" } },
-} as NodeManifest<{}>;
+  defaultDsl: { nodes: [{ tag: "@baseflow-nodes/end" }], sources: { "@baseflow-nodes/end": "@baseflow-nodes/end@1" } },
+} satisfies NodeManifest<NodeProps>;

@@ -18,7 +18,7 @@ export default {
   defaultDsl: {
     nodes: [{ tag: "@baseflow-nodes/branch" }],
     sources: {
-      "@baseflow-nodes/branch": "@baseflow-nodes/branch@*",
+      "@baseflow-nodes/branch": "@baseflow-nodes/branch@1",
     },
   },
 } as NodeManifest<NodeProps>;

@@ -4,8 +4,8 @@ import { memo } from "react";
 import { useEvent } from "../utils";
 
 export interface IDatePickerProps {
-  value?: string | null;
-  onChange?: (value: string | null) => void;
+  value?: string;
+  onChange?: (value: string) => void;
   showTime?: boolean;
   placeholder?: string;
   borderless?: boolean;
@@ -17,8 +17,7 @@ const Component: FC<IDatePickerProps> = ({ value, onChange, showTime, placeholde
   const _className = [className, borderless && "borderless"].filter(Boolean).join(" ");
 
   const _onChange = useEvent((event: ChangeEvent<any>) => {
-    const nextValue = event.currentTarget.value;
-    onChange?.(showTime ? nextValue.replace("T", " ") : nextValue);
+    onChange?.(event.currentTarget.value);
   });
 
   return (

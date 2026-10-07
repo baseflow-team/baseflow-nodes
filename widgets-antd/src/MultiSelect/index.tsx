@@ -3,10 +3,9 @@ import type { FC } from "react";
 import { memo } from "react";
 
 interface ISelectProps {
-  value?: string | null;
-  onChange?: (value: string | null) => void;
+  value?: string[];
+  onChange?: (value: string[]) => void;
   size?: "small";
-  require?: boolean;
   placeholder?: string;
   borderless?: boolean;
   className?: string;
@@ -19,7 +18,7 @@ interface ISelectProps {
 const Component: FC<ISelectProps> = ({ borderless, className, ...others }) => {
   const _className = [className, borderless && "borderless"].filter(Boolean).join(" ");
 
-  return <Select {...others} className={_className} {...others} />;
+  return <Select mode="multiple" className={_className} {...others} />;
 };
 
 export default memo(Component);

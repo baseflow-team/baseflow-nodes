@@ -29,5 +29,5 @@ export default {
     props: {},
   },
   uiForm: "index.js",
-  defaultDsl: { nodes: [{ tag: "@baseflow-nodes/http" }], sources: { "@baseflow-nodes/http": "@baseflow-nodes/http@*" } },
+  defaultDsl: { nodes: [{ tag: "@baseflow-nodes/http" }], sources: { "@baseflow-nodes/http": "@baseflow-nodes/http@1" } },
 } as NodeManifest<NodeProps>;

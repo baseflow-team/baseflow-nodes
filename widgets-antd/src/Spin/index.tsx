@@ -10,4 +10,4 @@ const Component: FC<ISpinProps> = (props) => {
   return <Spin {...props} />;
 };
 
-export default memo(Component) as typeof Component;
+export default memo(Component);

@@ -5,7 +5,7 @@ import { useEvent } from "../utils";
 
 export interface ITimePickerProps {
   value?: string;
-  onChange?: (value?: string) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
   borderless?: boolean;
   className?: string;
@@ -17,7 +17,7 @@ const Component: FC<ITimePickerProps> = ({ value, onChange, borderless, placehol
     onChange?.(event.currentTarget.value);
   });
 
-  return <Input className={_className} type="time" step={1} placeholder={placeholder} value={value ?? ""} onChange={_onChange} />;
+  return <Input className={_className} type="time" step={1} placeholder={placeholder} value={value} onChange={_onChange} />;
 };
 
 export default memo(Component);

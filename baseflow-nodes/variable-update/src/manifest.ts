@@ -17,6 +17,6 @@ export default {
   uiForm: "index.js",
   defaultDsl: {
     nodes: [{ tag: "@baseflow-nodes/variable-update" }],
-    sources: { "@baseflow-nodes/variable-update": "@baseflow-nodes/variable-update@*" },
+    sources: { "@baseflow-nodes/variable-update": "@baseflow-nodes/variable-update@1" },
   },
 } as NodeManifest<NodeProps>;

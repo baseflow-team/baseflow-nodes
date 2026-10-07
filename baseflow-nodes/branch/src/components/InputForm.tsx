@@ -2,6 +2,7 @@ import type { Conditions, INodeData } from "@baseflow/node-runtime-react";
 import { ConditionSelector, useEvent } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo } from "react";
+import Lang from "../i18n/en";
 import type { NodeProps } from "../model";
 
 interface Props {
@@ -16,7 +17,9 @@ const Component: FC<Props> = ({ nodeData, updateNodeProps }) => {
   });
 
   return (
-    <div>{nodeProps.default ? <div>其它条件默认分支</div> : <ConditionSelector value={nodeProps.conditions} onChange={onConditionsChange} />}</div>
+    <div>
+      {nodeProps.default ? <div>{Lang.defaultBranch}</div> : <ConditionSelector value={nodeProps.conditions} onChange={onConditionsChange} />}
+    </div>
   );
 };
 export default memo(Component);

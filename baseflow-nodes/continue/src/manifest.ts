@@ -18,5 +18,5 @@ export default {
     outputEditable: false,
     readme: "",
   },
-  defaultDsl: { nodes: [{ tag: "@baseflow-nodes/continue" }], sources: { "@baseflow-nodes/continue": "@baseflow-nodes/continue@*" } },
-} as NodeManifest<{}>;
+  defaultDsl: { nodes: [{ tag: "@baseflow-nodes/continue" }], sources: { "@baseflow-nodes/continue": "@baseflow-nodes/continue@1" } },
+} satisfies NodeManifest<{}>;

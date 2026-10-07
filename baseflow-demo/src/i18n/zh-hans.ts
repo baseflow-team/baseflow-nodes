@@ -151,6 +151,7 @@ export const NodeBaseLang = {
   insertChild: "插入子级",
   clipboardIsEmpty: "剪贴板数据无效",
   copied: "已复制",
+  inputMapping: "入参映射",
   mapping: "迭代",
   assign: "赋值",
   deconstruct: "解构",

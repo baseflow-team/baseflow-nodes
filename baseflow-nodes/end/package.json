@@ -1,6 +1,6 @@
 {
   "name": "@baseflow-nodes/end",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,8 +10,8 @@
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19",
-    "antd": "*",
-    "widgets-antd": "*",
+    "@mantine/core": "^9",
+    "widgets-mantine": "*",
     "@baseflow/node-runtime-react": "^1"
   }
 }

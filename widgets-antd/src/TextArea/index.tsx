@@ -1,6 +1,7 @@
 import { Input } from "antd";
-import type { FC, FocusEvent } from "react";
+import type { ChangeEvent, FC, FocusEvent } from "react";
 import { memo } from "react";
+import { useEvent } from "../utils";
 
 export interface ITextAreaProps {
   className?: string;
@@ -13,7 +14,11 @@ export interface ITextAreaProps {
 }
 
 const Component: FC<ITextAreaProps> = ({ onChange, ...others }) => {
-  return <Input.TextArea {...others} onChange={(e) => onChange?.(e.target.value.trim())} />;
+  const _onChange = useEvent((event: ChangeEvent<any>) => {
+    onChange?.(event.currentTarget.value.trim());
+  });
+
+  return <Input.TextArea {...others} onChange={_onChange} />;
 };
 
-export default memo(Component) as typeof Component;
+export default memo(Component);

@@ -1,18 +1,17 @@
 import { Switch } from "antd";
-import type { FC, ReactNode } from "react";
+import type { FC } from "react";
 import { memo } from "react";
 
 export interface ISwitchProps {
   value?: boolean;
   onChange?: (value: boolean) => void;
   className?: string;
-  size?: "small" | "middle";
-  checkedChildren?: ReactNode;
-  unCheckedChildren?: ReactNode;
+  size?: "small";
+  label?: string;
 }
 
-const Component: FC<ISwitchProps> = (props) => {
-  return <Switch {...props} />;
+const Component: FC<ISwitchProps> = ({ value, onChange, className, size, label }) => {
+  return <Switch value={value} onChange={onChange} className={className} size={size} checkedChildren={label} unCheckedChildren={label} />;
 };
 
-export default memo(Component) as typeof Component;
+export default memo(Component);

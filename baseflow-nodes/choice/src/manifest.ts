@@ -24,6 +24,6 @@ export default {
       { tag: "@baseflow-nodes/branch", id: "branch1", parentId: "choice1" },
       { tag: "@baseflow-nodes/branch", id: "branch2", parentId: "choice1", props: { default: true } },
     ],
-    sources: { "@baseflow-nodes/choice": "@baseflow-nodes/choice@*", "@baseflow-nodes/branch": "@baseflow-nodes/branch@*" },
+    sources: { "@baseflow-nodes/choice": "@baseflow-nodes/choice@1", "@baseflow-nodes/branch": "@baseflow-nodes/branch@1" },
   },
-} as NodeManifest<{}>;
+} satisfies NodeManifest<{}>;

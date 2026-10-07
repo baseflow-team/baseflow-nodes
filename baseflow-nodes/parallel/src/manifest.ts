@@ -24,6 +24,6 @@ export default {
       { tag: "@baseflow-nodes/thread", id: "thread1", parentId: "parallel1" },
       { tag: "@baseflow-nodes/thread", id: "thread2", parentId: "parallel1" },
     ],
-    sources: { "@baseflow-nodes/parallel": "@baseflow-nodes/parallel@*", "@baseflow-nodes/thread": "@baseflow-nodes/thread@*" },
+    sources: { "@baseflow-nodes/parallel": "@baseflow-nodes/parallel@1", "@baseflow-nodes/thread": "@baseflow-nodes/thread@1" },
   },
-} as NodeManifest<{}>;
+} satisfies NodeManifest<NodeProps>;

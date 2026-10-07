@@ -16,4 +16,4 @@ const Component: FC<ISegmentedProps> = (props) => {
   return <Segmented {...props} />;
 };
 
-export default memo(Component) as typeof Component;
+export default memo(Component);

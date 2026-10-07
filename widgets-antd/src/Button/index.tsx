@@ -5,11 +5,11 @@ import { memo } from "react";
 interface IButtonProps {
   ref?: Ref<HTMLButtonElement | null>;
   className?: string;
-  size?: "small" | "middle";
+  size?: "small";
   loading?: boolean;
   disabled?: boolean;
   block?: boolean;
-  type?: "primary" | "link" | "text" | "dashed";
+  type?: "primary" | "link" | "text";
   icon?: ReactNode;
   iconPosition?: "start" | "end";
   children?: React.ReactNode;
@@ -20,4 +20,4 @@ const Component: FC<IButtonProps> = (props) => {
   return <Button {...props} />;
 };
 
-export default memo(Component) as typeof Component;
+export default memo(Component);
