@@ -1,14 +1,13 @@
 import type { NodeNavigation, NodeSetup } from "@baseflow/node-runtime-react";
+import { NodeMock, NodeNameplate, SchemaShow } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo, useState } from "react";
 import InputForm from "./components/InputForm";
-import OutputForm from "./components/OutputForm";
-import Readme from "./components/Readme";
 import type { NodeProps } from "./model";
 
 const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
-  const { nodeData, updateNodeProps, updateNodeMeta } = setup({
+  const { nodeData, packageInfo, updateNodeProps, updateNodeMeta } = setup({
     onSubmit: () => {
       return {
         nodeData,
@@ -22,8 +21,9 @@ const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   return (
     <div>
       {currentTab === "input" && <InputForm nodeData={nodeData} updateNodeProps={updateNodeProps} updateNodeMeta={updateNodeMeta} />}
-      {currentTab === "output" && <OutputForm outputSchema={nodeData.meta.outputSchema} />}
-      {currentTab === "readme" && <Readme />}
+      {currentTab === "output" && nodeData.meta.outputSchema && <SchemaShow schema={nodeData.meta.outputSchema} />}
+      {currentTab === "mock" && <NodeMock nodeData={nodeData} updateNodeMeta={updateNodeMeta} />}
+      {currentTab === "readme" && <NodeNameplate packageInfo={packageInfo} />}
     </div>
   );
 };

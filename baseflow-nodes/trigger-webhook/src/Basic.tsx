@@ -1,15 +1,15 @@
 import type { NodeNavigation, NodeSetup } from "@baseflow/node-runtime-react";
+import { NodeMock, NodeNameplate } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo, useState } from "react";
 import InputForm from "./components/InputForm";
 import OutputForm from "./components/OutputForm";
-import Readme from "./components/Readme";
 import type { NodeProps } from "./model";
 import { InternalPropsMapping, validateNodeData } from "./model";
 
 const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
-  const { nodeData, updateNodeMeta } = setup({
+  const { nodeData, packageInfo, updateNodeMeta } = setup({
     onSubmit: () => {
       const props = InternalPropsMapping.out(internalProps);
       const error = validateNodeData(props);
@@ -35,7 +35,8 @@ const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
         />
       )}
       {currentTab === "output" && <OutputForm />}
-      {currentTab === "readme" && <Readme />}
+      {currentTab === "mock" && <NodeMock nodeData={nodeData} updateNodeMeta={updateNodeMeta} />}
+      {currentTab === "readme" && <NodeNameplate packageInfo={packageInfo} />}
     </div>
   );
 };

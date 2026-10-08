@@ -10,7 +10,7 @@ const inputSchema: SchemaModel = {
   type: DataType.Object,
   children: [
     { name: "url", type: DataType.String },
-    { name: "method", type: DataType.String, enums: [{ value: "GET" }, { value: "POST" }, { value: "PUT" }, { value: "DELETE" }] },
+    { name: "method", type: DataType.String, enums: [{ value: "get" }, { value: "post" }, { value: "put" }, { value: "delete" }] },
     { name: "https", type: DataType.Bool },
   ],
 };

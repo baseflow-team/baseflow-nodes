@@ -10,8 +10,8 @@
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19",
-    "antd": "*",
-    "widgets-antd": "*",
+    "@mantine/core": "^9",
+    "widgets-mantine": "*",
     "@baseflow/node-runtime-react": "^1",
     "path-to-regexp": "^8"
   }

@@ -1,5 +1,6 @@
 import type { SchemaModel } from "@baseflow/node-runtime-react";
 import { DataType } from "@baseflow/node-runtime-react";
+import Lang from "./i18n/en";
 
 export type IMethod = "get" | "post" | "put" | "delete";
 
@@ -53,22 +54,22 @@ export interface InternalProps {
 
 export function validateNodeData(props: NodeProps): string | undefined {
   if (!props.path) {
-    return "监听地址不能为空";
+    return Lang.pathRequire;
   }
   if (!props.methods?.length) {
-    return "监听方法不能为空";
+    return Lang.methodRequire;
   }
   if (props.headers) {
     for (const item of props.headers) {
       if (!item) {
-        return "key不能为空";
+        return Lang.keyRequire;
       }
     }
   }
   if (props.queries) {
     for (const item of props.queries) {
       if (!item) {
-        return "key不能为空";
+        return Lang.keyRequire;
       }
     }
   }

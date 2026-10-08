@@ -16,7 +16,7 @@ export default {
         type: "ͼOBJECTͼ",
         children: [
           {
-            name: "newVariable",
+            name: "???",
             type: "ͼSTRINGͼ",
           },
         ],
