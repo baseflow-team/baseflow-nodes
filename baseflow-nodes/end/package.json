@@ -3,6 +3,23 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "baseflow": {
+    "icon": "",
+    "desc": "流程结束：流程正常执行完成，可以设置返回数据",
+    "executor": {
+      "node": "@baseflow-executors/end@0.0.1"
+    },
+    "defaultDsl": {
+      "nodes": [
+        {
+          "tag": "@baseflow-nodes/end"
+        }
+      ],
+      "sources": {
+        "@baseflow-nodes/end": "@baseflow-nodes/end@1"
+      }
+    }
+  },
   "scripts": {
     "build": "node ../../scripts/buildNodeManifest.js && vite build",
     "type:check": "tsc --noEmit"

@@ -1,23 +1,19 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { DataType } from "@baseflow/node-runtime-react";
 import type { NodeProps } from "./model";
 
 export default {
   type: "Variable",
-  icon: "",
-  desc: "变量定义：通过本节点可以定义多个流程变量",
-  executor: {
-    node: "@baseflow-executors/variable@0.0.1",
-  },
   defaultData: {
     meta: {
       name: "变量定义",
       outputSchema: {
         name: "output",
-        type: "ͼOBJECTͼ",
+        type: DataType.Object,
         children: [
           {
             name: "???",
-            type: "ͼSTRINGͼ",
+            type: DataType.String,
           },
         ],
       },
@@ -25,5 +21,4 @@ export default {
     props: {},
   },
   uiForm: "index.js",
-  defaultDsl: { nodes: [{ tag: "@baseflow-nodes/variable" }], sources: { "@baseflow-nodes/variable": "@baseflow-nodes/variable@1" } },
-} as NodeManifest<NodeProps>;
+} satisfies NodeManifest<NodeProps>;

@@ -2,6 +2,23 @@
   "name": "@baseflow-nodes/task",
   "version": "1.0.0",
   "private": true,
+  "baseflow": {
+    "icon": "",
+    "desc": "Task任务: 测试任务",
+    "executor": {
+      "node": "@baseflow-executors/task@0.0.1"
+    },
+    "defaultDsl": {
+      "nodes": [
+        {
+          "tag": "@baseflow-nodes/task"
+        }
+      ],
+      "sources": {
+        "@baseflow-nodes/task": "@baseflow-nodes/task@1"
+      }
+    }
+  },
   "scripts": {
     "build": "node ../../scripts/buildNodeManifest.js",
     "type:check": "tsc --noEmit"

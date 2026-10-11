@@ -3,6 +3,23 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "baseflow": {
+    "icon": "",
+    "desc": "变量定义：通过本节点可以定义多个流程变量",
+    "executor": {
+      "node": "@baseflow-executors/variable@0.0.1"
+    },
+    "defaultDsl": {
+      "nodes": [
+        {
+          "tag": "@baseflow-nodes/variable"
+        }
+      ],
+      "sources": {
+        "@baseflow-nodes/variable": "@baseflow-nodes/variable@1"
+      }
+    }
+  },
   "scripts": {
     "build": "node ../../scripts/buildNodeManifest.js && vite build",
     "type:check": "tsc --noEmit"

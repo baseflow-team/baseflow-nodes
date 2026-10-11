@@ -1,82 +1,75 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { DataType } from "@baseflow/node-runtime-react";
 import type { NodeProps } from "./model";
 
 export default {
   type: "Trigger",
-  icon: "",
-  desc: "webhook触发器：让流程能被指定的Http请求触发",
-  executor: {
-    node: "@baseflow-executors/trigger-webhook@0.0.1",
-  },
   defaultData: {
     meta: {
       name: "webhook触发器",
       outputSchema: {
         name: "output",
-        type: "ͼOBJECTͼ",
+        type: DataType.Object,
         children: [
           {
             name: "headers",
-            type: "ͼOBJECTͼ",
+            type: DataType.Object,
             children: [
               {
                 name: "url",
-                type: "ͼSTRINGͼ",
+                type: DataType.String,
               },
               {
                 name: "protocol",
-                type: "ͼSTRINGͼ",
+                type: DataType.String,
               },
               {
                 name: "hostname",
-                type: "ͼSTRINGͼ",
+                type: DataType.String,
               },
               {
                 name: "port",
-                type: "ͼNUMBERͼ",
+                type: DataType.Number,
               },
               {
                 name: "path",
-                type: "ͼSTRINGͼ",
+                type: DataType.String,
               },
               {
                 name: "method",
-                type: "ͼSTRINGͼ",
+                type: DataType.String,
               },
               {
                 name: "queryString",
-                type: "ͼSTRINGͼ",
+                type: DataType.String,
               },
               {
                 name: "cookieString",
-                type: "ͼSTRINGͼ",
+                type: DataType.String,
               },
               {
                 name: "authorization",
-                type: "ͼSTRINGͼ",
+                type: DataType.String,
               },
             ],
           },
           {
             name: "params",
-            type: "ͼOBJECTͼ",
+            type: DataType.Object,
           },
           {
             name: "queries",
-            type: "ͼOBJECTͼ",
+            type: DataType.Object,
           },
           {
             name: "cookies",
-            type: "ͼOBJECTͼ",
+            type: DataType.Object,
           },
           {
             name: "body",
-            type: "ͼOBJECTͼ",
+            type: DataType.Object,
           },
         ],
-      },
-      valueReference: {
-        path: "start",
       },
     },
     props: {
@@ -85,8 +78,4 @@ export default {
     },
   },
   uiForm: "index.js",
-  defaultDsl: {
-    nodes: [{ tag: "@baseflow-nodes/trigger-webhook" }],
-    sources: { "@baseflow-nodes/trigger-webhook": "@baseflow-nodes/trigger-webhook@1" },
-  },
-} as NodeManifest<NodeProps>;
+} satisfies NodeManifest<NodeProps>;

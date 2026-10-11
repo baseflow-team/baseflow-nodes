@@ -2,11 +2,6 @@ import type { NodeManifest } from "@baseflow/node-runtime-react";
 
 export default {
   type: "Choice",
-  icon: "",
-  desc: "条件选择：可添加多个[条件分支]，通过条件判断来控制分支执行",
-  executor: {
-    node: "@baseflow-executors/choice@0.0.1",
-  },
   defaultData: {
     meta: {
       name: "条件选择",
@@ -16,14 +11,5 @@ export default {
   uiForm: {
     inputSchema: null,
     outputEditable: false,
-    readme: "",
-  },
-  defaultDsl: {
-    nodes: [
-      { tag: "@baseflow-nodes/choice", id: "choice1", childrenIds: ["branch1", "branch2"] },
-      { tag: "@baseflow-nodes/branch", id: "branch1", parentId: "choice1" },
-      { tag: "@baseflow-nodes/branch", id: "branch2", parentId: "choice1", props: { default: true } },
-    ],
-    sources: { "@baseflow-nodes/choice": "@baseflow-nodes/choice@1", "@baseflow-nodes/branch": "@baseflow-nodes/branch@1" },
   },
 } satisfies NodeManifest<{}>;

@@ -3,11 +3,6 @@ import type { NodeProps } from "./model";
 
 export default {
   type: "Return",
-  icon: "",
-  desc: "流程返回：流程提前终止执行并返回，可以设置返回数据",
-  executor: {
-    node: "@baseflow-executors/return@0.0.1",
-  },
   defaultData: {
     meta: {
       name: "流程返回",
@@ -29,5 +24,4 @@ export default {
     }
   },
   uiForm: "index.js",
-  defaultDsl: { nodes: [{ tag: "@baseflow-nodes/return" }], sources: { "@baseflow-nodes/return": "@baseflow-nodes/return@0.0.1" } },
 } satisfies NodeManifest<NodeProps>;

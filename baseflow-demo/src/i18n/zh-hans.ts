@@ -132,6 +132,7 @@ export const NodeBaseLang = {
   enableNode: "启用节点",
   enableNodeTips: "当前节点正常启用，不使用模拟输出...",
   disableNodeTips: "当前节点已禁用，可设置模拟输出...",
+  nodeNoOutput: "节点未定义输出...",
   mockOutput: "模拟输出",
   paste: "粘贴",
   invalidTips: "检测到Value与Schema不匹配",

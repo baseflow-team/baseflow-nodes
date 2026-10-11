@@ -3,6 +3,23 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "baseflow": {
+    "icon": "",
+    "desc": "webhook触发器：让流程能被指定的Http请求触发",
+    "executor": {
+      "node": "@baseflow-executors/trigger-webhook@0.0.1"
+    },
+    "defaultDsl": {
+      "nodes": [
+        {
+          "tag": "@baseflow-nodes/trigger-webhook"
+        }
+      ],
+      "sources": {
+        "@baseflow-nodes/trigger-webhook": "@baseflow-nodes/trigger-webhook@1"
+      }
+    }
+  },
   "scripts": {
     "build": "node ../../scripts/buildNodeManifest.js && vite build",
     "type:check": "tsc --noEmit"

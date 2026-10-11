@@ -3,6 +3,23 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "baseflow": {
+    "icon": "",
+    "desc": "流程：定义一个独立的流程",
+    "executor": {
+      "node": "@baseflow-executors/flow@0.0.1"
+    },
+    "defaultDsl": {
+      "nodes": [
+        {
+          "tag": "@baseflow-nodes/flow"
+        }
+      ],
+      "sources": {
+        "@baseflow-nodes/flow": "@baseflow-nodes/flow@1"
+      }
+    }
+  },
   "scripts": {
     "build": "node ../../scripts/buildNodeManifest.js",
     "type:check": "tsc --noEmit"

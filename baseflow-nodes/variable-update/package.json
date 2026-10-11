@@ -3,6 +3,23 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "baseflow": {
+    "icon": "",
+    "desc": "变量修改：通过本节点可以修改[变量定义]节点中的变量值.",
+    "executor": {
+      "node": "@baseflow-executors/variable-update@0.0.1"
+    },
+    "defaultDsl": {
+      "nodes": [
+        {
+          "tag": "@baseflow-nodes/variable-update"
+        }
+      ],
+      "sources": {
+        "@baseflow-nodes/variable-update": "@baseflow-nodes/variable-update@1"
+      }
+    }
+  },
   "scripts": {
     "build": "node ../../scripts/buildNodeManifest.js && vite build",
     "type:check": "tsc --noEmit"
