@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "runtimeVersion": "1",
     "icon": "",
     "desc": "循环Continue：放置于[循环]节点中，跳过本次循环，继续下一次循环",
     "executor": {

@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "runtimeVersion": "1",
     "icon": "",
     "desc": "并行执行：可添加多个[并行分支]，多个并行分支同时执行",
     "executor": {

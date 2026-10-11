@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "runtimeVersion": "1",
     "icon": "",
     "desc": "条件分支：放置于[条件选择]中，通过设置执行条件来决定是否执行",
     "executor": {

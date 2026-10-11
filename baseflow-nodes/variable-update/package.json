@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "runtimeVersion": "1",
     "icon": "",
     "desc": "变量修改：通过本节点可以修改[变量定义]节点中的变量值.",
     "executor": {

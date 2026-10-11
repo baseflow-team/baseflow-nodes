@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "runtimeVersion": "1",
     "icon": "",
     "desc": "流程返回：流程提前终止执行并返回，可以设置返回数据",
     "executor": {

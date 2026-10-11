@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "runtimeVersion": "1",
     "icon": "",
     "desc": "HTTP请求：通过置请求参数发送HTTP请求，并输出响应数据",
     "executor": {

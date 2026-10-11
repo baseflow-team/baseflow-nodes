@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "runtimeVersion": "1",
     "icon": "",
     "desc": "流程结束：流程正常执行完成，可以设置返回数据",
     "executor": {

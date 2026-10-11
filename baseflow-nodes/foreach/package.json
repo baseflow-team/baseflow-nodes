@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "runtimeVersion": "1",
     "icon": "",
     "desc": "Foreach循环：通过指定一个迭代源来循环执行子节点",
     "executor": {
