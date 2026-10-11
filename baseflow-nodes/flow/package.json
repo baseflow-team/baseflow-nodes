@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "name": "流程",
+    "type": "Flow",
     "runtimeVersion": "1",
     "icon": "",
     "desc": "流程：定义一个独立的流程",

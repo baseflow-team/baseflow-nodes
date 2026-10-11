@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "name": "变量定义",
+    "type": "Variable",
     "runtimeVersion": "1",
     "icon": "",
     "desc": "变量定义：通过本节点可以定义多个流程变量",

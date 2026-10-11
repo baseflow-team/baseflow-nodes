@@ -1,5 +1,5 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
-import { DataType } from "@baseflow/node-runtime-react";
+import { DataType } from "../../Constants";
 import type { NodeProps } from "./model";
 
 export default {

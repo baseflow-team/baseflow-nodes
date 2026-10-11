@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "name": "webhook触发器",
+    "type": "Trigger",
     "runtimeVersion": "1",
     "icon": "",
     "desc": "webhook触发器：让流程能被指定的Http请求触发",

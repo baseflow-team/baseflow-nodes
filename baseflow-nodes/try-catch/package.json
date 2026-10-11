@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "name": "TryCatch",
+    "type": "Group",
     "runtimeVersion": "1",
     "icon": "",
     "desc": "TryCatch：提供一个可以捕获子节点运行时错误的容器节点",

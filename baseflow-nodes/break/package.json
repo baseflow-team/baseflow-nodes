@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "name": "循环Break",
+    "type": "Break",
     "runtimeVersion": "1",
     "icon": "",
     "desc": "循环Break：放置于[循环]节点中，退出整个循环",

@@ -1,4 +1,4 @@
-import type { JsonDSL } from "@baseflow/flow-react";
+import type { INodeData, JsonDSL } from "@baseflow/flow-react";
 import { useRef } from "react";
 
 const params = new URLSearchParams(location.search);
@@ -29,7 +29,10 @@ export interface NodeEntity {
   name: string;
   icon: string;
   desc: string;
-  dsl: string;
+  dsl: {
+    sources: Record<string, string>;
+    nodes: INodeData[];
+  };
 }
 
 export async function fetchNodes(): Promise<NodeEntity[]> {

@@ -45,14 +45,16 @@ baseflow-demo 父页面与 node-render 分属不同 JS Realm，不共享运行�
 export default defineNodeConfig(import.meta.dirname);
 ```
 
-- 节点产物必须有 `package.json`，其中的 `baseflow` 字段作为 Manifest，定义节点的`元数据`信息。
-- `manifest.ts` 必须 default export 对象，只允许 `import type`；`runtimeVersion` 由根 `package.json#baseflowRuntimeVersion` 统一注入。
-- 单节点构建由节点 `package.json` 的 `scripts.build` 定义：第一步运行 `node ../../scripts/buildNodeManifest.js` 生成元数据，有 UI 时第二步再运行 `vite build`。
+- 节点产物必须有 `package.json`，其中的 `baseflow` 字段来自源码 package.json，定义节点的`元数据`信息，必填 key 为 `type/name/icon/desc/executor/defaultDsl`；构建仅检查 key 存在。`baseflow.type` 与 Manifest 的 `type` 由开发者保证一致。
+- `runtimeVersion` 可省略，构建时由根 `package.json#baseflowRuntimeVersion` 统一覆盖；`defaultDsl` 和 mock 的 `dsl` 保持源结构，不转换为字符串。产物 package.json 只保留 `private/publishConfig/type/name/version/baseflow` 顶级字段。
+- `src/manifest.ts` 必须 default export 对象，通过 `scripts/defineNodeManifestConfig.js` 独立构建为不压缩的 ESM 文件 `manifest.js`；允许源码导入运行时依赖，但所有依赖必须内联。构建钩子轻量检查产物默认导出和模块依赖记录。
+- 单节点构建由节点 `package.json` 的 `scripts.build` 定义：第一步运行 `node ../../scripts/buildNodeManifest.js` 生成 package.json 并打包 manifest.js，有 UI 时第二步再运行 `vite build`，保留先行生成的两个文件。
+- demo 的 mock 脚本从产物 package.json 的 `baseflow` 字段读取 `type/name/icon/desc/defaultDsl`，不读取 Manifest。
 - 某些节点需要渲染 UI 界面，`index.js` 为其 UI Render 入口，必须是标准 ESM，在模块执行时直接挂载 UI；`baseflow-demo/public/node-render.html` 的加载器只需动态 `import` 该入口。
   - 每个 iframe 只初始化一次，重新启动节点必须重建 iframe。
   - UI Render 允许生成额外 chunk，也允许动态 import 其它 ESM CDN 包，但加载入口固定为 `index.js`。
   - 例如 `baseflow-nodes/branch` 为具有 UI 界面的节点
-- 某些节点不需要 UI 界面，只需要 `manifest.ts` 定义`元数据`信息。
+- 某些节点不需要 UI 界面，只需要 package.json 定义元数据及 `manifest.ts` 定义 Manifest。
   - 例如 `baseflow-nodes/break` 为无 UI 界面的节点
 - 节点 `package.json` 中存在非空 `scripts.build` 即视为已准备好，由 `scripts/buildNodes.js` 自动发现。
 

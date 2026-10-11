@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "name": "条件选择",
+    "type": "Choice",
     "runtimeVersion": "1",
     "icon": "",
     "desc": "条件选择：可添加多个[条件分支]，通过条件判断来控制分支执行",

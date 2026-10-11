@@ -32,15 +32,13 @@ export function mapPackageManifest(packageJson, packageFile) {
   const packageData = requireObject(packageJson, "package", packageFile);
   const packageName = requireString(packageData.name, "package.name", packageFile, false);
   const baseflow = requireObject(packageData.baseflow, "package.baseflow", packageFile);
-  const defaultData = requireObject(baseflow.defaultData, "package.baseflow.defaultData", packageFile);
-  const meta = requireObject(defaultData.meta, "package.baseflow.defaultData.meta", packageFile);
 
   const mapped = {
     type: requireString(baseflow.type, "package.baseflow.type", packageFile),
-    name: requireString(meta.name, "package.baseflow.defaultData.meta.name", packageFile),
+    name: requireString(baseflow.name, "package.baseflow.name", packageFile),
     icon: requireString(baseflow.icon, "package.baseflow.icon", packageFile),
     desc: requireString(baseflow.desc, "package.baseflow.desc", packageFile),
-    dsl: requireString(baseflow.defaultDsl, "package.baseflow.defaultDsl", packageFile),
+    dsl: baseflow.defaultDsl,
   };
 
   return { packageName, mapped };

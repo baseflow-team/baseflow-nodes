@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "baseflow": {
+    "name": "HTTP请求",
+    "type": "Task",
     "runtimeVersion": "1",
     "icon": "",
     "desc": "HTTP请求：通过置请求参数发送HTTP请求，并输出响应数据",

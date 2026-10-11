@@ -11,7 +11,7 @@ const NodeIdPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
  *
  * 所有节点物料共用同一套构建约定，逐个复制配置既容易漂移，也容易在 outDir 上出错：
  * outDir 由文件夹名推导并强校验，避免将 UI 产物写入其它节点目录。
- * 节点目录的清理由先行的 buildNodeManifest.js 负责，Vite 必须保留已生成的 package.json。
+ * 节点目录的清理由先行的 buildNodeManifest.js 负责，Vite 必须保留已生成的 package.json 和 manifest.js。
  *
  * @param {string} packageDir 节点包根目录，调用方传 import.meta.dirname。
  * @returns {import("vite").UserConfig}

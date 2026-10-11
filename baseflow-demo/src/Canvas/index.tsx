@@ -1,10 +1,10 @@
-import type { CreatorPayload, FlowData, FlowOptions, IFlow, INodeData } from "@baseflow/flow-react";
+import type { CreatorPayload, FlowData, FlowOptions, IFlow } from "@baseflow/flow-react";
 import { Graph, HistoryTools, jsonToFlow } from "@baseflow/flow-react";
 import { Modal, message, notification, Select, Spin } from "antd";
 import type { FC } from "react";
 import { memo, useCallback, useState } from "react";
 import NodeList from "../NodeList";
-import type { IDoc } from "../utils";
+import type { IDoc, NodeEntity } from "../utils";
 import { getLocale, useEvent } from "../utils";
 import { FlowHooks } from "./FlowHooks";
 import styles from "./index.module.scss";
@@ -22,9 +22,9 @@ const Component: FC<{ doc: IDoc }> = (props) => {
     setFlow(flow);
   }, []);
 
-  const onApplyNode = useEvent((newItem: { type: string; dsl: string }) => {
+  const onApplyNode = useEvent((newItem: Pick<NodeEntity, "type" | "dsl">) => {
     const { sourceNode, place } = showNodeCreater!;
-    const { sources, nodes } = JSON.parse(newItem.dsl) as { sources: { [tag: string]: string }; nodes: INodeData[] };
+    const { sources, nodes } = newItem.dsl;
     const result = newItem.type === "Trigger" ? flow!.applyTrigger(nodes, sources) : flow!.applyNode(sourceNode.getId(), place, nodes, sources);
     result.then(
       (changedSources) => {
