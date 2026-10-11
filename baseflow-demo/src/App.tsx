@@ -109,12 +109,12 @@ function App() {
       }}
     >
       <FlowConfigProvider
+        enableLogInManifest
         flowBaseLang={FlowBaseLang}
         nodeBaseLang={NodeBaseLang}
         widgets={widgets}
         nodeRendererUrl={`http://localhost:4173/node-render.html?_lang_=${getLocale()}`}
         monacoEditorUrl="/monaco/index.html"
-        pureRunnerUrl="/pureRunner.worker-p0AIJc02.js"
         expressionUtils={expressionUtils}
         showMessage={showMessage}
         showConfirm={showConfirm}

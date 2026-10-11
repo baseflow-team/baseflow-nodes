@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "baseflow": {
-    "name": "流程返回",
+    "name": "流程结束",
     "type": "End",
     "runtimeVersion": "1",
     "icon": "",

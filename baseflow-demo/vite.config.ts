@@ -20,7 +20,8 @@ export default defineConfig({
             },
             {
               name: "flow-react",
-              test: /node_modules[\\/]@baseflow[\\/]flow-react[\\/]/,
+              // 排除 out/lazy/ 下的动态 chunk（如 QuickJS 运行时），保持其懒加载
+              test: /node_modules[\\/]@baseflow[\\/]flow-react[\\/](?!out[\\/]lazy[\\/])/,
               priority: 1,
             },
           ],

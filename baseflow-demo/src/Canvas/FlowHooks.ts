@@ -14,6 +14,8 @@ import { flowToJson } from "@baseflow/flow-react";
 import type { IDoc } from "../utils";
 import { sleep } from "../utils";
 
+const FilesCache: { [url: string]: string } = {};
+
 export class FlowHooks implements FlowHooksApi {
   public doc: IDoc;
   declare public flow: IFlow;
@@ -29,12 +31,71 @@ export class FlowHooks implements FlowHooksApi {
     localStorage.setItem("baseflow-dsl", JSON.stringify(dsl));
   }
 
-  async onNodeSourceQuery({ packageName }: NodeSource): Promise<{ actualVersion: string; baseUrl: string }> {
-    const arr = packageName.split(/[/@]/);
-    if (arr[1] === "baseflow-nodes") {
-      return { actualVersion: "1.0.0", baseUrl: `/nodes/${arr[2]}/` };
+  async onNodeSourceQuery(nodeSource: NodeSource): Promise<{
+    manifestCode: string;
+    sourceInfo: {
+      packageName: string;
+      expectedVersion: string;
+      expectedSource: string;
+      registry: string;
+      actualVersion: string;
+      baseUrl: string;
+      desc: string;
+      icon: string;
+      executor: {
+        [lang: string]: string;
+      };
+    };
+  }> {
+    if (nodeSource.packageName.startsWith("@baseflow-nodes/")) {
+      const baseUrl = `/nodes/${nodeSource.packageName.split("/")[1]}`;
+      const packageFile = `${baseUrl}/package.json`;
+      const manifestFile = `${baseUrl}/manifest.js`;
+      const [packageCode, manifestCode] = await Promise.all(
+        [packageFile, manifestFile].map(async (url) => {
+          if (FilesCache[url]) {
+            return FilesCache[url];
+          }
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`加载节点文件失败: ${url} (${response.status})`);
+          }
+          const code = await response.text();
+          FilesCache[url] = code;
+          return code;
+        }),
+      );
+      const packageData: {
+        version: string;
+        baseflow: {
+          desc: string;
+          icon: string;
+          executor: Record<string, string>;
+        };
+      } = JSON.parse(packageCode);
+      return {
+        manifestCode,
+        sourceInfo: {
+          ...nodeSource,
+          baseUrl,
+          actualVersion: packageData.version,
+          desc: packageData.baseflow.desc,
+          icon: packageData.baseflow.icon,
+          executor: packageData.baseflow.executor,
+        },
+      };
     }
-    return { actualVersion: "2.0.0", baseUrl: "" };
+    return {
+      manifestCode: "",
+      sourceInfo: {
+        ...nodeSource,
+        baseUrl: "",
+        actualVersion: "2.0.0",
+        desc: "",
+        icon: "",
+        executor: {},
+      },
+    };
   }
 
   async onUploadNodeData(node: INodeData): Promise<void> {

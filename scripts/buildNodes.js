@@ -2,7 +2,10 @@ import { spawnSync } from "node:child_process";
 import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-const NpmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+const IsWindows = process.platform === "win32";
+// npm.cmd 必须通过 Windows 命令解释器执行。
+const NpmCommand = IsWindows ? process.env.ComSpec || "cmd.exe" : "npm";
+const NpmCommandArgs = IsWindows ? ["/d", "/s", "/c", "npm.cmd"] : [];
 const WorkspaceRoot = resolve(import.meta.dirname, "..");
 const NodesDir = resolve(WorkspaceRoot, "baseflow-nodes");
 const Entries = await readdir(NodesDir, { withFileTypes: true });
@@ -29,7 +32,7 @@ if (BuildableNodes.length === 0) throw new Error(`${NodesDir}: 未发现可构�
 console.log(`构建已准备节点: ${BuildableNodes.map(({ id }) => id).join(", ")}`);
 
 for (const { packageName } of BuildableNodes) {
-  const result = spawnSync(NpmCommand, ["run", "build", "--workspace", packageName], { stdio: "inherit" });
+  const result = spawnSync(NpmCommand, [...NpmCommandArgs, "run", "build", "--workspace", packageName], { stdio: "inherit" });
   if (result.status !== 0) {
     if (result.error) {
       console.error(`节点构建启动失败: ${packageName}`, result.error);

@@ -84,7 +84,7 @@
   },
   "@baseflow-nodes/end": {
     "type": "End",
-    "name": "流程返回",
+    "name": "流程结束",
     "icon": "",
     "desc": "流程结束：流程正常执行完成，可以设置返回数据",
     "dsl": {
@@ -190,7 +190,7 @@
         }
       ],
       "sources": {
-        "@baseflow-nodes/return": "@baseflow-nodes/return@0.0.1"
+        "@baseflow-nodes/return": "@baseflow-nodes/return@1"
       }
     }
   },

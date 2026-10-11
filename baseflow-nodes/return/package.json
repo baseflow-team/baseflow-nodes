@@ -19,7 +19,7 @@
         }
       ],
       "sources": {
-        "@baseflow-nodes/return": "@baseflow-nodes/return@0.0.1"
+        "@baseflow-nodes/return": "@baseflow-nodes/return@1"
       }
     }
   },
