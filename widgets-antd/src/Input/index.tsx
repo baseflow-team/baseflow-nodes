@@ -6,7 +6,7 @@ export interface IInputProps {
   value?: string;
   onChange?: (value: string) => void;
   onBlur?: (evt: FocusEvent) => void;
-  variant?: "filled";
+  variant?: "filled" | "borderless";
   placeholder?: string;
   className?: string;
 }

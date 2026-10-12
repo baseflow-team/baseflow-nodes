@@ -1,7 +1,7 @@
 import type { IWidgets } from "@baseflow/node-runtime-react";
 import { NodeConfigProvider } from "@baseflow/node-runtime-react";
 import { MantineProvider } from "@mantine/core";
-import { BrandTheme, Button, DatePicker, Input, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-mantine";
+import { BrandTheme, Button, DatePicker, Input, MultiSelect, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-mantine";
 import Basic from "./Basic";
 import "@baseflow/node-runtime-react/style.css";
 
@@ -11,6 +11,7 @@ const widgets: Partial<IWidgets> = {
   Segmented,
   Input,
   Select,
+  MultiSelect,
   Switch,
   TextArea,
   DatePicker,

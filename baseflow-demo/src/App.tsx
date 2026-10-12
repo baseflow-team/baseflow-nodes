@@ -2,7 +2,7 @@ import type { IWidgets, SchemaModel } from "@baseflow/flow-react";
 import { DataType, FlowConfigProvider } from "@baseflow/flow-react";
 import { ConfigProvider, Modal, message } from "antd";
 import { useCallback } from "react";
-import { Button, DatePicker, Input, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-antd";
+import { Button, DatePicker, Input, MultiSelect, Segmented, Select, Spin, Switch, TextArea, TimePicker } from "widgets-antd";
 import Canvas from "./Canvas";
 import { FlowBaseLang, NodeBaseLang } from "./i18n/en";
 import { getLocale, MockDoc } from "./utils";
@@ -17,6 +17,7 @@ const widgets: Partial<IWidgets> = {
   Segmented,
   Input,
   Select,
+  MultiSelect,
   Switch,
   TextArea,
   DatePicker,

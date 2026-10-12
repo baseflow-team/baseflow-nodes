@@ -1,5 +1,6 @@
 import type { SchemaModel } from "@baseflow/node-runtime-react";
 import { DataType } from "@baseflow/node-runtime-react";
+import { pathToRegexp } from "path-to-regexp";
 import Lang from "./i18n/en";
 
 export type IMethod = "get" | "post" | "put" | "delete";
@@ -52,9 +53,23 @@ export interface InternalProps {
   contentSchema?: SchemaModel;
 }
 
+/** 返回路径中的参数名；路径格式不合法时返回 undefined。 */
+export function parsePathParams(path: string): string[] | undefined {
+  try {
+    return pathToRegexp(path)
+      .keys.filter((item) => item.type === "param")
+      .map((item) => item.name);
+  } catch {
+    return;
+  }
+}
+
 export function validateNodeData(props: NodeProps): string | undefined {
   if (!props.path) {
     return Lang.pathRequire;
+  }
+  if (!parsePathParams(props.path)) {
+    return Lang.pathInvalid;
   }
   if (!props.methods?.length) {
     return Lang.methodRequire;

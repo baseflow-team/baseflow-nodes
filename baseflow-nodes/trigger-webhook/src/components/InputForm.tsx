@@ -1,19 +1,19 @@
 import type { INodeMeta, SchemaModel } from "@baseflow/node-runtime-react";
 import { DataType, KeyValues, SchemaModelForm, useEvent } from "@baseflow/node-runtime-react";
-import type { FormInstance } from "antd";
-import { Form, Input, Select } from "antd";
-import { pathToRegexp } from "path-to-regexp";
+import { MultiSelect, Select, TextInput } from "@mantine/core";
 import type { FC } from "react";
-import { memo, useEffect, useRef } from "react";
-import type { InternalProps } from "../model";
-import { ContentTypeOptions, DefaultHeaders, MethodOptions } from "../model";
+import { memo } from "react";
+import { FormItem } from "widgets-mantine";
+import type { IContentType, IMethod, InternalProps } from "../model";
+import { ContentTypeOptions, DefaultHeaders, MethodOptions, parsePathParams } from "../model";
 
-const RequiredRule = [{ required: true }];
 const DefaultContentSchema: SchemaModel = { name: "body", type: DataType.Object };
 
-function buildKeyValueSchema(keyValues?: { value: string; label?: string }[]): SchemaModel[] | undefined {
+type SchemaUpdates = Partial<{ [key: string]: SchemaModel[] | undefined }>;
+
+function buildKeyValueSchema(keyValues?: { value: string; label?: string }[], reserved: SchemaModel[] = []): SchemaModel[] | undefined {
   if (keyValues) {
-    const duplicates: { [key: string]: boolean } = {};
+    const duplicates: { [key: string]: boolean } = Object.fromEntries(reserved.map((item) => [item.name, true]));
     const arr: SchemaModel[] = keyValues
       .filter((item) => {
         if (item.value && !duplicates[item.value]) {
@@ -31,27 +31,35 @@ function buildKeyValueSchema(keyValues?: { value: string; label?: string }[]): S
 }
 
 function buildPathSchema(path?: string): SchemaModel[] | undefined {
-  if (path) {
-    const { keys } = pathToRegexp(path);
-    const arr = keys.filter((item) => item.type === "param").map((item) => ({ name: item.name, type: DataType.String }));
-    if (arr.length) {
-      return arr;
-    }
+  const params = path ? parsePathParams(path) : undefined;
+  if (params?.length) {
+    return params.map((name) => ({ name, type: DataType.String }));
   }
   return;
 }
 
-function mergeSchema(outputSchema: SchemaModel, data: Partial<{ [key: string]: SchemaModel[] | undefined }>) {
-  const children = outputSchema.children!;
+function getPathError(path?: string): string | null {
+  if (!path) {
+    return "请输入监听地址";
+  }
+  if (!parsePathParams(path)) {
+    return "监听地址格式不正确";
+  }
+  return null;
+}
+
+// updates 中没有的 key 表示未修改；有 key 但值为空表示已清空，需回到默认结构。
+function mergeSchema(outputSchema: SchemaModel, updates: SchemaUpdates): SchemaModel {
   return {
     ...outputSchema,
-    children: [
-      data.headers ? { ...children[0], children: DefaultHeaders.concat(data.headers) } : children[0],
-      data.params ? { ...children[1], children: data.params } : children[1],
-      data.queries ? { ...children[2], children: data.queries } : children[2],
-      data.cookies ? { ...children[3], children: data.cookies } : children[3],
-      data.body ? { ...children[4], children: data.body } : children[4],
-    ],
+    children: outputSchema.children!.map((item) => {
+      if (!Object.hasOwn(updates, item.name)) {
+        return item;
+      }
+      const children = item.name === "headers" ? DefaultHeaders.concat(updates.headers || []) : updates[item.name];
+      const { children: _, ...others } = item;
+      return children?.length ? { ...others, children } : others;
+    }),
   };
 }
 
@@ -63,61 +71,87 @@ interface Props {
 }
 
 const Component: FC<Props> = ({ internalProps, setInternalProps, outputSchema, updateNodeMeta }) => {
-  const formRef = useRef<FormInstance>(null);
-  const inited = useRef(false);
-
   const onFormChange = useEvent((updates: Partial<InternalProps>) => {
     setInternalProps({ ...internalProps, ...updates });
+    const schemaUpdates: SchemaUpdates = {};
     if (Object.hasOwn(updates, "path")) {
-      updateNodeMeta({ outputSchema: mergeSchema(outputSchema, { params: buildPathSchema(updates.path) }) });
+      schemaUpdates.params = buildPathSchema(updates.path);
     }
     if (Object.hasOwn(updates, "headers")) {
-      updateNodeMeta({ outputSchema: mergeSchema(outputSchema, { headers: buildKeyValueSchema(updates.headers) }) });
+      schemaUpdates.headers = buildKeyValueSchema(updates.headers, DefaultHeaders);
     }
     if (Object.hasOwn(updates, "queries")) {
-      updateNodeMeta({ outputSchema: mergeSchema(outputSchema, { queries: buildKeyValueSchema(updates.queries) }) });
+      schemaUpdates.queries = buildKeyValueSchema(updates.queries);
     }
     if (Object.hasOwn(updates, "cookies")) {
-      updateNodeMeta({ outputSchema: mergeSchema(outputSchema, { cookies: buildKeyValueSchema(updates.cookies) }) });
+      schemaUpdates.cookies = buildKeyValueSchema(updates.cookies);
     }
     if (Object.hasOwn(updates, "contentSchema")) {
-      updateNodeMeta({ outputSchema: mergeSchema(outputSchema, { body: updates.contentSchema?.children }) });
+      schemaUpdates.body = updates.contentSchema?.children;
+    }
+    if (Object.keys(schemaUpdates).length) {
+      updateNodeMeta({ outputSchema: mergeSchema(outputSchema, schemaUpdates) });
     }
   });
 
-  useEffect(() => {
-    formRef.current?.validateFields();
-  }, []);
-
-  useEffect(() => {
-    inited.current = true;
-  }, []);
-
   return (
     <div>
-      <Form ref={formRef} className="nd-form" layout="vertical" initialValues={internalProps} autoComplete="off" onValuesChange={onFormChange}>
-        <Form.Item label="监听地址" tooltip="path" name="path" rules={RequiredRule}>
-          <Input allowClear prefix="BaseUrl / " placeholder="输入规划的url路径" />
-        </Form.Item>
-        <Form.Item label="监听方法" tooltip="method" name="methods" rules={RequiredRule}>
-          <Select className="block" mode="multiple" options={MethodOptions} />
-        </Form.Item>
-        <Form.Item label="自定义请求头" tooltip="header" name="headers">
-          <KeyValues variant="filled" hideLabel valuePlaceholder="key" />
-        </Form.Item>
-        <Form.Item label="Url查询参数" tooltip="query" name="queries">
-          <KeyValues variant="filled" hideLabel valuePlaceholder="key" />
-        </Form.Item>
-        <Form.Item label="Cookies" tooltip="cookies" name="cookies">
-          <KeyValues variant="filled" hideLabel valuePlaceholder="key" />
-        </Form.Item>
-        <Form.Item label="请求体类型" tooltip="content-type" name="contentType">
-          <Select variant="filled" className="block" options={ContentTypeOptions} />
-        </Form.Item>
-        <Form.Item label="请求体结构" tooltip="content-schema" name="contentSchema">
-          <SchemaModelForm variant="filled" defaultValue={DefaultContentSchema} />
-        </Form.Item>
-      </Form>
+      <FormItem required label="监听地址" tooltip="path">
+        <TextInput
+          required
+          value={internalProps.path ?? ""}
+          onChange={(event) => onFormChange({ path: event.currentTarget.value })}
+          error={getPathError(internalProps.path)}
+          autoComplete="off"
+          placeholder="输入规划的url路径"
+        />
+      </FormItem>
+      <FormItem required label="监听方法" tooltip="methods">
+        <MultiSelect
+          value={internalProps.methods}
+          onChange={(methods) => onFormChange({ methods: methods as IMethod[] })}
+          error={internalProps.methods?.length ? null : "请选择监听方法"}
+          required
+          data={MethodOptions}
+        />
+      </FormItem>
+      <FormItem label="自定义请求头" tooltip="headers">
+        <KeyValues value={internalProps.headers} onChange={(headers) => onFormChange({ headers })} hideLabel valuePlaceholder="key" />
+      </FormItem>
+      <FormItem label="Url查询参数" tooltip="queries">
+        <KeyValues
+          value={internalProps.queries}
+          onChange={(queries) => onFormChange({ queries })}
+          variant="filled"
+          hideLabel
+          valuePlaceholder="key"
+        />
+      </FormItem>
+      <FormItem label="Cookies" tooltip="cookies">
+        <KeyValues
+          value={internalProps.cookies}
+          onChange={(cookies) => onFormChange({ cookies })}
+          variant="filled"
+          hideLabel
+          valuePlaceholder="key"
+        />
+      </FormItem>
+      <FormItem label="请求体类型" tooltip="contentType">
+        <Select
+          value={internalProps.contentType}
+          onChange={(contentType) => onFormChange({ contentType: contentType as IContentType })}
+          variant="filled"
+          data={ContentTypeOptions}
+        />
+      </FormItem>
+      <FormItem label="请求体结构" tooltip="contentSchema">
+        <SchemaModelForm
+          value={internalProps.contentSchema}
+          onChange={(contentSchema) => onFormChange({ contentSchema })}
+          variant="filled"
+          defaultValue={DefaultContentSchema}
+        />
+      </FormItem>
     </div>
   );
 };

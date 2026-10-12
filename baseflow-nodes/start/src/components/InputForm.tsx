@@ -2,8 +2,8 @@ import type { INodeMeta, SchemaModel } from "@baseflow/node-runtime-react";
 import { DataType, SchemaModelForm, useEvent } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo } from "react";
+import { FormItem } from "widgets-mantine";
 import Lang from "../i18n/en";
-import styles from "../index.module.scss";
 
 const defaultInput: SchemaModel = { name: "input", type: DataType.Object, children: [] };
 const defaultReturn: SchemaModel = { name: "return", type: DataType.Object, children: [] };
@@ -27,20 +27,12 @@ const Component: FC<Props> = ({ flowReturnSchema, flowInputSchema, updateNodeMet
 
   return (
     <div>
-      <div className={styles.FormLayout}>
-        <div className="form-item">
-          <div className="label-item">{Lang.flowInput}</div>
-          <div className="input-item">
-            <SchemaModelForm variant="filled" defaultValue={defaultInput} value={flowInputSchema} onChange={onInputSchemaChange} />
-          </div>
-        </div>
-        <div className="form-item">
-          <div className="label-item">{Lang.flowOutput}</div>
-          <div className="input-item">
-            <SchemaModelForm variant="filled" defaultValue={defaultReturn} value={flowReturnSchema} onChange={onReturnSchemaChange} />
-          </div>
-        </div>
-      </div>
+      <FormItem required label={Lang.flowInput}>
+        <SchemaModelForm variant="filled" defaultValue={defaultInput} value={flowInputSchema} onChange={onInputSchemaChange} />
+      </FormItem>
+      <FormItem required label={Lang.flowOutput}>
+        <SchemaModelForm variant="filled" defaultValue={defaultReturn} value={flowReturnSchema} onChange={onReturnSchemaChange} />
+      </FormItem>
     </div>
   );
 };

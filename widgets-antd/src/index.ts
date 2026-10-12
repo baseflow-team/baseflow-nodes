@@ -2,6 +2,7 @@ import "./override.css";
 
 export { default as Button } from "./Button";
 export { default as DatePicker } from "./DatePicker";
+export { default as FormItem } from "./FormItem";
 export { default as Input } from "./Input";
 export { default as MultiSelect } from "./MultiSelect";
 export { default as Segmented } from "./Segmented";

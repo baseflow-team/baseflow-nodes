@@ -2,8 +2,8 @@ import type { INodeData, SchemaModel, SchemaValue } from "@baseflow/node-runtime
 import { SchemaValueForm, useEvent } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo } from "react";
+import { FormItem } from "widgets-mantine";
 import Lang from "../i18n/en";
-import styles from "../index.module.scss";
 import type { NodeProps } from "../model";
 
 interface Props {
@@ -22,14 +22,9 @@ const Component: FC<Props> = ({ nodeData, flowReturnSchema, updateNodeProps }) =
   return (
     <div>
       {(flowReturnSchema || flowReturnValue) && (
-        <div className={styles.FormLayout}>
-          <div className="form-item">
-            <div className="label-item require">{Lang.setFlowReturn}</div>
-            <div className="input-item">
-              <SchemaValueForm variant="filled" schema={flowReturnSchema} value={flowReturnValue} onChange={onReturnChange} />
-            </div>
-          </div>
-        </div>
+        <FormItem required label={Lang.setFlowReturn}>
+          <SchemaValueForm variant="filled" schema={flowReturnSchema} value={flowReturnValue} onChange={onReturnChange} />
+        </FormItem>
       )}
     </div>
   );
