@@ -3,7 +3,7 @@ import { DataType, SchemaValueForm, useEvent } from "@baseflow/node-runtime-reac
 import type { FC } from "react";
 import { memo } from "react";
 import Lang from "../i18n/en";
-import type { InternalProps } from "../model";
+import type { NodeProps } from "../model";
 
 const inputSchema: SchemaModel = { name: "source", label: Lang.iterationSource, type: DataType.Array, children: [] };
 
@@ -15,24 +15,24 @@ const inputPropsRender: SuperInputPropsRender = (item) => {
 };
 
 interface Props {
-  internalProps: InternalProps;
-  setInternalProps: (newProps: InternalProps) => void;
+  nodeProps: NodeProps;
+  updateNodeProps: (newProps: Partial<NodeProps>) => void;
   updateNodeMeta: (newMeta: Partial<INodeMeta>) => void;
 }
 
-const Component: FC<Props> = ({ internalProps, setInternalProps, updateNodeMeta }) => {
+const Component: FC<Props> = ({ nodeProps, updateNodeProps, updateNodeMeta }) => {
   const onInputChange = useEvent((source: SchemaValue | undefined) => {
     if (source) {
       // children and arrayType that allows to recognize it as a mapping mode
       source = { ...source, children: [] };
     }
-    setInternalProps({ source });
+    updateNodeProps({ source });
     const sourceVar = source?.value.text;
     if (sourceVar) {
       if (/\D/.test(sourceVar) && !sourceVar.startsWith("_number(")) {
         updateNodeMeta({
           outputSchema: {
-            name: "output",
+            name: "Output",
             type: DataType.Object,
             children: [
               { name: "_item_", type: DataType.Any, direct: sourceVar },
@@ -44,7 +44,7 @@ const Component: FC<Props> = ({ internalProps, setInternalProps, updateNodeMeta 
       } else {
         updateNodeMeta({
           outputSchema: {
-            name: "output",
+            name: "Output",
             type: DataType.Object,
             children: [
               { name: "_item_", type: DataType.Number },
@@ -60,7 +60,7 @@ const Component: FC<Props> = ({ internalProps, setInternalProps, updateNodeMeta 
   });
   return (
     <div>
-      <SchemaValueForm superInputPropsRender={inputPropsRender} schema={inputSchema} value={internalProps.source} onChange={onInputChange} />
+      <SchemaValueForm superInputPropsRender={inputPropsRender} schema={inputSchema} value={nodeProps.source} onChange={onInputChange} />
     </div>
   );
 };

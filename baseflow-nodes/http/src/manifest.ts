@@ -8,15 +8,15 @@ export default {
     meta: {
       name: "HTTP请求",
       outputSchema: {
-        name: "response",
+        name: "Response",
         type: DataType.Object,
         children: [
           {
-            name: "header",
+            name: "ResponseHeader",
             type: DataType.Object,
           },
           {
-            name: "body",
+            name: "ResponseBody",
             type: DataType.Object,
           },
         ],

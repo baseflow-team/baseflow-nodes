@@ -1,10 +1,11 @@
 import type { INodeMeta, SchemaModel } from "@baseflow/node-runtime-react";
-import { DataType, KeyValues, SchemaModelForm, useEvent } from "@baseflow/node-runtime-react";
+import { DataType, formatLang, KeyValues, SchemaModelForm, useEvent } from "@baseflow/node-runtime-react";
 import { MultiSelect, Select, TextInput } from "@mantine/core";
 import type { FC } from "react";
 import { memo } from "react";
 import { FormItem } from "widgets-mantine";
-import type { IContentType, IMethod, InternalProps } from "../model";
+import Lang from "../i18n/en";
+import type { IContentType, IMethod, NodeProps } from "../model";
 import { ContentTypeOptions, DefaultHeaders, MethodOptions, parsePathParams } from "../model";
 
 const DefaultContentSchema: SchemaModel = { name: "body", type: DataType.Object };
@@ -40,10 +41,10 @@ function buildPathSchema(path?: string): SchemaModel[] | undefined {
 
 function getPathError(path?: string): string | null {
   if (!path) {
-    return "请输入监听地址";
+    return formatLang(Lang.fieldRequired, { field: "path" });
   }
   if (!parsePathParams(path)) {
-    return "监听地址格式不正确";
+    return Lang.pathInvalid;
   }
   return null;
 }
@@ -64,15 +65,15 @@ function mergeSchema(outputSchema: SchemaModel, updates: SchemaUpdates): SchemaM
 }
 
 interface Props {
-  internalProps: InternalProps;
+  nodeProps: NodeProps;
   outputSchema: SchemaModel;
-  setInternalProps: (newProps: InternalProps) => void;
+  updateNodeProps: (newProps: Partial<NodeProps>) => void;
   updateNodeMeta: (newMeta: Partial<INodeMeta>) => void;
 }
 
-const Component: FC<Props> = ({ internalProps, setInternalProps, outputSchema, updateNodeMeta }) => {
-  const onFormChange = useEvent((updates: Partial<InternalProps>) => {
-    setInternalProps({ ...internalProps, ...updates });
+const Component: FC<Props> = ({ nodeProps, outputSchema, updateNodeProps, updateNodeMeta }) => {
+  const onFormChange = useEvent((updates: Partial<NodeProps>) => {
+    updateNodeProps(updates);
     const schemaUpdates: SchemaUpdates = {};
     if (Object.hasOwn(updates, "path")) {
       schemaUpdates.params = buildPathSchema(updates.path);
@@ -96,57 +97,45 @@ const Component: FC<Props> = ({ internalProps, setInternalProps, outputSchema, u
 
   return (
     <div>
-      <FormItem required label="监听地址" tooltip="path">
+      <FormItem required label={Lang.path} tooltip="path">
         <TextInput
           required
-          value={internalProps.path ?? ""}
+          value={nodeProps.path ?? ""}
           onChange={(event) => onFormChange({ path: event.currentTarget.value })}
-          error={getPathError(internalProps.path)}
+          error={getPathError(nodeProps.path)}
           autoComplete="off"
-          placeholder="输入规划的url路径"
+          placeholder={Lang.pathTips}
         />
       </FormItem>
-      <FormItem required label="监听方法" tooltip="methods">
+      <FormItem required label={Lang.methods} tooltip="methods">
         <MultiSelect
-          value={internalProps.methods}
+          value={nodeProps.methods}
           onChange={(methods) => onFormChange({ methods: methods as IMethod[] })}
-          error={internalProps.methods?.length ? null : "请选择监听方法"}
+          error={nodeProps.methods?.length ? null : formatLang(Lang.fieldRequired, { field: "methods" })}
           required
           data={MethodOptions}
         />
       </FormItem>
-      <FormItem label="自定义请求头" tooltip="headers">
-        <KeyValues value={internalProps.headers} onChange={(headers) => onFormChange({ headers })} hideLabel valuePlaceholder="key" />
+      <FormItem label={Lang.headers} tooltip="headers">
+        <KeyValues value={nodeProps.headers} onChange={(headers) => onFormChange({ headers })} hideLabel valuePlaceholder="key" />
       </FormItem>
-      <FormItem label="Url查询参数" tooltip="queries">
-        <KeyValues
-          value={internalProps.queries}
-          onChange={(queries) => onFormChange({ queries })}
-          variant="filled"
-          hideLabel
-          valuePlaceholder="key"
-        />
+      <FormItem label={Lang.queries} tooltip="queries">
+        <KeyValues value={nodeProps.queries} onChange={(queries) => onFormChange({ queries })} variant="filled" hideLabel valuePlaceholder="key" />
       </FormItem>
       <FormItem label="Cookies" tooltip="cookies">
-        <KeyValues
-          value={internalProps.cookies}
-          onChange={(cookies) => onFormChange({ cookies })}
-          variant="filled"
-          hideLabel
-          valuePlaceholder="key"
-        />
+        <KeyValues value={nodeProps.cookies} onChange={(cookies) => onFormChange({ cookies })} variant="filled" hideLabel valuePlaceholder="key" />
       </FormItem>
-      <FormItem label="请求体类型" tooltip="contentType">
+      <FormItem label={Lang.contentType} tooltip="contentType">
         <Select
-          value={internalProps.contentType}
+          value={nodeProps.contentType}
           onChange={(contentType) => onFormChange({ contentType: contentType as IContentType })}
           variant="filled"
           data={ContentTypeOptions}
         />
       </FormItem>
-      <FormItem label="请求体结构" tooltip="contentSchema">
+      <FormItem label={Lang.contentSchema} tooltip="contentSchema">
         <SchemaModelForm
-          value={internalProps.contentSchema}
+          value={nodeProps.contentSchema}
           onChange={(contentSchema) => onFormChange({ contentSchema })}
           variant="filled"
           defaultValue={DefaultContentSchema}

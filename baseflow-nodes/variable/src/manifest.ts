@@ -8,7 +8,7 @@ export default {
     meta: {
       name: "变量定义",
       outputSchema: {
-        name: "output",
+        name: "Variables",
         type: DataType.Object,
         children: [
           {

@@ -20,6 +20,10 @@ html {
   --input-padding-y-sm: 4px;
 }
 
+.mantine-Button-section[data-position='left'] {
+  margin-inline-end: 5px;
+}
+
 :root {
   --mantine-font-size-xs: 12px;
   --mantine-font-size-sm: 13px;

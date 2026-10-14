@@ -15,8 +15,8 @@ interface Props {
 const Component: FC<Props> = ({ nodeData, flowReturnSchema, updateNodeProps }) => {
   const flowReturnValue = nodeData.props.returnValue;
 
-  const onReturnChange = useEvent((value: SchemaValue | undefined) => {
-    updateNodeProps({ returnValue: value });
+  const onReturnChange = useEvent((returnValue: SchemaValue | undefined) => {
+    updateNodeProps({ returnValue });
   });
 
   return (

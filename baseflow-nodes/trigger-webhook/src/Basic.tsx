@@ -3,16 +3,16 @@ import { NodeMock, NodeNameplate } from "@baseflow/node-runtime-react";
 import type { FC } from "react";
 import { memo, useState } from "react";
 import InputForm from "./components/InputForm";
-import OutputForm from "./components/OutputForm";
+import MappingForm from "./components/MappingForm";
 import type { NodeProps } from "./model";
-import { InternalPropsMapping, validateNodeData } from "./model";
+import { validateNodeData } from "./model";
 
 const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
   const [currentTab, setCurrentTab] = useState<NodeNavigation>("input");
-  const { nodeData, packageInfo, updateNodeMeta } = setup({
+  const { nodeData, packageInfo, flowInputSchema, updateNodeProps, updateNodeMeta } = setup({
     onSubmit: () => {
-      const props = InternalPropsMapping.out(internalProps);
-      const error = validateNodeData(props);
+      const props = nodeData.props;
+      const error = validateNodeData(flowInputSchema, props);
       return {
         nodeData: { ...nodeData, meta: { ...nodeData.meta, configurationErrors: error || undefined }, props },
       };
@@ -22,19 +22,17 @@ const Component: FC<{ setup: NodeSetup<NodeProps> }> = ({ setup }) => {
     },
   });
 
-  const [internalProps, setInternalProps] = useState(() => InternalPropsMapping.in(nodeData.props));
-
   return (
     <div>
       {currentTab === "input" && (
         <InputForm
-          internalProps={internalProps}
+          nodeProps={nodeData.props}
           outputSchema={nodeData.meta.outputSchema!}
-          setInternalProps={setInternalProps}
+          updateNodeProps={updateNodeProps}
           updateNodeMeta={updateNodeMeta}
         />
       )}
-      {currentTab === "output" && <OutputForm />}
+      {currentTab === "output" && <MappingForm nodeProps={nodeData.props} flowInputSchema={flowInputSchema} updateNodeProps={updateNodeProps} />}
       {currentTab === "mock" && <NodeMock nodeData={nodeData} updateNodeMeta={updateNodeMeta} />}
       {currentTab === "readme" && <NodeNameplate packageInfo={packageInfo} />}
     </div>

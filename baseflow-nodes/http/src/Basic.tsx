@@ -5,11 +5,12 @@ import { memo, useCallback, useState } from "react";
 import InputForm from "./components/InputForm";
 import type { NodeProps } from "./model";
 
-const toolsFilter: SchemaToolsFilter = (item, parent) => {
-  if (!parent) {
+const toolsFilter: SchemaToolsFilter = (item, parent, path) => {
+  if (path.length === 1) {
+    //根级别 output（Response）固定结构
     return { addNext: false, addChild: false, edit: false, delete: false };
-  }
-  if (parent.name === "response") {
+  } else if (path.length === 2) {
+    //次级别 output（ResponseHeader / ResponseBody）仅允许增加子属性
     return { addNext: false, addChild: true, edit: false, delete: false };
   }
   return;

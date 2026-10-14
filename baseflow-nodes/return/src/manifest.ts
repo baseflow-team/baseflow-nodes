@@ -13,7 +13,6 @@ export default {
     props: {},
   },
   updateOnSelfCreated: (nodeData, flowSchema) => {
-    console.log("-----", nodeData);
     if (flowSchema.output) {
       if (!nodeData.props.returnValue) {
         return { updateMeta: { configurationErrors: "Please set the flow return value" } };

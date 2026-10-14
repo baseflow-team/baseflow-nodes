@@ -1,6 +1,6 @@
-import type { CreatorPayload, FlowData, FlowOptions, IFlow } from "@baseflow/flow-react";
-import { Graph, HistoryTools, jsonToFlow } from "@baseflow/flow-react";
-import { Modal, message, notification, Select, Spin } from "antd";
+import type { CreatorPayload, FlowOptions, IFlow } from "@baseflow/flow-react";
+import { Graph, HistoryTools } from "@baseflow/flow-react";
+import { Modal, message, notification, Select } from "antd";
 import type { FC } from "react";
 import { memo, useCallback, useState } from "react";
 import NodeList from "../NodeList";
@@ -11,7 +11,6 @@ import styles from "./index.module.scss";
 
 const Component: FC<{ doc: IDoc }> = (props) => {
   const [flow, setFlow] = useState<IFlow>();
-  const [initFlowData] = useState<FlowData>(() => jsonToFlow(props.doc.flow));
   const [flowOptions] = useState<FlowOptions>();
   const [flowHooks] = useState(new FlowHooks(props.doc));
   const [showNodeCreater, setShowNodeCreater] = useState<CreatorPayload>();
@@ -63,11 +62,7 @@ const Component: FC<{ doc: IDoc }> = (props) => {
         <div className="right">{flow && <HistoryTools flow={flow} />}</div>
       </div>
       <div className={`${styles.Canvas}__bd`}>
-        {initFlowData && flowHooks ? (
-          <Graph flowOptions={flowOptions} initialData={initFlowData} flowHooks={flowHooks} onInit={onInit} onShowCreater={setShowNodeCreater} />
-        ) : (
-          <Spin />
-        )}
+        <Graph flowOptions={flowOptions} initialDSL={props.doc.flow} flowHooks={flowHooks} onInit={onInit} onShowCreater={setShowNodeCreater} />
       </div>
       {showNodeCreater && (
         <Modal

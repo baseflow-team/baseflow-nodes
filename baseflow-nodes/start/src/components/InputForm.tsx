@@ -5,8 +5,8 @@ import { memo } from "react";
 import { FormItem } from "widgets-mantine";
 import Lang from "../i18n/en";
 
-const defaultInput: SchemaModel = { name: "input", type: DataType.Object, children: [] };
-const defaultReturn: SchemaModel = { name: "return", type: DataType.Object, children: [] };
+const defaultInput: SchemaModel = { name: "FlowInput", type: DataType.Object, children: [] };
+const defaultReturn: SchemaModel = { name: "FlowReturn", type: DataType.Object, children: [] };
 
 interface Props {
   flowInputSchema: SchemaModel | undefined;

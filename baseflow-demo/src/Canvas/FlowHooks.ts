@@ -1,16 +1,15 @@
 import type {
   EnvStatus,
-  FlowData,
   FlowHooksApi,
   FlowLogs,
   FlowLogsListItem,
   IFlow,
   INodeData,
+  JsonDSL,
   NodeSource,
   RunState,
   SchemaValue,
 } from "@baseflow/flow-react";
-import { flowToJson } from "@baseflow/flow-react";
 import type { IDoc } from "../utils";
 import { sleep } from "../utils";
 
@@ -26,8 +25,7 @@ export class FlowHooks implements FlowHooksApi {
     this.flow = flow;
   }
 
-  async onSave(data: FlowData): Promise<void> {
-    const dsl = flowToJson(data);
+  async onSave(dsl: JsonDSL): Promise<void> {
     localStorage.setItem("baseflow-dsl", JSON.stringify(dsl));
   }
 

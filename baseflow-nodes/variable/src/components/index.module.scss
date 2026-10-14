@@ -1,9 +1,9 @@
 :global {
   :local(.root) {
     > .initial-assignment {
-      padding: 15px 0;
-      margin: 0 15px 0 55px;
-      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      margin: 20px 0;
     }
   }
 }
