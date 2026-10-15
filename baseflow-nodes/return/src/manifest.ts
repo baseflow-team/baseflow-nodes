@@ -1,17 +1,9 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { NodeType } from "../../Constants";
 import type { NodeProps } from "./model";
 
 export default {
-  type: "Return",
-  defaultData: {
-    meta: {
-      name: "流程返回",
-      watchExternalProps: {
-        flow: { outputSchema: "The flowReturnSchema has been modified and needs to be confirmed" },
-      },
-    },
-    props: {},
-  },
+  type: NodeType.Return,
   updateOnSelfCreated: (nodeData, flowSchema) => {
     if (flowSchema.output) {
       if (!nodeData.props.returnValue) {

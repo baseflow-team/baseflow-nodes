@@ -17,23 +17,30 @@
         {
           "tag": "@baseflow-nodes/choice",
           "id": "choice1",
-          "childrenIds": [
-            "branch1",
-            "branch2"
+          "meta": {
+            "name": "条件选择"
+          },
+          "props": {},
+          "children": [
+            {
+              "tag": "@baseflow-nodes/branch",
+              "id": "branch1",
+              "meta": {
+                "name": "条件分支"
+              },
+              "props": {}
+            },
+            {
+              "tag": "@baseflow-nodes/branch",
+              "id": "branch2",
+              "meta": {
+                "name": "条件分支-Defalut"
+              },
+              "props": {
+                "default": true
+              }
+            }
           ]
-        },
-        {
-          "tag": "@baseflow-nodes/branch",
-          "id": "branch1",
-          "parentId": "choice1"
-        },
-        {
-          "tag": "@baseflow-nodes/branch",
-          "id": "branch2",
-          "parentId": "choice1",
-          "props": {
-            "default": true
-          }
         }
       ],
       "sources": {

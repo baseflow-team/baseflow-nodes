@@ -1,13 +1,8 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { NodeType } from "../../Constants";
 
 export default {
-  type: "Flow",
-  defaultData: {
-    meta: {
-      name: "流程",
-    },
-    props: {},
-  },
+  type: NodeType.Flow,
   uiForm: {
     inputSchema: null,
     outputEditable: false,

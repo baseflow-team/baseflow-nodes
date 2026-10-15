@@ -1,13 +1,8 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { NodeType } from "../../Constants";
 
 export default {
-  type: "Group",
-  defaultData: {
-    meta: {
-      name: "TryCatch",
-    },
-    props: {},
-  },
+  type: NodeType.Group,
   uiForm: {
     inputSchema: null,
     outputEditable: false,

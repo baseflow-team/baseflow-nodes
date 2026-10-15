@@ -1,24 +1,8 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
-import { DataType } from "../../Constants";
+import { NodeType } from "../../Constants";
 import type { NodeProps } from "./model";
 
 export default {
-  type: "Variable",
-  defaultData: {
-    meta: {
-      name: "变量定义",
-      outputSchema: {
-        name: "Variables",
-        type: DataType.Object,
-        children: [
-          {
-            name: "???",
-            type: DataType.String,
-          },
-        ],
-      },
-    },
-    props: {},
-  },
+  type: NodeType.Variable,
   uiForm: "index.js",
 } satisfies NodeManifest<NodeProps>;

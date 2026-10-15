@@ -15,7 +15,11 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/try-catch"
+          "tag": "@baseflow-nodes/try-catch",
+          "meta": {
+            "name": "TryCatch"
+          },
+          "props": {}
         }
       ],
       "sources": {

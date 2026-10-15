@@ -15,7 +15,11 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/branch"
+          "tag": "@baseflow-nodes/branch",
+          "meta": {
+            "name": "条件分支"
+          },
+          "props": {}
         }
       ],
       "sources": {

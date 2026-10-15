@@ -15,7 +15,16 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/return"
+          "tag": "@baseflow-nodes/return",
+          "meta": {
+            "name": "流程返回",
+            "watchExternalProps": {
+              "flow": {
+                "outputSchema": "The flowReturnSchema has been modified and needs to be confirmed"
+              }
+            }
+          },
+          "props": {}
         }
       ],
       "sources": {

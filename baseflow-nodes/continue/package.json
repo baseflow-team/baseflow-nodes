@@ -15,7 +15,11 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/continue"
+          "tag": "@baseflow-nodes/continue",
+          "meta": {
+            "name": "循环Continue"
+          },
+          "props": {}
         }
       ],
       "sources": {

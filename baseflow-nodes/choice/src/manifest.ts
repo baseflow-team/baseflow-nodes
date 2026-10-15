@@ -1,13 +1,8 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { NodeType } from "../../Constants";
 
 export default {
-  type: "Choice",
-  defaultData: {
-    meta: {
-      name: "条件选择",
-    },
-    props: {},
-  },
+  type: NodeType.Choice,
   uiForm: {
     inputSchema: null,
     outputEditable: false,

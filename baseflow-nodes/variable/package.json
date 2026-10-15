@@ -15,7 +15,21 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/variable"
+          "tag": "@baseflow-nodes/variable",
+          "meta": {
+            "name": "变量定义",
+            "outputSchema": {
+              "name": "Variables",
+              "type": "ͼOBJECTͼ",
+              "children": [
+                {
+                  "name": "???",
+                  "type": "ͼSTRINGͼ"
+                }
+              ]
+            }
+          },
+          "props": {}
         }
       ],
       "sources": {

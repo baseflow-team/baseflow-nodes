@@ -17,20 +17,28 @@
         {
           "tag": "@baseflow-nodes/parallel",
           "id": "parallel1",
-          "childrenIds": [
-            "thread1",
-            "thread2"
+          "meta": {
+            "name": "并行执行"
+          },
+          "props": {},
+          "children": [
+            {
+              "tag": "@baseflow-nodes/thread",
+              "id": "thread1",
+              "meta": {
+                "name": "并行分支1"
+              },
+              "props": {}
+            },
+            {
+              "tag": "@baseflow-nodes/thread",
+              "id": "thread2",
+              "meta": {
+                "name": "并行分支2"
+              },
+              "props": {}
+            }
           ]
-        },
-        {
-          "tag": "@baseflow-nodes/thread",
-          "id": "thread1",
-          "parentId": "parallel1"
-        },
-        {
-          "tag": "@baseflow-nodes/thread",
-          "id": "thread2",
-          "parentId": "parallel1"
         }
       ],
       "sources": {

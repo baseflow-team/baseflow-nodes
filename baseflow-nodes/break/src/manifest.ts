@@ -1,13 +1,8 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { NodeType } from "../../Constants";
 
 export default {
-  type: "Break",
-  defaultData: {
-    meta: {
-      name: "循环Break",
-    },
-    props: {},
-  },
+  type: NodeType.Break,
   uiForm: {
     inputSchema: null,
     outputEditable: false,

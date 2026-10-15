@@ -15,7 +15,34 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/http"
+          "tag": "@baseflow-nodes/http",
+          "meta": {
+            "name": "HTTP请求",
+            "outputSchema": {
+              "name": "Response",
+              "type": "ͼOBJECTͼ",
+              "children": [
+                {
+                  "name": "ResponseHeader",
+                  "type": "ͼOBJECTͼ"
+                },
+                {
+                  "name": "ResponseBody",
+                  "type": "ͼOBJECTͼ"
+                }
+              ]
+            }
+          },
+          "props": {
+            "input": {
+              "name": "request",
+              "value": {
+                "type": "ͼOBJECTͼ",
+                "source": "ͼVARIABLEͼ",
+                "text": ""
+              }
+            }
+          }
         }
       ],
       "sources": {

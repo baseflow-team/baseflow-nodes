@@ -14,7 +14,11 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/task"
+          "tag": "@baseflow-nodes/task",
+          "meta": {
+            "name": "Task任务"
+          },
+          "props": {}
         }
       ],
       "sources": {

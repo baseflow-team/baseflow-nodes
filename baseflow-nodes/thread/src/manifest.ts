@@ -1,13 +1,8 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { NodeType } from "../../Constants";
 
 export default {
-  type: "Thread",
-  defaultData: {
-    meta: {
-      name: "并行分支",
-    },
-    props: {},
-  },
+  type: NodeType.Thread,
   uiForm: {
     inputSchema: null,
     outputEditable: false,

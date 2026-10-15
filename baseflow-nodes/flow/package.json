@@ -15,7 +15,11 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/flow"
+          "tag": "@baseflow-nodes/flow",
+          "meta": {
+            "name": "流程"
+          },
+          "props": {}
         }
       ],
       "sources": {

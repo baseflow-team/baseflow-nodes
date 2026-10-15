@@ -1,85 +1,9 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
-import { DataType } from "../../Constants";
+import { NodeType } from "../../Constants";
 import type { DSLProps, NodeProps } from "./model";
 
 export default {
-  type: "Trigger",
-  defaultData: {
-    meta: {
-      name: "webhook触发器",
-      watchExternalProps: {
-        start: { outputSchema: "The flowInputSchema has been modified and needs to be confirmed" },
-      },
-      outputSchema: {
-        name: "output",
-        type: DataType.Object,
-        children: [
-          {
-            name: "headers",
-            type: DataType.Object,
-            children: [
-              {
-                name: "url",
-                type: DataType.String,
-              },
-              {
-                name: "protocol",
-                type: DataType.String,
-              },
-              {
-                name: "hostname",
-                type: DataType.String,
-              },
-              {
-                name: "port",
-                type: DataType.Number,
-              },
-              {
-                name: "path",
-                type: DataType.String,
-              },
-              {
-                name: "method",
-                type: DataType.String,
-              },
-              {
-                name: "queryString",
-                type: DataType.String,
-              },
-              {
-                name: "cookieString",
-                type: DataType.String,
-              },
-              {
-                name: "authorization",
-                type: DataType.String,
-              },
-            ],
-          },
-          {
-            name: "params",
-            type: DataType.Object,
-          },
-          {
-            name: "queries",
-            type: DataType.Object,
-          },
-          {
-            name: "cookies",
-            type: DataType.Object,
-          },
-          {
-            name: "body",
-            type: DataType.Object,
-          },
-        ],
-      },
-    },
-    props: {
-      methods: ["post"],
-      contentType: "json",
-    },
-  },
+  type: NodeType.Trigger,
   updateOnSelfCreated: (nodeData, flowSchema) => {
     if (flowSchema.input) {
       if (!nodeData.props.flowInputValue) {

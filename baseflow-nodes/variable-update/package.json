@@ -15,7 +15,11 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/variable-update"
+          "tag": "@baseflow-nodes/variable-update",
+          "meta": {
+            "name": "变量修改"
+          },
+          "props": {}
         }
       ],
       "sources": {

@@ -17,3 +17,21 @@ export const ValueSource = {
   Template: "ͼTEMPLATEͼ",
   Expression: "ͼEXPRESSIONͼ",
 } as const;
+
+export const NodeType = {
+  Flow: "Flow",
+  Start: "Start",
+  End: "End",
+  Return: "Return",
+  Task: "Task",
+  Variable: "Variable",
+  VariableUpdate: "VariableUpdate",
+  Choice: "Choice",
+  Branch: "Branch",
+  Parallel: "Parallel",
+  Thread: "Thread",
+  Loop: "Loop",
+  Break: "Break",
+  Group: "Group",
+  Trigger: "Trigger",
+} as const;

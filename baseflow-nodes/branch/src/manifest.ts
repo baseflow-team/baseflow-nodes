@@ -1,13 +1,8 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { NodeType } from "../../Constants";
 import type { NodeProps } from "./model";
 
 export default {
-  type: "Branch",
-  defaultData: {
-    meta: {
-      name: "条件分支",
-    },
-    props: {},
-  },
+  type: NodeType.Branch,
   uiForm: "index.js",
 } satisfies NodeManifest<NodeProps>;

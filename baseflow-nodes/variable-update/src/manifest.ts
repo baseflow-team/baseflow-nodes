@@ -1,15 +1,9 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
-import { DataType, ValueSource } from "../../Constants";
+import { DataType, NodeType, ValueSource } from "../../Constants";
 import type { DSLProps, NodeProps } from "./model";
 
 export default {
-  type: "VariableUpdate",
-  defaultData: {
-    meta: {
-      name: "变量修改",
-    },
-    props: {},
-  },
+  type: NodeType.VariableUpdate,
   mappingPropsOut(props): DSLProps {
     if (props.scripts) {
       const scripts = props.scripts?.text;

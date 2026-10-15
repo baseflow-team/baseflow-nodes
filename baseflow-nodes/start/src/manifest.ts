@@ -1,12 +1,7 @@
 import type { NodeManifest } from "@baseflow/node-runtime-react";
+import { NodeType } from "../../Constants";
 
 export default {
-  type: "Start",
-  defaultData: {
-    meta: {
-      name: "流程开始",
-    },
-    props: {},
-  },
+  type: NodeType.Start,
   uiForm: "index.js",
 } satisfies NodeManifest<{}>;

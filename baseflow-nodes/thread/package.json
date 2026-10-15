@@ -15,7 +15,11 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/thread"
+          "tag": "@baseflow-nodes/thread",
+          "meta": {
+            "name": "并行分支"
+          },
+          "props": {}
         }
       ],
       "sources": {

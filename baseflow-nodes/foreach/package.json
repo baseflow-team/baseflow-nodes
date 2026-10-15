@@ -15,7 +15,12 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/foreach"
+          "tag": "@baseflow-nodes/foreach",
+          "meta": {
+            "name": "Foreach循环",
+            "configurationErrors": "Please set the iteration source..."
+          },
+          "props": {}
         }
       ],
       "sources": {

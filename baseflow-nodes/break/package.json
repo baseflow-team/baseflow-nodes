@@ -15,7 +15,11 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/break"
+          "tag": "@baseflow-nodes/break",
+          "meta": {
+            "name": "循环Break"
+          },
+          "props": {}
         }
       ],
       "sources": {

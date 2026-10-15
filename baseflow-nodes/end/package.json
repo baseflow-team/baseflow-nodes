@@ -15,7 +15,16 @@
     "defaultDsl": {
       "nodes": [
         {
-          "tag": "@baseflow-nodes/end"
+          "tag": "@baseflow-nodes/end",
+          "meta": {
+            "name": "流程结束",
+            "watchExternalProps": {
+              "flow": {
+                "outputSchema": "The flowReturnSchema has been modified and needs to be confirmed"
+              }
+            }
+          },
+          "props": {}
         }
       ],
       "sources": {

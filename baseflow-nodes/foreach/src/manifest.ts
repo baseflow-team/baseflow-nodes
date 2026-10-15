@@ -1,16 +1,9 @@
 import type { IValueSource, NodeManifest } from "@baseflow/node-runtime-react";
-import { DataType, ValueSource } from "../../Constants";
+import { DataType, NodeType, ValueSource } from "../../Constants";
 import type { DSLProps, NodeProps } from "./model";
 
 export default {
-  type: "Loop",
-  defaultData: {
-    meta: {
-      name: "Foreach循环",
-      configurationErrors: "Please set the iteration source...",
-    },
-    props: {},
-  },
+  type: NodeType.Loop,
   uiForm: "index.js",
   mappingPropsOut(props): DSLProps {
     const source = props.source?.value.text;
