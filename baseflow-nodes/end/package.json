@@ -13,20 +13,18 @@
       "node": "@baseflow-executors/end@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/end",
-          "meta": {
-            "name": "流程结束",
-            "watchExternalProps": {
-              "flow": {
-                "outputSchema": "The flowReturnSchema has been modified and needs to be confirmed"
-              }
+      "node": {
+        "tag": "@baseflow-nodes/end",
+        "meta": {
+          "name": "流程结束",
+          "watchExternalProps": {
+            "flow": {
+              "outputSchema": "The flowReturnSchema has been modified and needs to be confirmed"
             }
-          },
-          "props": {}
-        }
-      ],
+          }
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/end": "@baseflow-nodes/end@1"
       }

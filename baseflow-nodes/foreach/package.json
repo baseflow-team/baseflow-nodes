@@ -13,16 +13,14 @@
       "node": "@baseflow-executors/foreach@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/foreach",
-          "meta": {
-            "name": "Foreach循环",
-            "configurationErrors": "Please set the iteration source..."
-          },
-          "props": {}
-        }
-      ],
+      "node": {
+        "tag": "@baseflow-nodes/foreach",
+        "meta": {
+          "name": "Foreach循环",
+          "configurationErrors": "Please set the iteration source..."
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/foreach": "@baseflow-nodes/foreach@1"
       }

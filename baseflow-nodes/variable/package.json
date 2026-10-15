@@ -13,25 +13,23 @@
       "node": "@baseflow-executors/variable@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/variable",
-          "meta": {
-            "name": "变量定义",
-            "outputSchema": {
-              "name": "Variables",
-              "type": "ͼOBJECTͼ",
-              "children": [
-                {
-                  "name": "???",
-                  "type": "ͼSTRINGͼ"
-                }
-              ]
-            }
-          },
-          "props": {}
-        }
-      ],
+      "node": {
+        "tag": "@baseflow-nodes/variable",
+        "meta": {
+          "name": "变量定义",
+          "outputSchema": {
+            "name": "Variables",
+            "type": "ͼOBJECTͼ",
+            "children": [
+              {
+                "name": "???",
+                "type": "ͼSTRINGͼ"
+              }
+            ]
+          }
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/variable": "@baseflow-nodes/variable@1"
       }

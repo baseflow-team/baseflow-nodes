@@ -13,15 +13,13 @@
       "node": "@baseflow-executors/try-catch@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/try-catch",
-          "meta": {
-            "name": "TryCatch"
-          },
-          "props": {}
-        }
-      ],
+      "node": {
+        "tag": "@baseflow-nodes/try-catch",
+        "meta": {
+          "name": "TryCatch"
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/try-catch": "@baseflow-nodes/try-catch@1"
       }

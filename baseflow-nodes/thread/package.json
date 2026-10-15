@@ -13,15 +13,13 @@
       "node": "@baseflow-executors/thread@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/thread",
-          "meta": {
-            "name": "并行分支"
-          },
-          "props": {}
-        }
-      ],
+      "node": {
+        "tag": "@baseflow-nodes/thread",
+        "meta": {
+          "name": "并行分支"
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/thread": "@baseflow-nodes/thread@1"
       }

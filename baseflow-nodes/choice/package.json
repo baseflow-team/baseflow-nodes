@@ -13,36 +13,31 @@
       "node": "@baseflow-executors/choice@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/choice",
-          "id": "choice1",
-          "meta": {
-            "name": "条件选择"
-          },
-          "props": {},
-          "children": [
-            {
-              "tag": "@baseflow-nodes/branch",
-              "id": "branch1",
-              "meta": {
-                "name": "条件分支"
-              },
-              "props": {}
+      "node": {
+        "tag": "@baseflow-nodes/choice",
+        "meta": {
+          "name": "条件选择"
+        },
+        "props": {},
+        "children": [
+          {
+            "tag": "@baseflow-nodes/branch",
+            "meta": {
+              "name": "条件分支"
             },
-            {
-              "tag": "@baseflow-nodes/branch",
-              "id": "branch2",
-              "meta": {
-                "name": "条件分支-Defalut"
-              },
-              "props": {
-                "default": true
-              }
+            "props": {}
+          },
+          {
+            "tag": "@baseflow-nodes/branch",
+            "meta": {
+              "name": "条件分支-Defalut"
+            },
+            "props": {
+              "default": true
             }
-          ]
-        }
-      ],
+          }
+        ]
+      },
       "sources": {
         "@baseflow-nodes/choice": "@baseflow-nodes/choice@1",
         "@baseflow-nodes/branch": "@baseflow-nodes/branch@1"

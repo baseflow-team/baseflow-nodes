@@ -31,7 +31,7 @@ export interface NodeEntity {
   desc: string;
   dsl: {
     sources: Record<string, string>;
-    nodes: INodeData[];
+    node: INodeData;
   };
 }
 
@@ -64,32 +64,23 @@ export function fetchFlow(): JsonDSL {
           "@baseflow-nodes/end": "@baseflow-nodes/end@1.0.0",
         },
         nodes: {
-          id: "flow",
           tag: "@baseflow-nodes/flow",
           meta: {
             name: "流程",
-            width: 250,
-            height: 68,
           },
           props: {},
           children: [
             {
-              id: "start",
               tag: "@baseflow-nodes/start",
               meta: {
                 name: "流程开始",
-                width: 250,
-                height: 68,
               },
               props: {},
             },
             {
-              id: "end",
               tag: "@baseflow-nodes/end",
               meta: {
                 name: "流程结束",
-                width: 250,
-                height: 68,
               },
               props: {},
             },

@@ -12,15 +12,13 @@
       "node": "@baseflow-executors/task@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/task",
-          "meta": {
-            "name": "Task任务"
-          },
-          "props": {}
-        }
-      ],
+      "node": {
+        "tag": "@baseflow-nodes/task",
+        "meta": {
+          "name": "Task任务"
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/task": "@baseflow-nodes/task@1"
       }

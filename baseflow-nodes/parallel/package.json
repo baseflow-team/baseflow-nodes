@@ -13,34 +13,29 @@
       "node": "@baseflow-executors/parallel@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/parallel",
-          "id": "parallel1",
-          "meta": {
-            "name": "并行执行"
-          },
-          "props": {},
-          "children": [
-            {
-              "tag": "@baseflow-nodes/thread",
-              "id": "thread1",
-              "meta": {
-                "name": "并行分支1"
-              },
-              "props": {}
+      "node": {
+        "tag": "@baseflow-nodes/parallel",
+        "meta": {
+          "name": "并行执行"
+        },
+        "props": {},
+        "children": [
+          {
+            "tag": "@baseflow-nodes/thread",
+            "meta": {
+              "name": "并行分支1"
             },
-            {
-              "tag": "@baseflow-nodes/thread",
-              "id": "thread2",
-              "meta": {
-                "name": "并行分支2"
-              },
-              "props": {}
-            }
-          ]
-        }
-      ],
+            "props": {}
+          },
+          {
+            "tag": "@baseflow-nodes/thread",
+            "meta": {
+              "name": "并行分支2"
+            },
+            "props": {}
+          }
+        ]
+      },
       "sources": {
         "@baseflow-nodes/parallel": "@baseflow-nodes/parallel@1",
         "@baseflow-nodes/thread": "@baseflow-nodes/thread@1"

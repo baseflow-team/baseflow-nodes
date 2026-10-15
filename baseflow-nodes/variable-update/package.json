@@ -13,15 +13,13 @@
       "node": "@baseflow-executors/variable-update@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/variable-update",
-          "meta": {
-            "name": "变量修改"
-          },
-          "props": {}
-        }
-      ],
+      "node": {
+        "tag": "@baseflow-nodes/variable-update",
+        "meta": {
+          "name": "变量修改"
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/variable-update": "@baseflow-nodes/variable-update@1"
       }

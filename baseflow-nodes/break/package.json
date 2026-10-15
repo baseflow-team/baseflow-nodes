@@ -13,15 +13,13 @@
       "node": "@baseflow-executors/break@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/break",
-          "meta": {
-            "name": "循环Break"
-          },
-          "props": {}
-        }
-      ],
+      "node": {
+        "tag": "@baseflow-nodes/break",
+        "meta": {
+          "name": "循环Break"
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/break": "@baseflow-nodes/break@1"
       }

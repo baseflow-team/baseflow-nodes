@@ -23,8 +23,8 @@ const Component: FC<{ doc: IDoc }> = (props) => {
 
   const onApplyNode = useEvent((newItem: Pick<NodeEntity, "type" | "dsl">) => {
     const { sourceNode, place } = showNodeCreater!;
-    const { sources, nodes } = newItem.dsl;
-    const result = newItem.type === "Trigger" ? flow!.applyTrigger(nodes, sources) : flow!.applyNode(sourceNode.getId(), place, nodes, sources);
+    const { sources, node } = newItem.dsl;
+    const result = newItem.type === "Trigger" ? flow!.insertTrigger(sources, node) : flow!.insertNode(sourceNode.getId(), place, sources, node);
     result.then(
       (changedSources) => {
         setShowNodeCreater(undefined);

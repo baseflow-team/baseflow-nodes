@@ -13,89 +13,87 @@
       "node": "@baseflow-executors/trigger-webhook@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/trigger-webhook",
-          "meta": {
-            "name": "webhook触发器",
-            "watchExternalProps": {
-              "start": {
-                "outputSchema": "The flowInputSchema has been modified and needs to be confirmed"
-              }
-            },
-            "outputSchema": {
-              "name": "output",
-              "type": "ͼOBJECTͼ",
-              "children": [
-                {
-                  "name": "headers",
-                  "type": "ͼOBJECTͼ",
-                  "children": [
-                    {
-                      "name": "url",
-                      "type": "ͼSTRINGͼ"
-                    },
-                    {
-                      "name": "protocol",
-                      "type": "ͼSTRINGͼ"
-                    },
-                    {
-                      "name": "hostname",
-                      "type": "ͼSTRINGͼ"
-                    },
-                    {
-                      "name": "port",
-                      "type": "ͼNUMBERͼ"
-                    },
-                    {
-                      "name": "path",
-                      "type": "ͼSTRINGͼ"
-                    },
-                    {
-                      "name": "method",
-                      "type": "ͼSTRINGͼ"
-                    },
-                    {
-                      "name": "queryString",
-                      "type": "ͼSTRINGͼ"
-                    },
-                    {
-                      "name": "cookieString",
-                      "type": "ͼSTRINGͼ"
-                    },
-                    {
-                      "name": "authorization",
-                      "type": "ͼSTRINGͼ"
-                    }
-                  ]
-                },
-                {
-                  "name": "params",
-                  "type": "ͼOBJECTͼ"
-                },
-                {
-                  "name": "queries",
-                  "type": "ͼOBJECTͼ"
-                },
-                {
-                  "name": "cookies",
-                  "type": "ͼOBJECTͼ"
-                },
-                {
-                  "name": "body",
-                  "type": "ͼOBJECTͼ"
-                }
-              ]
+      "node": {
+        "tag": "@baseflow-nodes/trigger-webhook",
+        "meta": {
+          "name": "webhook触发器",
+          "watchExternalProps": {
+            "start": {
+              "outputSchema": "The flowInputSchema has been modified and needs to be confirmed"
             }
           },
-          "props": {
-            "methods": [
-              "post"
-            ],
-            "contentType": "json"
+          "outputSchema": {
+            "name": "output",
+            "type": "ͼOBJECTͼ",
+            "children": [
+              {
+                "name": "headers",
+                "type": "ͼOBJECTͼ",
+                "children": [
+                  {
+                    "name": "url",
+                    "type": "ͼSTRINGͼ"
+                  },
+                  {
+                    "name": "protocol",
+                    "type": "ͼSTRINGͼ"
+                  },
+                  {
+                    "name": "hostname",
+                    "type": "ͼSTRINGͼ"
+                  },
+                  {
+                    "name": "port",
+                    "type": "ͼNUMBERͼ"
+                  },
+                  {
+                    "name": "path",
+                    "type": "ͼSTRINGͼ"
+                  },
+                  {
+                    "name": "method",
+                    "type": "ͼSTRINGͼ"
+                  },
+                  {
+                    "name": "queryString",
+                    "type": "ͼSTRINGͼ"
+                  },
+                  {
+                    "name": "cookieString",
+                    "type": "ͼSTRINGͼ"
+                  },
+                  {
+                    "name": "authorization",
+                    "type": "ͼSTRINGͼ"
+                  }
+                ]
+              },
+              {
+                "name": "params",
+                "type": "ͼOBJECTͼ"
+              },
+              {
+                "name": "queries",
+                "type": "ͼOBJECTͼ"
+              },
+              {
+                "name": "cookies",
+                "type": "ͼOBJECTͼ"
+              },
+              {
+                "name": "body",
+                "type": "ͼOBJECTͼ"
+              }
+            ]
           }
+        },
+        "props": {
+          "methods": [
+            "post"
+          ],
+          "contentType": "json"
         }
-      ],
+      },
       "sources": {
         "@baseflow-nodes/trigger-webhook": "@baseflow-nodes/trigger-webhook@1"
       }

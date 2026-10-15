@@ -13,15 +13,13 @@
       "node": "@baseflow-executors/branch@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/branch",
-          "meta": {
-            "name": "条件分支"
-          },
-          "props": {}
-        }
-      ],
+      "node": {
+        "tag": "@baseflow-nodes/branch",
+        "meta": {
+          "name": "条件分支"
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/branch": "@baseflow-nodes/branch@1"
       }

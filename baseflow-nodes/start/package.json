@@ -13,15 +13,13 @@
       "node": "@baseflow-executors/start@0.0.1"
     },
     "defaultDsl": {
-      "nodes": [
-        {
-          "tag": "@baseflow-nodes/start",
-          "meta": {
-            "name": "流程开始"
-          },
-          "props": {}
-        }
-      ],
+      "node": {
+        "tag": "@baseflow-nodes/start",
+        "meta": {
+          "name": "流程开始"
+        },
+        "props": {}
+      },
       "sources": {
         "@baseflow-nodes/start": "@baseflow-nodes/start@1"
       }
